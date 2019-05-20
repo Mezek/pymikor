@@ -1,0 +1,2 @@
+Project PyMikor is written by
+Erik Bartoš <erik.bartos@gmail.com>
