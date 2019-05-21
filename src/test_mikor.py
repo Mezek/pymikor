@@ -10,7 +10,7 @@ def f(x):
 
 def main():
     integral = Mikor()
-    integral.set(13, 5)
+    integral.set_values(13, 5, 10000)
     integral.result()
 
 
