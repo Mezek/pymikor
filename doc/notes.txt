@@ -1,0 +1,15 @@
+Notes
+=====
+
+
+Formulae
+--------
+
+Notes to former |PyMikor| documentation. Probably written for Sphinx documentation.
+
+.. math::
+
+	x^2
+
+
+End of notes.
