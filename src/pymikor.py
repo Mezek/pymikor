@@ -1,4 +1,5 @@
 import math
+import numpy as np
 from itertools import count
 
 
@@ -42,9 +43,14 @@ class Mikor:
             next_prime = next(filter(self.is_prime, count(next_prime)))
         return next_prime
 
+    def h_funct(self, n):
+        s = self.dimS
+        z = np.arange(1, n, 1)
+        hval = pow(s, 3)/n
+        return hval
+
     def result(self):
         print('dimension of integration:', self.dimS)
         print('dimension of result     :', self.dimN)
         print('number of nodes         :', self.nodesN)
-        my_int = 1013
-        print('number: %i - prime: %i' % (my_int, self.n_prime(my_int)))
+        print('z:', self.h_funct(13))
