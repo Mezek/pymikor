@@ -1,3 +1,8 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright © 2019 Erik Bartoš <erik.bartos@gmail.com>
+
 from pymikor import *
 
 
@@ -11,7 +16,8 @@ def f(x):
 def main():
     integral = Mikor()
     integral.set_values(13, 5, 10000)
-    integral.result()
+    integral.show_parameters()
+    print('H(z) =', integral.h_funct())
 
 
 if __name__ == "__main__":

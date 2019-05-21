@@ -43,14 +43,17 @@ class Mikor:
             next_prime = next(filter(self.is_prime, count(next_prime)))
         return next_prime
 
-    def h_funct(self, n):
+    def h_funct(self):
         s = self.dimS
+        # n = self.nodes
+        n = 13
         z = np.arange(1, n, 1)
         hval = pow(s, 3)/n
         return hval
 
-    def result(self):
+    def show_parameters(self):
+        print('Object class            :', self.__class__.__name__)
         print('dimension of integration:', self.dimS)
         print('dimension of result     :', self.dimN)
         print('number of nodes         :', self.nodesN)
-        print('z:', self.h_funct(13))
+
