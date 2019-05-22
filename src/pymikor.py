@@ -10,6 +10,10 @@ class Mikor:
         self.dimN = 1
         self.nodesN = 100
 
+    def check_numbers(self):
+        if self.nodesN <= self.dimS:
+            raise ValueError('Integral dimension s must be < N nodes!')
+
     def set_values(self, dim_s, dim_n, nodes):
         """
         Class Mikor
@@ -21,6 +25,7 @@ class Mikor:
         self.dimS = dim_s
         self.dimN = dim_n
         self.nodesN = nodes
+        assert (self.dimS < self.nodesN), "Integral dimension s must be < N nodes!"
 
     def is_prime(self, n):
         # if n in (2, 3, 5, 7, 11):  # special case small primes
@@ -50,6 +55,10 @@ class Mikor:
         z = np.arange(1, n, 1)
         hval = pow(s, 3)/n
         return hval
+
+    def find_min_h(self):
+        a = []
+        return a
 
     def show_parameters(self):
         print('Object class            :', self.__class__.__name__)
