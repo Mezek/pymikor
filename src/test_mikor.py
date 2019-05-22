@@ -19,6 +19,9 @@ def main():
     integral.show_parameters()
     print('H(z) =', integral.h_funct())
 
+    a = -123.456
+    print(fraction(a))
+
 
 if __name__ == "__main__":
     main()
