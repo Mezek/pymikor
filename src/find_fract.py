@@ -1,8 +1,5 @@
-# program to compute fraction of a big number
-
 from math import *
-from decimal import *
-
+import numpy as np
 
 
 def fraction(num):
@@ -14,15 +11,23 @@ def lfraction(num):
     return str(num-int(num)).split('.')[1]
 
 
-# Driver program
 num = 12316767678678.6
 lnum = 1231676767867812316767678678.6
 
+#a = [15, 16, 17]
+#a = [503, 504, 505]
+a = np.arange(1, 15)
 
-print(fraction(num))
-print(fraction(lnum))
+d = 503
+m = 1
+n = 1.
+for i in range(len(a)):
+    m = (m*a[i]) % d
+    n = n*a[i]
+    print(m, n)
 
-print(lfraction(num))
-print(lfraction(lnum))
-
-print(floor(0), floor(1), floor(1.2), floor(Decimal(503)**Decimal(13)/Decimal(1013)))
+m = m / d
+n = n / d
+print(fraction(m))
+print(fraction(n))
+print(217/d, 720/d)
