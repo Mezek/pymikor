@@ -17,10 +17,8 @@ def main():
     integral = Mikor()
     integral.set_values(13, 5, 1000)
     integral.show_parameters()
-    print('H(z) =', integral.h_funct())
 
-    a = -123.456
-    print(fraction(a))
+    integral.first_optimal()
 
 
 if __name__ == "__main__":
