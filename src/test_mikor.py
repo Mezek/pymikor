@@ -18,7 +18,9 @@ def main():
     integral.set_values(8, 2, 1011)
     integral.show_parameters()
 
-    print(integral.optimal_coeffs(integral.first_optimal()[0]))
+    # print(integral.optimal_coeffs(integral.first_optimal()[0]))
+
+    integral.h_sum(100, 1.3)
 
 
 if __name__ == "__main__":

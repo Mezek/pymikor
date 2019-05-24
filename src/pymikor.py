@@ -55,8 +55,20 @@ class Mikor:
             next_prime = next(filter(is_prime, count(next_prime)))
         return next_prime
 
-    def h_sum(self, s, ub, z):
-        return 0
+    def h_sum(self, upb, z):
+        s = self.dim_s
+        sm_k = 1
+        for i in range(1, upb + 1):
+            print(i)
+
+        for k in range(1, upb + 1):
+            kterm = 1.
+            for l in range(s):
+                ent = fraction(k*z)
+                kterm = kterm*(1. - ent - ent)
+            sm_k = sm_k + kterm*kterm
+        print(sm_k)
+        return sm_k
 
     def h_poly(self, z):
         return 0
@@ -68,8 +80,6 @@ class Mikor:
         n_orig = self.n_nodes
         s = self.dim_s
         p = int((n_orig - 1)/2)
-        z = np.arange(1, p + 1, 1)
-        # print('z =', z[-5:])
         optimal_a = 0
         optimal_val = 1e+18
 
