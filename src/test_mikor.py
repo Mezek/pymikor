@@ -15,10 +15,10 @@ def f(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(13, 5, 1000)
+    integral.set_values(8, 2, 1011)
     integral.show_parameters()
 
-    integral.first_optimal()
+    print(integral.optimal_coeffs(integral.first_optimal()[0]))
 
 
 if __name__ == "__main__":
