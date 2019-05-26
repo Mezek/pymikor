@@ -20,7 +20,10 @@ def main():
 
     # print(integral.optimal_coeffs(integral.first_optimal()[0]))
 
-    integral.h_sum(100, 1.3)
+    z, w = integral.first_optimal()
+    z = 1.0123
+    print(integral.h_sum(1013, z))
+    print(integral.h_sum(1013, integral.n_nodes - z))
 
 
 if __name__ == "__main__":
