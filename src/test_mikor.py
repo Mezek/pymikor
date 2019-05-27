@@ -18,12 +18,16 @@ def main():
     integral.set_values(8, 2, 1011)
     integral.show_parameters()
 
-    # print(integral.optimal_coeffs(integral.first_optimal()[0]))
+    print(integral.optimal_coeffs(integral.first_optimal()[0]))
 
     z, w = integral.first_optimal()
-    z = 1.0123
+    print(z, w)
+
     print(integral.h_sum(1013, z))
-    print(integral.h_sum(1013, integral.n_nodes - z))
+    print(integral.h_sum(1013, 1013 - z))
+
+    print(integral.h_poly(z))
+    print(integral.h_poly_chet(z))
 
 
 if __name__ == "__main__":

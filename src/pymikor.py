@@ -57,25 +57,28 @@ class Mikor:
 
     def h_sum(self, upperb, z):
         s = self.dim_s
+        p = self.n_nodes
         a = np.ones(s)
         sm_k = 0
         zs = 1
         for j in range(s):
-            a[j] = zs / upperb
-            zs = (zs*z) % upperb
+            a[j] = zs / p
+            zs = (zs*z) % p
         for k in range(1, upperb + 1):
             k_term = 1.
             for l in range(s):
-                ent = fraction(k*z)
+                ent = fraction(k*a[l])
                 k_term = k_term*(1. - ent - ent)
             sm_k = sm_k + k_term*k_term
         return sm_k
 
     def h_poly(self, z):
-        return 0
+        return self.h_sum(self.n_nodes, z)
 
     def h_poly_chet(self, z):
-        return 0
+        p = int((self.n_nodes - 1)/2)
+        chet = 1. + 2.*self.h_sum(p, z)
+        return chet
 
     def first_optimal(self):
         s = self.dim_s
@@ -88,7 +91,7 @@ class Mikor:
             hpoly = 0
             zs = 1
             for j in range(s):
-                a[j] = zs/p
+                a[j] = zs / p
                 zs = (zs*i) % p
             for k in range(1, p + 1):
                 kterm = 1.
