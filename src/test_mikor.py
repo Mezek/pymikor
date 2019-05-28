@@ -21,7 +21,6 @@ def main():
     print(integral.optimal_coeffs(integral.first_optimal()[0]))
 
     z, w = integral.first_optimal()
-    print(z, w)
 
     print(integral.h_sum(1013, z))
     print(integral.h_sum(1013, 1013 - z))

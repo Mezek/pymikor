@@ -4,12 +4,22 @@ from itertools import count
 
 
 def fraction(n):
+    """
+    Fractional part of real number n
+    :param n: real number
+    :return: fractional part
+    """
     f, i = math.modf(n)
     # alternative: f = n - int(n)
     return f
 
 
 def is_prime(n):
+    """
+    Check if n is prime number
+    :param n: number
+    :return: True/False
+    """
     # if n in (2, 3, 5, 7, 11):  # special case small primes
     #    return True
     if n % 2 == 0 or n == 1:  # special case even numbers and 1
@@ -56,6 +66,12 @@ class Mikor:
         return next_prime
 
     def h_sum(self, upperb, z):
+        """
+        Summation in H(z) function without coefficient
+        :param upperb: upper bound of summation
+        :param z: polynomial parameter
+        :return: sum in H(z) function
+        """
         s = self.dim_s
         p = self.n_nodes
         a = np.ones(s)
@@ -73,40 +89,47 @@ class Mikor:
         return sm_k
 
     def h_poly(self, z):
+        """
+        Equation (196) in Korobov's book
+        :param z: polynomial parameter
+        :return: sum k = 1,2,...,N
+        """
         return self.h_sum(self.n_nodes, z)
 
     def h_poly_chet(self, z):
+        """
+        Equation (206) in Korobov's book, faster summation
+        :param z: polynomial parameter
+        :return: sum k = 1,2,...,(N-1)/2
+        """
         p = int((self.n_nodes - 1)/2)
         chet = 1. + 2.*self.h_sum(p, z)
         return chet
 
     def first_optimal(self):
-        s = self.dim_s
-        p = int((self.n_nodes - 1)/2)
+        """
+        Find first optimal value z = a
+        :return: tuple of (a value, H(a) value)
+        """
+        upran = int((self.n_nodes - 1)/2)
         optimal_a = 0
         optimal_val = 1e+18
 
-        for i in range(1, p + 1):
-            a = np.ones(s)
-            hpoly = 0
-            zs = 1
-            for j in range(s):
-                a[j] = zs / p
-                zs = (zs*i) % p
-            for k in range(1, p + 1):
-                kterm = 1.
-                for l in range(s):
-                    ent = fraction(k*a[l])
-                    kterm = kterm*(1. - ent - ent)
-                hpoly = hpoly + kterm*kterm
-            if hpoly < optimal_val:
+        for i in range(1, upran + 1):
+            h_sum = self.h_poly_chet(i)
+            if h_sum < optimal_val:
                 optimal_a = i
-                optimal_val = hpoly
+                optimal_val = h_sum
             if i % 1000 == 0:
                 print('%i. iteration' % i)
         return optimal_a, optimal_val
 
     def optimal_coeffs(self, opt):
+        """
+        Calculate optimal coefficients a
+        :param opt: 1st optimal value
+        :return: array of [1,a,a^2,...,a^{s-1}]
+        """
         s = self.dim_s
         a = np.ones(s)
         a[1] = opt
