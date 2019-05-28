@@ -36,6 +36,7 @@ class Mikor:
         self.dim_s = 4
         self.dim_r = 1
         self.n_nodes = self.n_prime(100)
+        self.a = np.empty(self.dim_s)
 
     def check_numbers(self):
         if self.n_nodes <= self.dim_s:
@@ -94,7 +95,7 @@ class Mikor:
         :param z: polynomial parameter
         :return: sum k = 1,2,...,N
         """
-        return self.h_sum(self.n_nodes, z)
+        return pow(3, self.dim_s)/self.n_nodes*self.h_sum(self.n_nodes, z)
 
     def h_poly_chet(self, z):
         """
@@ -103,7 +104,7 @@ class Mikor:
         :return: sum k = 1,2,...,(N-1)/2
         """
         p = int((self.n_nodes - 1)/2)
-        chet = 1. + 2.*self.h_sum(p, z)
+        chet = pow(3, self.dim_s)/self.n_nodes*(1. + 2.*self.h_sum(p, z))
         return chet
 
     def first_optimal(self):
@@ -111,7 +112,8 @@ class Mikor:
         Find first optimal value z = a
         :return: tuple of (a value, H(a) value)
         """
-        upran = int((self.n_nodes - 1)/2)
+        p = self.n_nodes
+        upran = int((p - 1)/2)
         optimal_a = 0
         optimal_val = 1e+18
 
@@ -124,18 +126,52 @@ class Mikor:
                 print('%i. iteration' % i)
         return optimal_a, optimal_val
 
-    def optimal_coeffs(self, opt):
+    def more_optimal(self, err_limit):
+        """
+        Find more optimal values z = a, to check with Saltykov's values
+        :param err_limit: error limit
+        :return: array of optimal values
+        """
+        p = self.n_nodes
+        upran = int((p - 1)/2)
+        a, opt_val = self.first_optimal()
+        arr = [a]
+
+        for i in range(1, upran + 1):
+            if i == a:
+                continue
+            h_sum = self.h_poly_chet(i)
+            if h_sum <= (opt_val + err_limit):
+                arr.append(i)
+        return arr
+
+    def optimal_coeffs(self, opt_val):
         """
         Calculate optimal coefficients a
-        :param opt: 1st optimal value
+        :param opt_val: 1st optimal value
         :return: array of [1,a,a^2,...,a^{s-1}]
         """
         s = self.dim_s
         a = np.ones(s)
-        a[1] = opt
+        a[1] = opt_val
         for i in range(2, s):
-            a[i] = (a[i-1]*opt) % self.n_nodes
+            a[i] = (a[i-1]*opt_val) % self.n_nodes
         return a
+
+    def h_for_coeffs(self, o):
+        if len(o) != self.dim_s:
+            raise ValueError('Array dimension must be equal to s!')
+        s = self.dim_s
+        p = self.n_nodes
+        upperb = int((p - 1)/2)
+        sm_k = 0
+        for k in range(1, upperb + 1):
+            k_term = 1.
+            for l in range(s):
+                ent = fraction(k*o[l] / p)
+                k_term = k_term*(1. - ent - ent)
+            sm_k = sm_k + k_term*k_term
+        return pow(3, s)/p*(1. + 2*sm_k)
 
     def show_parameters(self):
         print('Object class            :', self.__class__.__name__)
