@@ -1,3 +1,2 @@
-- korobov, saltykov in python
-- prepare makefile
-- prepare examples
+TODO: korobov, saltykov in python
+TODO: prepare makefile

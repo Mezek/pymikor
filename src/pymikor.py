@@ -33,7 +33,7 @@ def is_prime(n):
 def n_prime(n):
     """
     Find prime p >= n
-    :param nodes: Number of nodes
+    :param n: Number of nodes
     :return: prime p >= n
     """
     next_prime = n
@@ -50,8 +50,11 @@ class Mikor:
         self.n_nodes = n_prime(1000)
         self.p_prime = self.n_nodes
         self.q_prime = 1
-        self.a_arr = np.empty(self.dim_s - 1)
-        self.b_arr = np.empty(self.dim_s - 1)
+        self.a_arr = np.empty(self.dim_s)
+        self.b_arr = np.empty(self.dim_s)
+
+    def __del__(self):
+        print('Object %s deleted' % self.__class__.__name__)
 
     def check_numbers(self):
         if self.n_nodes <= self.dim_s:
@@ -75,6 +78,8 @@ class Mikor:
             self.q_prime = n_prime(int(pow(self.n_nodes, 1/3)))
         else:
             self.p_prime = n_prime(self.n_nodes)
+        self.a_arr = np.empty(self.dim_s)
+        self.b_arr = np.empty(self.dim_s)
 
     def h_sum(self, upperb, z):
         """
@@ -166,6 +171,10 @@ class Mikor:
         self.a_arr[1] = opt_val
         for i in range(2, s):
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
+        return self.a_arr
+
+    def get_opt_coeffs(self):
+        return self.a_arr
 
     def h_for_coeffs(self, o):
         if len(o) != self.dim_s:
@@ -182,15 +191,6 @@ class Mikor:
             sm_k = sm_k + k_term*k_term
         return pow(3, s)/p*(1. + 2*sm_k)
 
-    def compute_coeffs(self, s, n):
-        self.set_values(s, 1, n)
-        with open('coefficients.txt', 'w') as f:
-            f.write('Tables of optimal coefficents\n\n')
-            f.write('N = %i, s = %i\n\n' % (self.p_prime, self.dim_s))
-
-    def get_opt_coeffs(self):
-        return self.a_arr
-
     def show_parameters(self):
         print('Object class            :', self.__class__.__name__)
         print('dimension of integration:', self.dim_s)
@@ -199,4 +199,3 @@ class Mikor:
         print('p - prime               :', self.p_prime)
         print('q - prime               :', self.q_prime)
         print('N = p.q                 :', self.p_prime*self.q_prime)
-
