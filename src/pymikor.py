@@ -30,13 +30,28 @@ def is_prime(n):
     return True
 
 
+def n_prime(n):
+    """
+    Find prime p >= n
+    :param nodes: Number of nodes
+    :return: prime p >= n
+    """
+    next_prime = n
+    while not is_prime(next_prime):
+        next_prime = next(filter(is_prime, count(next_prime)))
+    return next_prime
+
+
 class Mikor:
 
     def __init__(self):
         self.dim_s = 4
         self.dim_r = 1
-        self.n_nodes = self.n_prime(100)
-        self.a = np.empty(self.dim_s)
+        self.n_nodes = n_prime(1000)
+        self.p_prime = self.n_nodes
+        self.q_prime = 1
+        self.a_arr = np.empty(self.dim_s - 1)
+        self.b_arr = np.empty(self.dim_s - 1)
 
     def check_numbers(self):
         if self.n_nodes <= self.dim_s:
@@ -47,24 +62,19 @@ class Mikor:
         Class Mikor
         :param dims: Dimension of integral
         :param dres: Dimension of result
-        :param nodes: Number of nodes, is converted to first prime number
+        :param nodes: Number of nodes, is converted to first prime number.
+                      If nodes > 8000 divided to p, q
         :return:
         """
         self.dim_s = dims
         self.dim_r = dres
-        self.n_nodes = self.n_prime(nodes)
-        assert (self.dim_s < self.n_nodes), "Integral dimension s must be < N nodes!"
-
-    def n_prime(self, nodes):
-        """
-        Find prime p >= n
-        :param nodes: Number of nodes
-        :return: prime p >= n
-        """
-        next_prime = nodes
-        while not is_prime(next_prime):
-            next_prime = next(filter(is_prime, count(next_prime)))
-        return next_prime
+        self.n_nodes = int(nodes)
+        assert (self.dim_s < nodes), "Integral dimension s must be < N nodes!"
+        if nodes > 10007:
+            self.p_prime = n_prime(int(pow(self.n_nodes, 2/3)))
+            self.q_prime = n_prime(int(pow(self.n_nodes, 1/3)))
+        else:
+            self.p_prime = n_prime(self.n_nodes)
 
     def h_sum(self, upperb, z):
         """
@@ -74,7 +84,7 @@ class Mikor:
         :return: sum in H(z) function
         """
         s = self.dim_s
-        p = self.n_nodes
+        p = self.p_prime
         a = np.ones(s)
         sm_k = 0
         zs = 1
@@ -95,7 +105,7 @@ class Mikor:
         :param z: polynomial parameter
         :return: sum k = 1,2,...,N
         """
-        return pow(3, self.dim_s)/self.n_nodes*self.h_sum(self.n_nodes, z)
+        return pow(3, self.dim_s)/self.p_prime*self.h_sum(self.p_prime, z)
 
     def h_poly_chet(self, z):
         """
@@ -103,8 +113,8 @@ class Mikor:
         :param z: polynomial parameter
         :return: sum k = 1,2,...,(N-1)/2
         """
-        p = int((self.n_nodes - 1)/2)
-        chet = pow(3, self.dim_s)/self.n_nodes*(1. + 2.*self.h_sum(p, z))
+        p = int((self.p_prime - 1)/2)
+        chet = pow(3, self.dim_s)/self.p_prime*(1. + 2.*self.h_sum(p, z))
         return chet
 
     def first_optimal(self):
@@ -112,7 +122,7 @@ class Mikor:
         Find first optimal value z = a
         :return: tuple of (a value, H(a) value)
         """
-        p = self.n_nodes
+        p = self.p_prime
         upran = int((p - 1)/2)
         optimal_a = 0
         optimal_val = 1e+18
@@ -132,37 +142,36 @@ class Mikor:
         :param err_limit: error limit
         :return: array of optimal values
         """
-        p = self.n_nodes
+        p = self.p_prime
         upran = int((p - 1)/2)
-        a, opt_val = self.first_optimal()
-        arr = [a]
+        first_a, first_val = self.first_optimal()
+        arr = [first_a]
 
         for i in range(1, upran + 1):
-            if i == a:
+            if i == first_a:
                 continue
             h_sum = self.h_poly_chet(i)
-            if h_sum <= (opt_val + err_limit):
+            if h_sum <= (first_val + err_limit):
                 arr.append(i)
         return arr
 
-    def optimal_coeffs(self, opt_val):
+    def calc_optimal_coeffs_a(self, opt_val):
         """
         Calculate optimal coefficients a
         :param opt_val: 1st optimal value
         :return: array of [1,a,a^2,...,a^{s-1}]
         """
         s = self.dim_s
-        a = np.ones(s)
-        a[1] = opt_val
+        self.a_arr[0] = 1
+        self.a_arr[1] = opt_val
         for i in range(2, s):
-            a[i] = (a[i-1]*opt_val) % self.n_nodes
-        return a
+            self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
 
     def h_for_coeffs(self, o):
         if len(o) != self.dim_s:
             raise ValueError('Array dimension must be equal to s!')
         s = self.dim_s
-        p = self.n_nodes
+        p = self.p_prime
         upperb = int((p - 1)/2)
         sm_k = 0
         for k in range(1, upperb + 1):
@@ -173,8 +182,21 @@ class Mikor:
             sm_k = sm_k + k_term*k_term
         return pow(3, s)/p*(1. + 2*sm_k)
 
+    def compute_coeffs(self, s, n):
+        self.set_values(s, 1, n)
+        with open('coefficients.txt', 'w') as f:
+            f.write('Tables of optimal coefficents\n\n')
+            f.write('N = %i, s = %i\n\n' % (self.p_prime, self.dim_s))
+
+    def get_opt_coeffs(self):
+        return self.a_arr
+
     def show_parameters(self):
         print('Object class            :', self.__class__.__name__)
         print('dimension of integration:', self.dim_s)
         print('dimension of result     :', self.dim_r)
         print('number of nodes         :', self.n_nodes)
+        print('p - prime               :', self.p_prime)
+        print('q - prime               :', self.q_prime)
+        print('N = p.q                 :', self.p_prime*self.q_prime)
+
