@@ -171,7 +171,7 @@ class Mikor:
         self.a_arr[1] = opt_val
         for i in range(2, s):
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
-        return self.a_arr
+        return self.a_arr.astype(int)
 
     def get_opt_coeffs(self):
         return self.a_arr

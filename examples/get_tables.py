@@ -13,29 +13,37 @@ def get_optimal_table(self, s, n):
 
 
 def main():
-    max_s = 3
+    max_s = 4
     p_start = 99
-    max_n_nodes = 1000
+    max_n_nodes = 300
     integral = Mikor()
     integral.show_parameters()
     print('Spawning numbers...')
 
     with open('coefficients.txt', 'w') as f:
-        f.write('Tables of optimal coefficients\n\n')
+        f.write('Tables of optimal coefficients\n')
 
     for i in range(3, max_s + 1):
         p_num = p_start
+        print(str(i), sep=' ', end=' ', flush=True)
         with open('coefficients.txt', 'a') as f:
-            f.write(' N=p' + ' '*14 + 's = %i\n' % i)
+            f.write('\n  N=p' + ' ' * 4 + 'H(a) - 1' + ' ' * 5 + 's = %i\n' % i)
+            f.write('  ' + '-' * 25 + '\n')
             while p_num <= max_n_nodes:
+                p_num = n_prime(p_num)
                 integral.set_values(i, 1, p_num)
-                # f.write('%6i%12i%12i\n' % (p_num, 10 ** i, 30 ** i))
-                # mo = integral.more_optimal(1.e-15)
-                mo = np.ones(4)
+                mo = integral.more_optimal(1.e-12)
                 for j in range(len(mo)):
-                    f.write(str(j) + ' ')
-                f.write('\n')
+                    f.write('%6i   ' % p_num)
+                    opt_a = integral.calc_optimal_coeffs_a(mo[j])
+                    opt_val = integral.h_for_coeffs(opt_a) - 1
+                    f.write(f'{str(opt_val):10.8}' + ' ' * 2)
+                    f.write(str(mo[j]) + ' ' * 2)
+                    for k in range(2, len(opt_a)):
+                        f.write(str(opt_a[k]) + ' ' * 2)
+                    f.write('\n')
                 p_num += 1
+    print('\n')
 
 
 if __name__ == "__main__":
