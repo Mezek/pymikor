@@ -13,9 +13,9 @@ def get_optimal_table(self, s, n):
 
 
 def main():
-    max_s = 4
-    p_start = 99
-    max_n_nodes = 300
+    max_s = 3
+    p_start = 10009
+    max_n_nodes = 10100
     integral = Mikor()
     integral.show_parameters()
     print('Spawning numbers...')
@@ -32,17 +32,17 @@ def main():
             while p_num <= max_n_nodes:
                 p_num = n_prime(p_num)
                 integral.set_values(i, 1, p_num)
-                mo = integral.more_optimal(1.e-12)
+                mo = integral.more_optimal(1.e-10)
                 for j in range(len(mo)):
                     f.write('%6i   ' % p_num)
                     opt_a = integral.calc_optimal_coeffs_a(mo[j])
                     opt_val = integral.h_for_coeffs(opt_a) - 1
-                    f.write(f'{str(opt_val):10.8}' + ' ' * 2)
+                    f.write(f'{opt_val:10.6}' + ' ' * 2)
                     f.write(str(mo[j]) + ' ' * 2)
                     for k in range(2, len(opt_a)):
                         f.write(str(opt_a[k]) + ' ' * 2)
                     f.write('\n')
-                p_num += 1
+                p_num += 1000
     print('\n')
 
 

@@ -15,18 +15,14 @@ def f(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(5, 2, 1064)
+    integral.set_values(3, 1, 5147)
     integral.show_parameters()
 
-    z, w = integral.first_optimal()
+    z, w = integral.first_optimal_a()
     print(z, w)
     print(integral.calc_optimal_coeffs_a(z))
 
-
-    #print(integral.h_poly(z))
-    #print(integral.h_poly_chet(z))
-
-    #print(integral.more_optimal(1.e-15))
+    print(integral.more_optimal(1.e-10))
 
     #print('S:', integral.h_for_coeffs([1, 30, 104]))
     #print('S:', integral.h_for_coeffs([1, 73, 155]))

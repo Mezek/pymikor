@@ -76,6 +76,7 @@ class Mikor:
         if nodes > 10007:
             self.p_prime = n_prime(int(pow(self.n_nodes, 2/3)))
             self.q_prime = n_prime(int(pow(self.n_nodes, 1/3)))
+            # TODO: alternative p, q, e. g., p < 10007, q all above
         else:
             self.p_prime = n_prime(self.n_nodes)
         self.a_arr = np.empty(self.dim_s)
@@ -122,7 +123,7 @@ class Mikor:
         chet = pow(3, self.dim_s)/self.p_prime*(1. + 2.*self.h_sum(p, z))
         return chet
 
-    def first_optimal(self):
+    def first_optimal_a(self):
         """
         Find first optimal value z = a
         :return: tuple of (a value, H(a) value)
@@ -137,8 +138,8 @@ class Mikor:
             if h_sum < optimal_val:
                 optimal_a = i
                 optimal_val = h_sum
-            if i % 1000 == 0:
-                print('%i. iteration' % i)
+            # if i % 1000 == 0:
+            #    print('%i. iteration' % i)
         return optimal_a, optimal_val
 
     def more_optimal(self, err_limit):
@@ -149,7 +150,7 @@ class Mikor:
         """
         p = self.p_prime
         upran = int((p - 1)/2)
-        first_a, first_val = self.first_optimal()
+        first_a, first_val = self.first_optimal_a()
         arr = [first_a]
 
         for i in range(1, upran + 1):
@@ -173,8 +174,11 @@ class Mikor:
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
         return self.a_arr.astype(int)
 
-    def get_opt_coeffs(self):
+    def get_opt_coeffs_a(self):
         return self.a_arr
+
+    def get_opt_coeffs_b(self):
+        return self.b_arr
 
     def h_for_coeffs(self, o):
         if len(o) != self.dim_s:
