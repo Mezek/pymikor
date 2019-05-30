@@ -54,7 +54,7 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
 
     def __del__(self):
-        print('Object %s deleted' % self.__class__.__name__)
+        print(f'Object {self.__class__.__name__} deleted')
 
     def check_numbers(self):
         if self.n_nodes <= self.dim_s:
@@ -128,8 +128,7 @@ class Mikor:
         Find first optimal value z = a
         :return: tuple of (a value, H(a) value)
         """
-        p = self.p_prime
-        upran = int((p - 1)/2)
+        upran = int((self.p_prime - 1)/2)
         optimal_a = 0
         optimal_val = 1e+18
 
@@ -139,8 +138,61 @@ class Mikor:
                 optimal_a = i
                 optimal_val = h_sum
             # if i % 1000 == 0:
-            #    print('%i. iteration' % i)
+            #    print(f'{i}. iteration')
         return optimal_a, optimal_val
+
+    def h_tilde_sum(self, upperb, z):
+        """
+        Summation in h(z) function without coefficient
+        :param upperb: upper bound of summation
+        :param z: polynomial parameter
+        :return: sum in h(z) function
+        """
+        # must calculate a_arr before!!!
+        s = self.dim_s
+        p = self.p_prime
+        q = self.q_prime
+        b = np.ones(s)
+        sm_k = 0
+        zs = 1
+        for j in range(s):
+            b[j] = zs / q + self.a_arr[j] / p
+            zs = (zs*z) % q
+        for k in range(1, upperb + 1):
+            k_term = 1.
+            for l in range(s):
+                ent = fraction(k*b[l])
+                k_term = k_term*(1. - ent - ent)
+            sm_k = sm_k + k_term*k_term
+        return sm_k
+
+    def h_tilde_poly(self, z):
+        """
+        Equation (207) in Korobov's book
+        :param z: polynomial parameter
+        :return: sum k = 1,2,...,N=p.q
+        """
+        nn = self.p_prime*self.q_prime
+        return pow(3, self.dim_s)/nn*self.h_tilde_sum(nn, z)
+
+    def first_optimal_b(self):
+        """
+        Find first optimal value z = b
+        :return: tuple of (b value, H(b) value)
+        """
+        q = self.q_prime
+        upran = int((q - 1)/2)
+        optimal_b = 0
+        optimal_val = 1e+28
+
+        for i in range(1, upran + 1):
+            h_sum = self.h_tilde_poly(i)
+            if h_sum < optimal_val:
+                optimal_b = i
+                optimal_val = h_sum
+            # if i % 1000 == 0:
+            #    print(f'{i}. iteration')
+        return optimal_b, optimal_val
 
     def more_optimal(self, err_limit):
         """
