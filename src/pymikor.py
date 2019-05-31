@@ -42,6 +42,24 @@ def n_prime(n):
     return next_prime
 
 
+def egcd(a, b):
+    """return (g, x, y) such that a*x + b*y = g = gcd(a, b)"""
+    if a == 0:
+        return b, 0, 1
+    else:
+        g, y, x = egcd(b % a, a)
+        return g, x - (b // a) * y, y
+
+
+def mod_inv(a, b):
+    """return x such that (x * a) % b == 1"""
+    g, x, y = egcd(a, b)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % b
+
+
 class Mikor:
 
     def __init__(self):
@@ -251,8 +269,11 @@ class Mikor:
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
+        n = p * q
+        w = mod_inv(p + q, n)
         for i in range(s):
-            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i])*16727 % (p*q)
+            m = (p*self.b_arr[i] + q*self.a_arr[i])
+            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i])*w % n
         return self.c_arr
 
     def get_opt_coeffs_a(self):

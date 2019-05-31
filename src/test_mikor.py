@@ -27,8 +27,6 @@ def main():
     integral.calc_optimal_coeffs_c()
     print('c =', integral.get_opt_coeffs_c())
 
-    print(18924/5704)
-
     # print('S:', integral.h_for_coeffs([1, 30, 104]))
     # print('S:', integral.h_for_coeffs([1, 73, 155]))
 
