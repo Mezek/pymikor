@@ -52,6 +52,7 @@ class Mikor:
         self.q_prime = 1
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
+        self.c_arr = np.empty(self.dim_s)
 
     def __del__(self):
         print(f'Object {self.__class__.__name__} deleted')
@@ -81,6 +82,12 @@ class Mikor:
             self.p_prime = n_prime(self.n_nodes)
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
+        self.c_arr = np.empty(self.dim_s)
+
+    def set_p_q(self, p, q):
+        self.p_prime = p
+        self.q_prime = q
+        self.n_nodes = p*q
 
     def h_sum(self, upperb, z):
         """
@@ -148,7 +155,7 @@ class Mikor:
         :param z: polynomial parameter
         :return: sum in h(z) function
         """
-        # must calculate a_arr before!!!
+        # TODO: must be calculated a_arr before, make new flag?!
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
@@ -173,7 +180,7 @@ class Mikor:
         :return: sum k = 1,2,...,N=p.q
         """
         nn = self.p_prime*self.q_prime
-        return pow(3, self.dim_s)/nn*self.h_tilde_sum(nn, z)
+        return pow(3, self.dim_s) / nn * self.h_tilde_sum(nn, z)
 
     def first_optimal_b(self):
         """
@@ -185,8 +192,9 @@ class Mikor:
         optimal_b = 0
         optimal_val = 1e+28
 
-        for i in range(1, upran + 1):
+        for i in range(1, q):
             h_sum = self.h_tilde_poly(i)
+            print(i, h_sum)
             if h_sum < optimal_val:
                 optimal_b = i
                 optimal_val = h_sum
@@ -226,11 +234,35 @@ class Mikor:
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
         return self.a_arr.astype(int)
 
+    def calc_optimal_coeffs_b(self, opt_val):
+        """
+        Calculate optimal coefficients b
+        :param opt_val: 1st optimal value
+        :return: array of [1,b,b^2,...,b^{s-1}]
+        """
+        s = self.dim_s
+        self.b_arr[0] = 1
+        self.b_arr[1] = opt_val
+        for i in range(2, s):
+            self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
+        return self.b_arr.astype(int)
+
+    def calc_optimal_coeffs_c(self):
+        s = self.dim_s
+        p = self.p_prime
+        q = self.q_prime
+        for i in range(s):
+            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i]) % (p*q)
+        return self.c_arr.astype(int)
+
     def get_opt_coeffs_a(self):
         return self.a_arr
 
     def get_opt_coeffs_b(self):
         return self.b_arr
+
+    def get_opt_coeffs_c(self):
+        return self.c_arr
 
     def h_for_coeffs(self, o):
         if len(o) != self.dim_s:

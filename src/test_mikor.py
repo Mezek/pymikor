@@ -8,19 +8,27 @@ from pymikor import *
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 1, 5147)
+    integral.set_values(3, 1, 20039)
+    integral.set_p_q(691, 29)
+
+    integral.set_values(5, 1, 15019)
+    integral.set_p_q(653, 23)
+
     integral.show_parameters()
 
-    z, w = integral.first_optimal_a()
-    print(z, w)
-    print(integral.calc_optimal_coeffs_a(z))
+    fa, wa = integral.first_optimal_a()
+    print(integral.calc_optimal_coeffs_a(fa))
+    # print(integral.more_optimal(1.e-10))
 
-    print(integral.more_optimal(1.e-10))
+    fb, wb = integral.first_optimal_b()
+    print(f'b = {fb}', f'wb = {wb}')
+    print(integral.calc_optimal_coeffs_b(fb))
 
-    #print('S:', integral.h_for_coeffs([1, 30, 104]))
-    #print('S:', integral.h_for_coeffs([1, 73, 155]))
+    integral.calc_optimal_coeffs_c()
+    print(integral.get_opt_coeffs_c())
 
-    #integral.compute_coeffs(3, 1001)
+    # print('S:', integral.h_for_coeffs([1, 30, 104]))
+    # print('S:', integral.h_for_coeffs([1, 73, 155]))
 
     del integral
 
