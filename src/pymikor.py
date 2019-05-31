@@ -194,7 +194,7 @@ class Mikor:
 
         for i in range(1, q):
             h_sum = self.h_tilde_poly(i)
-            print(i, h_sum)
+            # print(i, h_sum)
             if h_sum < optimal_val:
                 optimal_b = i
                 optimal_val = h_sum
@@ -252,8 +252,8 @@ class Mikor:
         p = self.p_prime
         q = self.q_prime
         for i in range(s):
-            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i]) % (p*q)
-        return self.c_arr.astype(int)
+            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i])*16727 % (p*q)
+        return self.c_arr
 
     def get_opt_coeffs_a(self):
         return self.a_arr
@@ -262,7 +262,7 @@ class Mikor:
         return self.b_arr
 
     def get_opt_coeffs_c(self):
-        return self.c_arr
+        return self.c_arr.astype(int)
 
     def h_for_coeffs(self, o):
         if len(o) != self.dim_s:
