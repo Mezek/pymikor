@@ -212,7 +212,7 @@ class Mikor:
 
         for i in range(1, q):
             h_sum = self.h_tilde_poly(i)
-            # print(i, h_sum)
+            print(i, h_sum)
             if h_sum < optimal_val:
                 optimal_b = i
                 optimal_val = h_sum
@@ -239,7 +239,7 @@ class Mikor:
                 arr.append(i)
         return arr
 
-    def calc_optimal_coeffs_a(self, opt_val):
+    def calc_optimal_coefficients_a(self, opt_val):
         """
         Calculate optimal coefficients a
         :param opt_val: 1st optimal value
@@ -252,7 +252,7 @@ class Mikor:
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
         return self.a_arr.astype(int)
 
-    def calc_optimal_coeffs_b(self, opt_val):
+    def calc_optimal_coefficients_b(self, opt_val):
         """
         Calculate optimal coefficients b
         :param opt_val: 1st optimal value
@@ -265,27 +265,27 @@ class Mikor:
             self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
         return self.b_arr.astype(int)
 
-    def calc_optimal_coeffs_c(self):
+    def calc_optimal_coefficients_c(self):
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
         n = p * q
         w = mod_inv(p + q, n)
         for i in range(s):
-            m = (p*self.b_arr[i] + q*self.a_arr[i])
-            self.c_arr[i] = (p*self.b_arr[i] + q*self.a_arr[i])*w % n
+            m = p*self.b_arr[i] + q*self.a_arr[i]
+            self.c_arr[i] = (m * w) % n
         return self.c_arr
 
-    def get_opt_coeffs_a(self):
+    def get_opt_coefficients_a(self):
         return self.a_arr
 
-    def get_opt_coeffs_b(self):
+    def get_opt_coefficients_b(self):
         return self.b_arr
 
-    def get_opt_coeffs_c(self):
+    def get_opt_coefficients_c(self):
         return self.c_arr.astype(int)
 
-    def h_for_coeffs(self, o):
+    def h_for_coefficients(self, o):
         if len(o) != self.dim_s:
             raise ValueError('Array dimension must be equal to s!')
         s = self.dim_s

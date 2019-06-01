@@ -6,13 +6,7 @@
 from pymikor import *
 
 
-"""
-def get_optimal_table(self, s, n):
-        self.set_values(s, 1, n)
-"""
-
-
-def main():
+def get_table_for_p():
     max_s = 3
     p_start = 99
     max_n_nodes = 6000
@@ -35,7 +29,7 @@ def main():
                 mo = integral.more_optimal(1.e-10)
                 for j in range(len(mo)):
                     f.write(f'{p_num:6}   ')
-                    opt_a = integral.calc_optimal_coeffs_a(mo[j])
+                    opt_a = integral.calc_optimal_coefficients_a(mo[j])
                     opt_val = integral.h_for_coeffs(opt_a) - 1
                     f.write(f'{opt_val:12.6}' + ' ' * 2)
                     f.write(f'{mo[j]}' + ' ' * 2)
@@ -44,6 +38,23 @@ def main():
                     f.write('\n')
                 p_num += 1000
     print('\n')
+
+
+def get_table_for_p_q():
+    max_s = 9
+    p_start = 99
+    max_n_nodes = 100000
+    integral = Mikor()
+    integral.show_parameters()
+    print('Spawning numbers...')
+
+    with open('coefficientsPQ.txt', 'w') as f:
+        f.write('Tables of optimal coefficients\n')
+
+
+def main():
+    # get_table_for_p()
+    get_table_for_p_q()
 
 
 if __name__ == "__main__":
