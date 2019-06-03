@@ -8,9 +8,18 @@ from pymikor import *
 
 def main():
     max_s = 9
-    p_start = 99
+    p_start = 15000
     p_step = 1000
     max_n_nodes = 100000
+
+    sv = ([[3, 691, 29], [3, 907, 31], [3, 1259, 31], [3, 1543, 37], [3, 1907, 43], [3, 2129, 47]],
+          [[4, 691, 29], [4, 907, 31], [4, 1259, 31], [4, 1543, 37], [4, 1907, 43], [4, 2129, 47]],
+          [[5, 653, 23], [5, 691, 29], [5, 1069, 31], [5, 1381, 37], [5, 1733, 41], [5, 2129, 47]],
+          [[6, 653, 23], [6, 691, 29], [6, 1069, 31], [6, 1381, 37], [6, 1733, 41], [6, 2129, 47]],
+          [[7, 653, 23], [7, 787, 23], [7, 829, 29], [7, 1069, 31], [7, 1249, 37], [7, 1543, 37],
+           [7, 1733, 41], [7, 2129, 47]],
+          )
+
     integral = Mikor()
     integral.show_parameters()
     print('Spawning numbers...')
@@ -18,6 +27,31 @@ def main():
     # coefficientsPQ.txt
     with open('coefficients.txt', 'w') as f:
         f.write('Tables of optimal coefficients\n')
+
+    for i in sv:
+        with open('coefficients.txt', 'a') as f:
+            arr = np.asarray(i)
+            print(str(arr[0][0]), sep=' ', end=' ', flush=True)
+            f.write(f'\n s = {arr[0][0]}\n')
+            f.write('  N=pq' + ' ' * 7 + 'p' + ' ' * 5 + 'q' + ' ' * 5 +
+                    'a' + ' ' * 5 + 'b' + ' ' * 5 + 'H(b) - 1' + ' ' * 7 + 'a_2 -->\n')
+            f.write(' ' + '-' * 60 + '\n')
+            for j in range(len(arr)):
+                integral.set_dpq(arr[j][0], arr[j][1], arr[j][2])
+                fa, wa = integral.first_optimal_a()
+                integral.calc_optimal_coefficients_a(fa)
+                fb, wb = integral.first_optimal_b()
+                integral.calc_optimal_coefficients_b(fb)
+                integral.calc_optimal_coefficients_c()
+                c = integral.get_opt_coefficients_c()
+
+                f.write(f'{arr[j][1]*arr[j][2]:6} ' + f'{arr[j][1]:6} ' + f'{arr[j][2]:6} ')
+                f.write(f'{fa:5}' + ' ' * 2)
+                f.write(f'{fb:5}' + ' ' * 2)
+                f.write(f'{wb-1:12.6}' + ' ' * 2)
+                for k in range(1, len(c)):
+                    f.write(f'{c[k]:6}' + ' ' * 2)
+                f.write('\n')
 
 
 if __name__ == "__main__":

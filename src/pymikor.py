@@ -102,10 +102,14 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
 
-    def set_p_q(self, p, q):
+    def set_dpq(self, d, p, q):
+        self.dim_s = d
         self.p_prime = p
         self.q_prime = q
         self.n_nodes = p*q
+        self.a_arr = np.empty(self.dim_s)
+        self.b_arr = np.empty(self.dim_s)
+        self.c_arr = np.empty(self.dim_s)
 
     def h_sum(self, upperb, z):
         """
@@ -212,7 +216,7 @@ class Mikor:
 
         for i in range(1, q):
             h_sum = self.h_tilde_poly(i)
-            print(i, h_sum)
+            # print(i, h_sum)
             if h_sum < optimal_val:
                 optimal_b = i
                 optimal_val = h_sum
