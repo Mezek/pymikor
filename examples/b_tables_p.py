@@ -12,16 +12,10 @@ def main():
     p_step = 1000
     max_n_nodes = 6000
 
-    sv = ([101, 199, 307, 523, 701, 1069, 1543, 2129, 3001, 4001, 5003, 6007, 8191, 10007],
-          [307, 523, 701, 1069, 1543, 2129, 3001, 4001, 5003, 6007, 8191, 10007],
-          [1069, 1543, 2129, 3001, 4001, 5003, 6007, 8191, 10007],
-          [2129, 3001, 4001, 5003, 6007, 8191, 10007])
-
     integral = Mikor()
     integral.show_parameters()
     print('Spawning numbers...')
 
-    # coefficientsP.txt
     with open('coefficients.txt', 'w') as f:
         f.write('Tables of optimal coefficients\n')
 
