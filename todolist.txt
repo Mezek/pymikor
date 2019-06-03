@@ -1,2 +1,3 @@
-TODO: korobov, saltykov in python
+TODO: korobov integration
+TODO: saltykov in python
 TODO: prepare makefile
