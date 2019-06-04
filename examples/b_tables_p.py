@@ -10,7 +10,7 @@ def main():
     max_s = 3
     p_start = 99
     p_step = 1000
-    max_n_nodes = 6000
+    max_n_nodes = 13101
 
     integral = Mikor()
     integral.show_parameters()
@@ -23,8 +23,9 @@ def main():
         p_num = p_start
         print(str(i), sep=' ', end=' ', flush=True)
         with open('coefficients.txt', 'a') as f:
-            f.write('\n  N=p' + ' ' * 7 + 'H(a) - 1' + ' ' * 7 + f's = {i}\n')
-            f.write(' ' + '-' * 33 + '\n')
+            f.write(f'\n s = {i}\n')
+            f.write('  N=p' + ' ' * 7 + 'H(a) - 1' + ' ' * 5 + f'a_2 -->\n')
+            f.write(' ' + '-' * 35 + '\n')
             while p_num <= max_n_nodes:
                 p_num = n_prime(p_num)
                 integral.set_values(i, 1, p_num)
