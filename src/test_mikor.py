@@ -15,11 +15,12 @@ def f(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 1, 1000)
-    integral.set_dpq(3, 1907, 43)
+    integral.set_values(3, 1000, 2)
+    # integral.set_dpq(3, 1907, 43)
 
     integral.show_parameters()
 
+    """
     fa, wa = integral.first_optimal_a()
     print('a =', integral.calc_optimal_coefficients_a(fa))
     # print(integral.more_optimal(1.e-10))
@@ -30,7 +31,7 @@ def main():
 
     integral.calc_optimal_coefficients_c()
     print('c =', integral.get_opt_coefficients_c())
-
+    """
     # print('S:', integral.h_for_coeffs([1, 30, 104]))
     # print('S:', integral.h_for_coeffs([1, 73, 155]))
 

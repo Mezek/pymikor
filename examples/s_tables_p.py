@@ -29,7 +29,7 @@ def main():
             f.write(' ' + '-' * 34 + '\n')
             p_num = 1
             while p_num < len(arr):
-                integral.set_values(arr[0], 1, arr[p_num])
+                integral.set_values(arr[0], arr[p_num])
                 mo = integral.more_optimal(1.e-10)
                 for j in range(len(mo)):
                     f.write(f'{arr[p_num]:6}   ')

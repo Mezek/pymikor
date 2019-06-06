@@ -96,29 +96,30 @@ class Mikor:
         :param sec_nodes: Number of nodes N2
         :return:
         """
-        if strategy != 1:
-            self.strategy = strategy
-
-        if sec_nodes != 1:
-            self.strategy = 2
-        else:
-            self.strategy = 1
-
         self.empty_arrays(dims)
-        self.n_nodes = int(nodes)
-        assert (self.dim_s < nodes), "Integral dimension s must be < N nodes!"
+        self.p_prime = n_prime(nodes)
+        self.strategy = strategy
 
-        if nodes > 10007:
-            self.p_prime = n_prime(int(pow(self.n_nodes, 2/3)))
-            self.q_prime = n_prime(int(pow(self.n_nodes, 1/3)))
-        else:
-            self.p_prime = n_prime(self.n_nodes)
+        if self.strategy == 1 and sec_nodes > 1:
+            self.q_prime = 1
+        if self.strategy == 2 and sec_nodes == 1:
+            self.p_prime = n_prime(int(pow(nodes, 2/3)))
+            self.q_prime = n_prime(int(pow(nodes, 1/3)))
+        if self.strategy == 2 and sec_nodes > 1:
+            self.q_prime = n_prime(sec_nodes)
+
+        self.n_nodes = self.p_prime*self.q_prime
+        assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
 
     def set_dpq(self, dims, p, q):
         self.empty_arrays(dims)
-        self.p_prime = p
-        self.q_prime = q
+        self.p_prime = n_prime(p)
+        self.q_prime = n_prime(q)
         self.n_nodes = p*q
+        if q == 1:
+            self.strategy = 1
+        else:
+            self.strategy = 2
 
     def h_sum(self, upperb, z):
         """
@@ -317,7 +318,6 @@ class Mikor:
         print('Object class            :', self.__class__.__name__)
         print('dimension of integration:', self.dim_s)
         print('dimension of result     :', self.dim_r)
-        print('number of nodes         :', self.n_nodes)
         print('p - prime               :', self.p_prime)
         print('q - prime               :', self.q_prime)
-        print('N = p.q                 :', self.p_prime*self.q_prime)
+        print('number of nodes         :', self.n_nodes)
