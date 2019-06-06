@@ -63,7 +63,8 @@ def mod_inv(a, b):
 class Mikor:
 
     def __init__(self):
-        self.dim_s = 4
+        self.strategy = 1
+        self.dim_s = 1
         self.dim_r = 1
         self.n_nodes = n_prime(1000)
         self.p_prime = self.n_nodes
@@ -75,41 +76,49 @@ class Mikor:
     def __del__(self):
         print(f'Object {self.__class__.__name__} deleted')
 
+    def empty_arrays(self, dims):
+        self.dim_s = dims
+        self.a_arr = np.empty(self.dim_s)
+        self.b_arr = np.empty(self.dim_s)
+        self.c_arr = np.empty(self.dim_s)
+
     def check_numbers(self):
         if self.n_nodes <= self.dim_s:
             raise ValueError('Integral dimension s must be < N nodes!')
 
-    def set_values(self, dims, dres, nodes):
+    def set_values(self, dims, nodes, strategy=1, sec_nodes=1):
         """
-        Class Mikor
         :param dims: Dimension of integral
-        :param dres: Dimension of result
-        :param nodes: Number of nodes, is converted to first prime number.
-                      If nodes > 8000 divided to p, q
+        :param nodes: Number of nodes N1
+        :param strategy: Set variant of integration
+                          1 - N = p
+                          2 - N = p.q
+        :param sec_nodes: Number of nodes N2
         :return:
         """
-        self.dim_s = dims
-        self.dim_r = dres
+        if strategy != 1:
+            self.strategy = strategy
+
+        if sec_nodes != 1:
+            self.strategy = 2
+        else:
+            self.strategy = 1
+
+        self.empty_arrays(dims)
         self.n_nodes = int(nodes)
         assert (self.dim_s < nodes), "Integral dimension s must be < N nodes!"
+
         if nodes > 10007:
             self.p_prime = n_prime(int(pow(self.n_nodes, 2/3)))
             self.q_prime = n_prime(int(pow(self.n_nodes, 1/3)))
-            # TODO: alternative p, q, e. g., p < 10007, q all above
         else:
             self.p_prime = n_prime(self.n_nodes)
-        self.a_arr = np.empty(self.dim_s)
-        self.b_arr = np.empty(self.dim_s)
-        self.c_arr = np.empty(self.dim_s)
 
-    def set_dpq(self, d, p, q):
-        self.dim_s = d
+    def set_dpq(self, dims, p, q):
+        self.empty_arrays(dims)
         self.p_prime = p
         self.q_prime = q
         self.n_nodes = p*q
-        self.a_arr = np.empty(self.dim_s)
-        self.b_arr = np.empty(self.dim_s)
-        self.c_arr = np.empty(self.dim_s)
 
     def h_sum(self, upperb, z):
         """
