@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from itertools import count
+from functools import reduce
 
 
 def fraction(n):
@@ -74,7 +75,8 @@ class Mikor:
         self.c_arr = np.empty(self.dim_s)
 
     def __del__(self):
-        print(f'Object {self.__class__.__name__} deleted')
+        # print(f'Object {self.__class__.__name__} deleted')
+        print('\n')
 
     def empty_arrays(self, dims):
         self.dim_s = dims
@@ -114,12 +116,12 @@ class Mikor:
     def set_dpq(self, dims, p, q):
         self.empty_arrays(dims)
         self.p_prime = n_prime(p)
-        self.q_prime = n_prime(q)
-        self.n_nodes = p*q
         if q == 1:
             self.strategy = 1
         else:
             self.strategy = 2
+            self.q_prime = n_prime(q)
+        self.n_nodes = p*q
 
     def h_sum(self, upperb, z):
         """
@@ -321,3 +323,17 @@ class Mikor:
         print('p - prime               :', self.p_prime)
         print('q - prime               :', self.q_prime)
         print('number of nodes         :', self.n_nodes)
+        print('strategy                :', self.strategy)
+
+    def __call__(self, m_fnc, **kwargs):
+        for k in kwargs:
+            if k == 'strategy':
+                print(f'strategy = {kwargs[k]}')
+            elif k == 'name':
+                print(' '*4 + f'{kwargs[k]}')
+            else:
+                raise AttributeError(f'no attribute named {k}')
+
+        x = np.array([1, 2, 3, 4])
+        res = m_fnc(x)
+        return res

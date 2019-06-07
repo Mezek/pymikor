@@ -1,7 +1,13 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright © 2019 Erik Bartoš <erik.bartos@gmail.com>
+"""Provides tables for N=p
+
+Use it to check the original tables in paper of A.I.Saltykov
+https://doi.org/10.1016/0041-5553(63)90134-4
+"""
+__author__ = "Erik Bartoš"
+__copyright__ = "Copyright © 2019 Erik Bartoš"
+__email__ = "erik.bartos@gmail.com"
 
 from pymikor import *
 

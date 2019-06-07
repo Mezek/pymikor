@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Copyright © 2019 Erik Bartoš <erik.bartos@gmail.com>
@@ -15,10 +15,13 @@ def f(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 1000, 2)
-    # integral.set_dpq(3, 1907, 43)
-
+    integral.set_values(3, 1000, 2, 10)
+    # integral.set_dpq(3, 1907, 1)
     integral.show_parameters()
+
+    result = integral(f, name='MyIntegral')
+
+    print(f'Result of integration is: {result}')
 
     """
     fa, wa = integral.first_optimal_a()

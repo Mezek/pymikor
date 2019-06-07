@@ -1,19 +1,25 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Copyright © 2019 Erik Bartoš <erik.bartos@gmail.com>
+"""Provides arbitrary tables for N=p
+
+Use it to find optimal coefficient for any prime number
+"""
+__author__ = "Erik Bartoš"
+__copyright__ = "Copyright © 2019 Erik Bartoš"
+__email__ = "erik.bartos@gmail.com"
+
 
 from pymikor import *
 
 
 def main():
     max_s = 3
-    p_start = 99
+    p_start = 13000
     p_step = 1000
-    max_n_nodes = 13101
+    max_n_nodes = 18000
 
     integral = Mikor()
-    integral.show_parameters()
+    # integral.show_parameters()
     print('Spawning numbers...')
 
     with open('coefficients.txt', 'w') as f:
@@ -28,7 +34,7 @@ def main():
             f.write(' ' + '-' * 35 + '\n')
             while p_num <= max_n_nodes:
                 p_num = n_prime(p_num)
-                integral.set_values(i, 1, p_num)
+                integral.set_values(i, p_num)
                 mo = integral.more_optimal(1.e-10)
                 for j in range(len(mo)):
                     f.write(f'{p_num:6}   ')
