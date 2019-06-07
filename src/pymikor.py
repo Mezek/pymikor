@@ -329,9 +329,14 @@ class Mikor:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
             elif k == 'name':
-                print(' '*4 + f'{kwargs[k]}')
+                print(' '*2 + f'{kwargs[k]}')
             else:
                 raise AttributeError(f'no attribute named {k}')
+
+        sm_f = 0
+        for i in range(1, self.n_nodes + 1):
+            sm_f += i
+        print(sm_f, sm_f/self.n_nodes)
 
         x = np.arange(1, 11)
         res = m_fnc(x)

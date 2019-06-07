@@ -6,6 +6,10 @@
 from pymikor import *
 
 
+def fcn(x):
+    return x[0]*x[0] + x[1]*x[2]
+
+
 def fcn1(x):
     df = 0
     for d in range(len(x)):
@@ -22,15 +26,20 @@ def fcn2(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 1000, 2, 10)
+    integral.set_values(3, 10, 2, 1)
     # integral.set_dpq(3, 1907, 1)
     integral.show_parameters()
 
+    result = integral(fcn, name='Fcn progress')
+    print(f'Result of integration   : {result}')
+
+    """
     result1 = integral(fcn1, name='F1')
     result2 = integral(fcn2, name='F2')
 
-    print(f'Result of integration is: {result1}')
-    print(f'Result of integration is: {result2}')
+    print(f'Result of integration   : {result1}')
+    print(f'Result of integration   : {result2}')
+    """
 
     """
     fa, wa = integral.first_optimal_a()
