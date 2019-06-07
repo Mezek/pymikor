@@ -6,10 +6,17 @@
 from pymikor import *
 
 
-def f(x):
+def fcn1(x):
     df = 0
     for d in range(len(x)):
         df += x[d]
+    return df
+
+
+def fcn2(x):
+    df = 1
+    for d in range(len(x)):
+        df *= x[d]
     return df
 
 
@@ -19,9 +26,11 @@ def main():
     # integral.set_dpq(3, 1907, 1)
     integral.show_parameters()
 
-    result = integral(f, name='MyIntegral')
+    result1 = integral(fcn1, name='F1')
+    result2 = integral(fcn2, name='F2')
 
-    print(f'Result of integration is: {result}')
+    print(f'Result of integration is: {result1}')
+    print(f'Result of integration is: {result2}')
 
     """
     fa, wa = integral.first_optimal_a()

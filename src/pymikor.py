@@ -1,7 +1,6 @@
 import math
 import numpy as np
 from itertools import count
-from functools import reduce
 
 
 def fraction(n):
@@ -222,7 +221,7 @@ class Mikor:
         :return: tuple of (b value, H(b) value)
         """
         q = self.q_prime
-        upran = int((q - 1)/2)
+        # upran = int((q - 1)/2)
         optimal_b = 0
         optimal_val = 1e+28
 
@@ -334,6 +333,6 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        x = np.array([1, 2, 3, 4])
+        x = np.arange(1, 11)
         res = m_fnc(x)
         return res

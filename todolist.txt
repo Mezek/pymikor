@@ -1,3 +1,3 @@
 TODO: korobov integration
-TODO: saltykov in python
+TODO: add test functions of Zakrzewska
 TODO: prepare makefile
