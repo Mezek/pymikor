@@ -94,6 +94,7 @@ class Mikor:
         :param strategy: Set variant of integration
                           1 - N = p
                           2 - N = p.q
+                          3 - predefined coefficients
         :param sec_nodes: Number of nodes N2
         :return:
         """
@@ -108,9 +109,16 @@ class Mikor:
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
         if self.strategy == 2 and sec_nodes > 1:
             self.q_prime = n_prime(sec_nodes)
+        if self.strategy == 3:
+            self.choose_pq()
 
         self.n_nodes = self.p_prime*self.q_prime
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
+
+    def choose_pq(self):
+        self.p_prime = 13
+        self.q_prime = 11
+        self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dims, p, q):
         self.empty_arrays(dims)
@@ -280,6 +288,7 @@ class Mikor:
             self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
         return self.b_arr.astype(int)
 
+    # TODO: must have a and b arrays before
     def calc_optimal_coefficients_c(self):
         s = self.dim_s
         p = self.p_prime
@@ -291,6 +300,7 @@ class Mikor:
             self.c_arr[i] = (m * w) % n
         return self.c_arr
 
+    # TODO: Erase get_a, get_b, get_c, it's obsolete
     def get_opt_coefficients_a(self):
         return self.a_arr
 
