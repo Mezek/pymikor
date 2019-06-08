@@ -47,7 +47,7 @@ def main():
                 fb, wb = integral.first_optimal_b()
                 integral.calc_optimal_coefficients_b(fb)
                 integral.calc_optimal_coefficients_c()
-                c = integral.get_opt_coefficients_c()
+                c = integral.c_arr.astype(int)
 
                 f.write(f'{arr[j][1]*arr[j][2]:6} ' + f'{arr[j][1]:6} ' + f'{arr[j][2]:6} ')
                 f.write(f'{fa:5}' + ' ' * 2)

@@ -298,16 +298,18 @@ class Mikor:
         for i in range(s):
             m = p*self.b_arr[i] + q*self.a_arr[i]
             self.c_arr[i] = (m * w) % n
-        return self.c_arr
 
-    # TODO: Erase get_a, get_b, get_c, it's obsolete
-    def get_opt_coefficients_a(self):
-        return self.a_arr
-
-    def get_opt_coefficients_b(self):
-        return self.b_arr
-
-    def get_opt_coefficients_c(self):
+    def get_opt_coefficients(self):
+        if self.strategy == 3:
+            for i in range(len(self.a_arr)):
+                self.c_arr[i] = 11
+        else:
+            fa, wa = self.first_optimal_a()
+            self.calc_optimal_coefficients_a(fa)
+            if self.strategy == 2:
+                fb, wb = self.first_optimal_b()
+                self.calc_optimal_coefficients_b(fb)
+                self.calc_optimal_coefficients_c()
         return self.c_arr.astype(int)
 
     def h_for_coefficients(self, o):
@@ -343,6 +345,8 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
+        m_a_arr = self.get_opt_coefficients()
+        print(m_a_arr)
         sm_f = 0
         for i in range(1, self.n_nodes + 1):
             sm_f += i
