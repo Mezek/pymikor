@@ -288,29 +288,31 @@ class Mikor:
             self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
         return self.b_arr.astype(int)
 
-    # TODO: must have a and b arrays before
-    def calc_optimal_coefficients_c(self):
+    def calc_optimal_coefficients_c(self, fa, fb):
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
         n = p * q
         w = mod_inv(p + q, n)
+        self.calc_optimal_coefficients_a(fa)
+        self.calc_optimal_coefficients_b(fb)
         for i in range(s):
             m = p*self.b_arr[i] + q*self.a_arr[i]
             self.c_arr[i] = (m * w) % n
 
     def get_opt_coefficients(self):
+        res_arr = self.a_arr
         if self.strategy == 3:
             for i in range(len(self.a_arr)):
-                self.c_arr[i] = 11
+                res_arr[i] = 11
         else:
             fa, wa = self.first_optimal_a()
-            self.calc_optimal_coefficients_a(fa)
             if self.strategy == 2:
                 fb, wb = self.first_optimal_b()
-                self.calc_optimal_coefficients_b(fb)
-                self.calc_optimal_coefficients_c()
-        return self.c_arr.astype(int)
+                self.calc_optimal_coefficients_c(fa, fb)
+            else:
+                res_arr = self.calc_optimal_coefficients_a(fa)
+        return res_arr.astype(int)
 
     def h_for_coefficients(self, o):
         if len(o) != self.dim_s:

@@ -43,10 +43,8 @@ def main():
             for j in range(len(arr)):
                 integral.set_dpq(arr[j][0], arr[j][1], arr[j][2])
                 fa, wa = integral.first_optimal_a()
-                integral.calc_optimal_coefficients_a(fa)
                 fb, wb = integral.first_optimal_b()
-                integral.calc_optimal_coefficients_b(fb)
-                integral.calc_optimal_coefficients_c()
+                integral.calc_optimal_coefficients_c(fa, fb)
                 c = integral.c_arr.astype(int)
 
                 f.write(f'{arr[j][1]*arr[j][2]:6} ' + f'{arr[j][1]:6} ' + f'{arr[j][2]:6} ')
