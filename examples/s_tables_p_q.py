@@ -42,15 +42,12 @@ def main():
             f.write(' ' + '-' * 60 + '\n')
             for j in range(len(arr)):
                 integral.set_dpq(arr[j][0], arr[j][1], arr[j][2])
-                fa, wa = integral.first_optimal_a()
-                fb, wb = integral.first_optimal_b()
-                integral.calc_optimal_coefficients_c(fa, fb)
-                c = integral.c_arr.astype(int)
+                c = integral.optimal_coefficients()
 
                 f.write(f'{arr[j][1]*arr[j][2]:6} ' + f'{arr[j][1]:6} ' + f'{arr[j][2]:6} ')
-                f.write(f'{fa:5}' + ' ' * 2)
-                f.write(f'{fb:5}' + ' ' * 2)
-                f.write(f'{wb-1:12.6}' + ' ' * 2)
+                f.write(f'{integral.a_opt:5}' + ' ' * 2)
+                f.write(f'{integral.b_opt:5}' + ' ' * 2)
+                f.write(f'{integral.b_opt_value - 1:12.6}' + ' ' * 2)
                 for k in range(1, len(c)):
                     f.write(f'{c[k]:6}' + ' ' * 2)
                 f.write('\n')

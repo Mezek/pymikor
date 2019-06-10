@@ -69,6 +69,10 @@ class Mikor:
         self.n_nodes = n_prime(1000)
         self.p_prime = self.n_nodes
         self.q_prime = 1
+        self.a_opt = 0
+        self.a_opt_value = 0
+        self.b_opt = 0
+        self.b_opt_value = 0
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
@@ -171,6 +175,26 @@ class Mikor:
         chet = pow(3, self.dim_s)/self.p_prime*(1. + 2.*self.h_sum(p, z))
         return chet
 
+    def h_for_coefficients(self, aopt):
+        """
+        Summation in H(z) fuction for a coefficients
+        :param aopt: array of parameters
+        :return: sum k = 1,2,...,N=p.q
+        """
+        if len(aopt) != self.dim_s:
+            raise ValueError('Array dimension must be equal to s!')
+        s = self.dim_s
+        p = self.p_prime
+        upperb = int((p - 1)/2)
+        sm_k = 0
+        for k in range(1, upperb + 1):
+            k_term = 1.
+            for l in range(s):
+                ent = fraction(k*aopt[l] / p)
+                k_term = k_term*(1. - ent - ent)
+            sm_k = sm_k + k_term*k_term
+        return pow(3, s)/p*(1. + 2*sm_k)
+
     def first_optimal_a(self):
         """
         Find first optimal value z = a
@@ -192,11 +216,11 @@ class Mikor:
     def h_tilde_sum(self, upperb, z):
         """
         Summation in h(z) function without coefficient
+        Must calculate array a_arr before!
         :param upperb: upper bound of summation
         :param z: polynomial parameter
         :return: sum in h(z) function
         """
-        # TODO: must be calculated a_arr before, make new flag?!
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
@@ -288,46 +312,40 @@ class Mikor:
             self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
         return self.b_arr.astype(int)
 
-    def calc_optimal_coefficients_c(self, fa, fb):
+    def calc_optimal_coefficients_c(self):
+        """
+        Calculate optimal coefficients with congruence root
+        :return: array of [1,c,c^2,...,c^{s-1}]
+        """
         s = self.dim_s
         p = self.p_prime
         q = self.q_prime
         n = p * q
         w = mod_inv(p + q, n)
-        self.calc_optimal_coefficients_a(fa)
-        self.calc_optimal_coefficients_b(fb)
         for i in range(s):
             m = p*self.b_arr[i] + q*self.a_arr[i]
             self.c_arr[i] = (m * w) % n
 
-    def get_opt_coefficients(self):
+    def optimal_coefficients(self):
+        """
+        Provides optimal coefficients based on strategy
+        :return: array of [1,c,c^2,...,c^{s-1}]
+        """
         res_arr = self.a_arr
         if self.strategy == 3:
             for i in range(len(self.a_arr)):
                 res_arr[i] = 11
         else:
-            fa, wa = self.first_optimal_a()
+            self.a_opt, self.a_opt_value = self.first_optimal_a()
+            self.calc_optimal_coefficients_a(self.a_opt)
+            if self.strategy == 1:
+                res_arr = self.a_arr
             if self.strategy == 2:
-                fb, wb = self.first_optimal_b()
-                self.calc_optimal_coefficients_c(fa, fb)
-            else:
-                res_arr = self.calc_optimal_coefficients_a(fa)
+                self.b_opt, self.b_opt_value = self.first_optimal_b()
+                self.calc_optimal_coefficients_b(self.b_opt)
+                self.calc_optimal_coefficients_c()
+                res_arr = self.c_arr
         return res_arr.astype(int)
-
-    def h_for_coefficients(self, o):
-        if len(o) != self.dim_s:
-            raise ValueError('Array dimension must be equal to s!')
-        s = self.dim_s
-        p = self.p_prime
-        upperb = int((p - 1)/2)
-        sm_k = 0
-        for k in range(1, upperb + 1):
-            k_term = 1.
-            for l in range(s):
-                ent = fraction(k*o[l] / p)
-                k_term = k_term*(1. - ent - ent)
-            sm_k = sm_k + k_term*k_term
-        return pow(3, s)/p*(1. + 2*sm_k)
 
     def show_parameters(self):
         print('Object class            :', self.__class__.__name__)
@@ -347,7 +365,7 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        m_a_arr = self.get_opt_coefficients()
+        m_a_arr = self.optimal_coefficients()
         print(m_a_arr)
         sm_f = 0
         for i in range(1, self.n_nodes + 1):
