@@ -24,14 +24,24 @@ def fcn2(x):
     return df
 
 
+def fcn3(x):
+    fc = 0
+    for i in range(4):
+        fc += 0.5*math.pi*math.sin(math.pi*x[i])
+    return fc
+
+
 def main():
     integral = Mikor()
     integral.set_values(3, 10, 2, 1)
-    # integral.set_dpq(3, 1907, 1)
+    integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
     result = integral(fcn, name='Fcn progress')
     print(f'Result of integration   : {result}')
+
+    x = np.array([0.1, 0.2, 0.3, 0.4])
+    print(fcn3(x))
 
     """
     result1 = integral(fcn1, name='F1')
@@ -40,21 +50,6 @@ def main():
     print(f'Result of integration   : {result1}')
     print(f'Result of integration   : {result2}')
     """
-
-    """
-    fa, wa = integral.first_optimal_a()
-    print('a =', integral.calc_optimal_coefficients_a(fa))
-    # print(integral.more_optimal(1.e-10))
-
-    fb, wb = integral.first_optimal_b()
-    print(f'b = {fb}', f'wb = {wb}')
-    print('b =', integral.calc_optimal_coefficients_b(fb))
-
-    integral.calc_optimal_coefficients_c()
-    print('c =', integral.get_opt_coefficients_c())
-    """
-    # print('S:', integral.h_for_coeffs([1, 30, 104]))
-    # print('S:', integral.h_for_coeffs([1, 73, 155]))
 
     del integral
 
