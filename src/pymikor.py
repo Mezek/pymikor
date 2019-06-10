@@ -366,16 +366,10 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         m_a_arr = self.optimal_coefficients()
-        # print(m_a_arr)
         fpa = np.empty(self.dim_s)
         sm_f = 0
         for i in range(1, self.n_nodes + 1):
             for j in range(self.dim_s):
                 fpa[j] = fraction(m_a_arr[j]*i/self.n_nodes)
-                # print(i, len(fpa))
             sm_f += m_fnc(fpa)
-        print(sm_f, sm_f/self.n_nodes)
-
-        x = np.arange(1, 11)
-        res = m_fnc(x)
-        return res
+        return sm_f/self.n_nodes

@@ -7,7 +7,7 @@ from pymikor import *
 
 
 def fcn(x):
-    return x[0]*x[0] + x[1]*x[2]
+    return 3.*x[0]*x[0] + 4.*x[1]*x[2]
 
 
 def fcn1(x):
@@ -33,15 +33,15 @@ def fcn3(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 10, 2, 1)
-    integral.set_dpq(3, 907, 31)
+    integral.set_values(3, 100000)
+    # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
     result = integral(fcn, name='Fcn progress')
     print(f'Result of integration   : {result}')
 
-    x = np.array([0.1, 0.2, 0.3, 0.4])
-    print(fcn3(x))
+    # x = np.array([0.1, 0.2, 0.3, 0.4])
+    # print(fcn3(x))
 
     """
     result1 = integral(fcn1, name='F1')
