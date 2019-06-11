@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from itertools import count
+import warnings
 
 
 def fraction(n):
@@ -96,9 +97,9 @@ class Mikor:
         :param dims: Dimension of integral
         :param nodes: Number of nodes N1
         :param strategy: Set variant of integration
-                          1 - N = p
-                          2 - N = p.q
-                          3 - predefined coefficients
+                          1 - predefined coefficients
+                          2 - N = p
+                          3 - N = p.q
         :param sec_nodes: Number of nodes N2
         :return:
         """
@@ -106,18 +107,21 @@ class Mikor:
         self.p_prime = n_prime(nodes)
         self.strategy = strategy
 
-        if self.strategy == 1 and sec_nodes > 1:
+        if self.strategy == 1:
+            self.choose_pq()
+        if self.strategy == 2 and sec_nodes > 1:
             self.q_prime = 1
-        if self.strategy == 2 and sec_nodes == 1:
+        if self.strategy == 3 and sec_nodes == 1:
             self.p_prime = n_prime(int(pow(nodes, 2/3)))
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
-        if self.strategy == 2 and sec_nodes > 1:
+        if self.strategy == 3 and sec_nodes > 1:
             self.q_prime = n_prime(sec_nodes)
-        if self.strategy == 3:
-            self.choose_pq()
 
         self.n_nodes = self.p_prime*self.q_prime
+
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
+        if strategy == 2 and nodes >= 10000:
+            warnings.warn('Slow computation, number of nodes too large.')
 
     def choose_pq(self):
         self.p_prime = 13
@@ -128,9 +132,9 @@ class Mikor:
         self.empty_arrays(dims)
         self.p_prime = n_prime(p)
         if q == 1:
-            self.strategy = 1
-        else:
             self.strategy = 2
+        else:
+            self.strategy = 3
             self.q_prime = n_prime(q)
         self.n_nodes = p*q
 
@@ -286,6 +290,15 @@ class Mikor:
                 arr.append(i)
         return arr
 
+    def calc_fibonacii(self):
+        """
+        Calculate coefficients for s=2
+        :return: array of [1, Q_{N-1}]
+        """
+        res_arr = self.a_arr
+
+        return res_arr
+
     def calc_optimal_coefficients_a(self, opt_val):
         """
         Calculate optimal coefficients a
@@ -332,15 +345,15 @@ class Mikor:
         :return: array of [1,c,c^2,...,c^{s-1}]
         """
         res_arr = self.a_arr
-        if self.strategy == 3:
+        if self.strategy == 1:
             for i in range(len(self.a_arr)):
                 res_arr[i] = 11
         else:
             self.a_opt, self.a_opt_value = self.first_optimal_a()
             self.calc_optimal_coefficients_a(self.a_opt)
-            if self.strategy == 1:
-                res_arr = self.a_arr
             if self.strategy == 2:
+                res_arr = self.a_arr
+            if self.strategy == 3:
                 self.b_opt, self.b_opt_value = self.first_optimal_b()
                 self.calc_optimal_coefficients_b(self.b_opt)
                 self.calc_optimal_coefficients_c()
@@ -365,7 +378,11 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        m_a_arr = self.optimal_coefficients()
+        if self.dim_s == 2:
+            m_a_arr = self.calc_fibonacii()
+        else:
+            m_a_arr = self.optimal_coefficients()
+            print(len(m_a_arr))
         fpa = np.empty(self.dim_s)
         sm_f = 0
         for i in range(1, self.n_nodes + 1):
