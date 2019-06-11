@@ -1,7 +1,8 @@
 import math
 import numpy as np
-from itertools import count
+import scipy.special
 import warnings
+from itertools import count
 
 
 def fraction(n):
@@ -295,7 +296,6 @@ class Mikor:
         Calculate coefficients for s=2
         :return: array of [1, Q_{N-1}]
         """
-        # res_arr = self.a_arr
         a = 1
         b = 1
         while b < self.n_nodes:
@@ -390,7 +390,6 @@ class Mikor:
             m_a_arr = self.calc_fibonacci()
         else:
             m_a_arr = self.optimal_coefficients()
-            print(len(m_a_arr))
         fpa = np.empty(self.dim_s)
         sm_f = 0
         for i in range(1, self.n_nodes + 1):
