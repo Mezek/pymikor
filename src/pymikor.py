@@ -290,14 +290,22 @@ class Mikor:
                 arr.append(i)
         return arr
 
-    def calc_fibonacii(self):
+    def calc_fibonacci(self):
         """
         Calculate coefficients for s=2
         :return: array of [1, Q_{N-1}]
         """
-        res_arr = self.a_arr
-
-        return res_arr
+        # res_arr = self.a_arr
+        a = 1
+        b = 1
+        while b < self.n_nodes:
+            k = a + b
+            if k > self.n_nodes:
+                break
+            a = b
+            b = k
+        self.n_nodes = b
+        return np.array([1, a])
 
     def calc_optimal_coefficients_a(self, opt_val):
         """
@@ -379,7 +387,7 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         if self.dim_s == 2:
-            m_a_arr = self.calc_fibonacii()
+            m_a_arr = self.calc_fibonacci()
         else:
             m_a_arr = self.optimal_coefficients()
             print(len(m_a_arr))
