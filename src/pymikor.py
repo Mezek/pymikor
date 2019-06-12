@@ -113,8 +113,8 @@ class Mikor:
         for k in kwargs:
             if k == 'sigma':
                 self.sigma = kwargs[k]
-                if self.sigma < 2:
-                    raise AttributeError(f'{k} be greater then {self.sigma}')
+                if self.sigma < 1:
+                    raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
                 self.aux_period_coefficients()
             else:
@@ -145,13 +145,6 @@ class Mikor:
         print('number of nodes         :', self.n_nodes)
         print('sigma                   :', self.sigma)
         print('strategy                :', self.strategy)
-
-    def aux_period_coefficients(self):
-        s_sig = 1
-        k1 = self.sigma - 1
-        for i in range(self.sigma):
-            self.v_arr[i] = scipy.special.binom(k1, i)*s_sig/(i+1 + k1)
-            s_sig = -s_sig
 
     def choose_pq(self):
         self.p_prime = 13
@@ -397,14 +390,27 @@ class Mikor:
                 res_arr = self.c_arr
         return res_arr.astype(int)
 
+    def aux_period_coefficients(self):
+        s_sign = 1
+        k1 = self.sigma - 1
+        for i in range(self.sigma):
+            self.v_arr[i] = scipy.special.binom(k1, i)*s_sign/(i+1 + k1)
+            s_sign = -s_sign
+
     def periodization(self, x):
-        fcn = 0
-        der_fcn = 0
         sig = self.sigma
+        if sig == 1:
+            return x, 1
+        psi = 0
         k1 = sig - 1
         cp = (2*sig - 1)*scipy.special.binom(2*sig - 2, sig - 1)
         t = pow(x, k1)
-        return fcn, der_fcn
+        for i in range(sig):
+            t = t*x
+            psi = psi + self.v_arr[i]*t
+        psi = psi*cp
+        der_psi = cp*pow(x*(1. - x), k1)
+        return psi, der_psi
 
     def __call__(self, m_fnc, **kwargs):
         for k in kwargs:
