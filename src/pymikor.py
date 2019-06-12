@@ -71,6 +71,7 @@ class Mikor:
         self.n_nodes = n_prime(1000)
         self.p_prime = self.n_nodes
         self.q_prime = 1
+        self.sigma = 2
         self.a_opt = 0
         self.a_opt_value = 0
         self.b_opt = 0
@@ -78,6 +79,7 @@ class Mikor:
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
+        self.v_arr = np.empty(self.sigma)
 
     def __del__(self):
         # print(f'Object {self.__class__.__name__} deleted')
@@ -93,7 +95,7 @@ class Mikor:
         if self.n_nodes <= self.dim_s:
             raise ValueError('Integral dimension s must be < N nodes!')
 
-    def set_values(self, dims, nodes, strategy=1, sec_nodes=1):
+    def set_values(self, dims, nodes, strategy=1, sec_nodes=1, **kwargs):
         """
         :param dims: Dimension of integral
         :param nodes: Number of nodes N1
@@ -107,6 +109,16 @@ class Mikor:
         self.empty_arrays(dims)
         self.p_prime = n_prime(nodes)
         self.strategy = strategy
+
+        for k in kwargs:
+            if k == 'sigma':
+                self.sigma = kwargs[k]
+                if self.sigma < 2:
+                    raise AttributeError(f'{k} be greater then {self.sigma}')
+                self.v_arr = np.empty(self.sigma)
+                self.aux_period_coefficients()
+            else:
+                raise AttributeError(f'no attribute named {k}')
 
         if self.strategy == 1:
             self.choose_pq()
@@ -123,6 +135,23 @@ class Mikor:
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
         if strategy == 2 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
+
+    def show_parameters(self):
+        print('Object class            :', self.__class__.__name__)
+        print('dimension of integration:', self.dim_s)
+        print('dimension of result     :', self.dim_r)
+        print('p - prime               :', self.p_prime)
+        print('q - prime               :', self.q_prime)
+        print('number of nodes         :', self.n_nodes)
+        print('sigma                   :', self.sigma)
+        print('strategy                :', self.strategy)
+
+    def aux_period_coefficients(self):
+        s_sig = 1
+        k1 = self.sigma - 1
+        for i in range(self.sigma):
+            self.v_arr[i] = scipy.special.binom(k1, i)*s_sig/(i+1 + k1)
+            s_sig = -s_sig
 
     def choose_pq(self):
         self.p_prime = 13
@@ -368,14 +397,14 @@ class Mikor:
                 res_arr = self.c_arr
         return res_arr.astype(int)
 
-    def show_parameters(self):
-        print('Object class            :', self.__class__.__name__)
-        print('dimension of integration:', self.dim_s)
-        print('dimension of result     :', self.dim_r)
-        print('p - prime               :', self.p_prime)
-        print('q - prime               :', self.q_prime)
-        print('number of nodes         :', self.n_nodes)
-        print('strategy                :', self.strategy)
+    def periodization(self, x):
+        fcn = 0
+        der_fcn = 0
+        sig = self.sigma
+        k1 = sig - 1
+        cp = (2*sig - 1)*scipy.special.binom(2*sig - 2, sig - 1)
+        t = pow(x, k1)
+        return fcn, der_fcn
 
     def __call__(self, m_fnc, **kwargs):
         for k in kwargs:
