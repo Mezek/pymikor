@@ -116,10 +116,10 @@ class Mikor:
                 if self.sigma < 1:
                     raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
-                self.aux_period_coefficients()
             else:
                 raise AttributeError(f'no attribute named {k}')
 
+        # TODO: choose p,q for strategy==1
         if self.strategy == 1:
             self.choose_pq()
         if self.strategy == 2 and sec_nodes > 1:
@@ -375,6 +375,7 @@ class Mikor:
         :return: array of [1,c,c^2,...,c^{s-1}]
         """
         res_arr = self.a_arr
+        # TODO: set coefficients for strategy==1
         if self.strategy == 1:
             for i in range(len(self.a_arr)):
                 res_arr[i] = 11
@@ -390,7 +391,7 @@ class Mikor:
                 res_arr = self.c_arr
         return res_arr.astype(int)
 
-    def aux_period_coefficients(self):
+    def calc_aux_period_coefficients(self):
         s_sign = 1
         k1 = self.sigma - 1
         for i in range(self.sigma):
@@ -403,16 +404,17 @@ class Mikor:
             return x, 1
         psi = 0
         k1 = sig - 1
-        cp = (2*sig - 1)*scipy.special.binom(2*sig - 2, sig - 1)
         t = pow(x, k1)
+        cp = (2*sig - 1)*scipy.special.binom(2*sig - 2, sig - 1)
+        self.calc_aux_period_coefficients()
         for i in range(sig):
-            t = t*x
+            t = t * x
             psi = psi + self.v_arr[i]*t
-        psi = psi*cp
+        psi = psi * cp
         der_psi = cp*pow(x*(1. - x), k1)
         return psi, der_psi
 
-    def __call__(self, m_fnc, **kwargs):
+    def __call__(self, integrand_fcn, **kwargs):
         for k in kwargs:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
@@ -422,13 +424,20 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         if self.dim_s == 2:
-            m_a_arr = self.calc_fibonacci()
+            mi_a_arr = self.calc_fibonacci()
         else:
-            m_a_arr = self.optimal_coefficients()
-        fpa = np.empty(self.dim_s)
-        sm_f = 0
+            mi_a_arr = self.optimal_coefficients()
+
+        trans_x = np.empty(self.dim_s)
+        mi_f = 0.
         for i in range(1, self.n_nodes + 1):
+            mi_drv = 1.
             for j in range(self.dim_s):
-                fpa[j] = fraction(m_a_arr[j]*i/self.n_nodes)
-            sm_f += m_fnc(fpa)
-        return sm_f/self.n_nodes
+                a_element = mi_a_arr[j]*i/self.n_nodes
+                x = fraction(a_element)
+                psi, der_psi = self.periodization(x)
+                trans_x[j] = psi
+                # print(x, psi, der_psi)
+                mi_drv = mi_drv * der_psi
+            mi_f += integrand_fcn(trans_x) * mi_drv
+        return mi_f/self.n_nodes

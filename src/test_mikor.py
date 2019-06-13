@@ -33,11 +33,11 @@ def fcn3(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 50000, 3, 3, sigma=3)
+    integral.set_values(3, 10000, 3, 1, sigma=3)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
-    result = integral(fcn2, name='Fcn progress')
+    result = integral(fcn, name='Fcn progress')
     print(f'Result of integration   : {result}')
 
     # x = np.array([0.1, 0.2, 0.3, 0.4])
