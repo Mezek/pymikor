@@ -398,7 +398,7 @@ class Mikor:
             self.v_arr[i] = scipy.special.binom(k1, i)*s_sign/(i+1 + k1)
             s_sign = -s_sign
 
-    def periodization(self, x):
+    def periodization_fcn(self, x):
         sig = self.sigma
         if sig == 1:
             return x, 1
@@ -435,7 +435,7 @@ class Mikor:
             for j in range(self.dim_s):
                 a_element = mi_a_arr[j]*i/self.n_nodes
                 x = fraction(a_element)
-                psi, der_psi = self.periodization(x)
+                psi, der_psi = self.periodization_fcn(x)
                 trans_x[j] = psi
                 # print(x, psi, der_psi)
                 mi_drv = mi_drv * der_psi
