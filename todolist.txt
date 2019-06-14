@@ -1,6 +1,5 @@
 TODO: Korobov's integration
-TODO: Korobov's tables vs. Saltykov's ones
-TODO: Korobov's functional comparision
-TODO: add precomputed first a, b nubmers
+TODO: calc optimal coefficients as in Mikor
+TODO: add precomputed first a, b numbers
 TODO: add test functions of Zakrzewska
 TODO: prepare makefile

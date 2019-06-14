@@ -147,6 +147,9 @@ class Mikor:
         print('strategy                :', self.strategy)
 
     def choose_pq(self):
+        p = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001,5003,
+                      6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
+                      100003, 200003, 500009, 1000003, 2000003, 5000011])
         self.p_prime = 13
         self.q_prime = 11
         self.n_nodes = self.p_prime*self.q_prime
