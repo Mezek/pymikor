@@ -37,21 +37,21 @@ def fcn3(x):
 def fcn4(x):
     f = 1
     for i in range(4):
-        f *= 2*(1./pow(math.e, 2) - 1)*exp(-2*x[i])
+        f *= 2/(1/pow(math.e, 2) - 1)*exp(-2*x[i])
     return f
 
 
 def fcn5(x):
     f = 1
     for i in range(4):
-        f *= 15*(1./pow(math.e, 15) - 1)*exp(-15*x[i])
+        f *= 15./(1./pow(math.e, 15) - 1)*exp(-15*x[i])
     return f
 
 
 def fcn6(x):
     f = 1
     for i in range(4):
-        f *= math.pi/4./(1 + x[i]*x[i])
+        f *= 4/math.pi/(1 + x[i]*x[i])
     return f
 
 

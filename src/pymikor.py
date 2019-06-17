@@ -330,7 +330,7 @@ class Mikor:
             a = b
             b = k
         self.n_nodes = b
-        return np.array([1, a])
+        return [1, a]
 
     def calc_optimal_coefficients_a(self, opt_val):
         """
@@ -392,7 +392,7 @@ class Mikor:
                 self.calc_optimal_coefficients_b(self.b_opt)
                 self.calc_optimal_coefficients_c()
                 res_arr = self.c_arr
-        return res_arr.astype(int)
+        return res_arr
 
     def calc_aux_period_coefficients(self):
         s_sign = 1
