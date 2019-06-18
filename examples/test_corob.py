@@ -87,10 +87,11 @@ def fcn10(x):
 
 
 def main():
-    node = np.array([251, 631, 1259, 2503, 4001, 6521, 10007])
+    node = np.array([[251, 44], [631, 290], [1259, 483], [2503, 792],
+                     [4001, 956], [6521, 3138], [10007, 1206]])
 
     integral = Mikor()
-    #integral.set_values(4, 10007, 2, 1, sigma=2)
+    # integral.set_values(4, 10007, 2, 1, sigma=2)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
     print('Spawning numbers...')
@@ -108,12 +109,10 @@ def main():
 
     for i, item in enumerate(node):
         with open('coefficients.txt', 'a') as f:
-            integral.set_values(4, item, 2, 1, sigma=2)
-            # opta, optval = integral.first_optimal_a()
-            # integral.calc_optimal_coefficients_a(opta)
-            f.write(f' {item:6}' + ' ' * 3)
+            f.write(f' {item[0]:6}' + ' ' * 3)
             for j in range(2, 5):
-                integral.set_values(4, item, 2, 1, sigma=j)
+                integral.set_values(4, 5050, 1, 1, sigma=j)
+                integral.set_pa(item)
                 result = integral(fcn10)
                 f.write(f'{result:.6f}' + ' '*3)
             f.write('\n')

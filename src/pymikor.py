@@ -165,6 +165,11 @@ class Mikor:
             self.q_prime = n_prime(q)
         self.n_nodes = p*q
 
+    def set_pa(self, pa):
+        self.p_prime = n_prime(pa[0])
+        self.n_nodes = self.p_prime
+        self.a_opt = pa[1]
+
     def h_sum(self, upperb, z):
         """
         Summation in H(z) function without coefficient
@@ -381,8 +386,8 @@ class Mikor:
         res_arr = self.a_arr
         # TODO: set coefficients for strategy==1
         if self.strategy == 1:
-            for i in range(len(self.a_arr)):
-                res_arr[i] = 11
+            self.calc_optimal_coefficients_a(self.a_opt)
+            res_arr = self.a_arr
         else:
             self.a_opt, self.a_opt_value = self.first_optimal_a()
             self.calc_optimal_coefficients_a(self.a_opt)
