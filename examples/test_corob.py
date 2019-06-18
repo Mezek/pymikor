@@ -90,17 +90,33 @@ def main():
     node = np.array([251, 631, 1259, 2503, 4001, 6521, 10007])
 
     integral = Mikor()
-    integral.set_values(4, 10007, 2, 1, sigma=2)
+    #integral.set_values(4, 10007, 2, 1, sigma=2)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
+    print('Spawning numbers...')
 
     # k_fcn = [fcn1, fcn2, fcn3, fcn4, fcn5, fcn6]
-    k_fcn = [fcn9]
+    k_fcn = [fcn10]
 
-    print('Results of integration:')
-    for i, item in enumerate(k_fcn):
-        result = integral(item)
-        print(f'{i+1}. = {result}')
+    # coefficientsZ.txt
+    with open('coefficients.txt', 'w') as f:
+        f.write('Function f_10\n')
+        f.write('-' * 41 + '\n')
+        f.write(f'  N' + ' ' * 7 +
+                'sigma=2' + ' ' * 4 + 'sigma=3' + ' ' * 4 + 'sigma=4\n')
+        f.write('-' * 41 + '\n')
+
+    for i, item in enumerate(node):
+        with open('coefficients.txt', 'a') as f:
+            integral.set_values(4, item, 2, 1, sigma=2)
+            # opta, optval = integral.first_optimal_a()
+            # integral.calc_optimal_coefficients_a(opta)
+            f.write(f' {item:6}' + ' ' * 3)
+            for j in range(2, 5):
+                integral.set_values(4, item, 2, 1, sigma=j)
+                result = integral(fcn10)
+                f.write(f'{result:.6f}' + ' '*3)
+            f.write('\n')
 
     del integral
 
