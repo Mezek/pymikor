@@ -55,14 +55,47 @@ def fcn6(x):
     return f
 
 
+def fcn7(x):
+    f = 1/pow(0.34*0.26, 2)*abs((x[0] - 0.2)*(x[1] - 0.4)*(x[2] - 0.6)*(x[3] - 0.8))
+    return f
+
+
+def fcn8(x):
+    n8 = 1.266065877752
+    f = 1
+    for i in range(4):
+        f *= exp(sin(2*math.pi*x[i]))/n8
+    return f
+
+
+def fcn9(x):
+    c = log(101)
+    f = 1
+    for i in range(4):
+        f *= 1/(1.01 - x[i])/c
+    return f
+
+
+def fcn10(x):
+    c = 6/pow(math.pi, 2)
+    f = 1
+    for i in range(4):
+        if x[i] == 0.:
+            continue
+        f *= log(x[i])/(x[i] - 1)*c
+    return f
+
+
 def main():
+    node = np.array([251, 631, 1259, 2503, 4001, 6521, 10007])
+
     integral = Mikor()
-    integral.set_values(4, 50000, 3, 1, sigma=3)
+    integral.set_values(4, 10007, 2, 1, sigma=2)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
-    k_fcn = [fcn1, fcn2, fcn3, fcn4, fcn5, fcn6]
-    # k_fcn = [fcn4]
+    # k_fcn = [fcn1, fcn2, fcn3, fcn4, fcn5, fcn6]
+    k_fcn = [fcn9]
 
     print('Results of integration:')
     for i, item in enumerate(k_fcn):

@@ -72,6 +72,7 @@ class Mikor:
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
+        self.r_eps = 0.0001
         self.a_opt = 0
         self.a_opt_value = 0
         self.b_opt = 0
@@ -330,7 +331,7 @@ class Mikor:
             a = b
             b = k
         self.n_nodes = b
-        return [1, a]
+        return np.array([1, a])
 
     def calc_optimal_coefficients_a(self, opt_val):
         """
@@ -343,7 +344,7 @@ class Mikor:
         self.a_arr[1] = opt_val
         for i in range(2, s):
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
-        return self.a_arr.astype(int)
+        return self.a_arr
 
     def calc_optimal_coefficients_b(self, opt_val):
         """
@@ -356,7 +357,7 @@ class Mikor:
         self.b_arr[1] = opt_val
         for i in range(2, s):
             self.b_arr[i] = (self.b_arr[i-1]*opt_val) % self.q_prime
-        return self.b_arr.astype(int)
+        return self.b_arr
 
     def calc_optimal_coefficients_c(self):
         """
