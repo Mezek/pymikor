@@ -257,14 +257,18 @@ class Mikor:
         upran = self.p_prime
         optimal_a = 0
         optimal_val = 1e+18
+        flag_o = False
         cand = []
 
         for i in range(1, upran + 1):
             h_sum = self.h_poly(i)
-            print(i, h_sum)
+            # print(i, h_sum)
             if abs(h_sum - optimal_val) < eps:
-                print(f'{optimal_a}, {i}: {h_sum}')
-                cand.append(i)
+                # print(f'{optimal_a}, {i}: {h_sum}')
+                if flag_o is False:
+                    cand.append([optimal_a, optimal_val])
+                    flag_o = True
+                cand.append([i, h_sum])
             if h_sum < optimal_val:
                 optimal_a = i
                 optimal_val = h_sum
