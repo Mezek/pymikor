@@ -152,7 +152,7 @@ class Mikor:
                       6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
                       100003, 200003, 500009, 1000003, 2000003, 5000011])
         self.p_prime = 13
-        self.q_prime = 11
+        self.q_prime = 1
         self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dims, p, q):

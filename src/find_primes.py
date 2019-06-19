@@ -26,7 +26,7 @@ def main():
         next_prime += 1
 
 
-def iterprime():
+def get_primes():
     # num = int(input())
     num = ULIMIT
     plist = []
@@ -40,16 +40,7 @@ def iterprime():
     return plist
 
 
-def kp1():
-    f = [3, 5]
-    i = 2
-    while f[-1] < 500000:
-        f.append(f[i-1] + f[i-2])
-        i += 1
-    print(f, len(f))
-
-
 if __name__ == "__main__":
     main()
-    primes = iterprime()
-    kp1()
+    primes = get_primes()
+    print(primes)

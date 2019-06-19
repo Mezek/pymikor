@@ -16,7 +16,10 @@ from math import *
 def fcn1(x):
     f = 1
     for i in range(4):
-        f *= x[i]*sqrt(1. - x[i]*x[i])
+        dblx = x[i]*x[i]
+        if dblx > 1.0:
+            dblx = 1.0
+        f *= x[i]*sqrt(1. - dblx)
     return 81*f
 
 
@@ -87,8 +90,11 @@ def fcn10(x):
 
 
 def main():
-    node = np.array([[251, 44], [631, 290], [1259, 483], [2503, 792],
-                     [4001, 956], [6521, 3138], [10007, 1206]])
+    nodes_4_1 = np.array([[1069, 271], [2129, 766], [3001, 1466], [5003, 2053],
+                          [6007, 1351], [8191, 3842], [10007, 1206], [28111, 3570]])
+
+    nodes_4_3 = np.array([[251, 44], [631, 290], [1259, 483], [2503, 792],
+                          [4001, 956], [6521, 3138], [10007, 1206]])
 
     integral = Mikor()
     # integral.set_values(4, 10007, 2, 1, sigma=2)
@@ -96,26 +102,89 @@ def main():
     integral.show_parameters()
     print('Spawning numbers...')
 
-    # k_fcn = [fcn1, fcn2, fcn3, fcn4, fcn5, fcn6]
-    k_fcn = [fcn10]
+    t_fcn = {
+        'fcn1': fcn1,
+        'fcn2': fcn2,
+        'fcn3': fcn3
+    }
+    u_fcn = {
+        'fcn4': fcn4,
+        'fcn5': fcn5,
+        'fcn6': fcn6,
+        'fcn7': fcn7,
+        'fcn8': fcn8
+    }
+    w_fcn = {
+        'fcn9': fcn9,
+        'fcn10': fcn10
+    }
 
-    # coefficientsZ.txt
     with open('coefficients.txt', 'w') as f:
-        f.write('Function f_10\n')
-        f.write('-' * 41 + '\n')
-        f.write(f'  N' + ' ' * 7 +
-                'sigma=2' + ' ' * 4 + 'sigma=3' + ' ' * 4 + 'sigma=4\n')
-        f.write('-' * 41 + '\n')
+        f.write('s = 4\n')
 
-    for i, item in enumerate(node):
+    for i in t_fcn:
+        # coefficientsZ.txt
         with open('coefficients.txt', 'a') as f:
-            f.write(f' {item[0]:6}' + ' ' * 3)
-            for j in range(2, 5):
-                integral.set_values(4, 5050, 1, 1, sigma=j)
-                integral.set_pa(item)
-                result = integral(fcn10)
-                f.write(f'{result:.6f}' + ' '*3)
-            f.write('\n')
+            f.write('\n' + '-' * 93 + '\n')
+            f.write(f'Function {i}\n')
+            f.write('-' * 93 + '\n')
+            f.write(f'  N' + ' ' * 7 +
+                    'sigma=1' + ' ' * 7 + 'sigma=2' + ' ' * 7 + 'sigma=3' + ' ' * 7 +
+                    'sigma=4' + ' ' * 7 + 'sigma=5' + ' ' * 7 + 'sigma=6\n')
+            f.write('-' * 93 + '\n')
+
+        for j, item in enumerate(nodes_4_1):
+            with open('coefficients.txt', 'a') as f:
+                f.write(f' {item[0]:6}' + ' ' * 3)
+                for s in range(1, 7):
+                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_pa(item)
+                    fcn_name = t_fcn[i]
+                    result = integral(fcn_name)
+                    f.write(f'{result:.9f}' + ' '*3)
+                f.write('\n')
+
+    for i in u_fcn:
+        # coefficientsZ.txt
+        with open('coefficients.txt', 'a') as f:
+            f.write('\n' + '-' * 21 + '\n')
+            f.write(f'Function {i}\n')
+            f.write('-' * 21 + '\n')
+            f.write(f'  N' + ' ' * 7 +
+                    'sigma=3' + '\n')
+            f.write('-' * 21 + '\n')
+
+        for j, item in enumerate(nodes_4_3):
+            with open('coefficients.txt', 'a') as f:
+                f.write(f' {item[0]:6}' + ' ' * 3)
+                for s in range(3, 4):
+                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_pa(item)
+                    fcn_name = u_fcn[i]
+                    result = integral(fcn_name)
+                    f.write(f'{result:.6f}' + ' '*3)
+                f.write('\n')
+
+    for i in w_fcn:
+        # coefficientsZ.txt
+        with open('coefficients.txt', 'a') as f:
+            f.write('\n' + '-' * 53 + '\n')
+            f.write(f'Function {i}\n')
+            f.write('-' * 53 + '\n')
+            f.write(f'  N' + ' ' * 7 +
+                    'sigma=2' + ' ' * 4 + 'sigma=3' + ' ' * 4 + 'sigma=4' + ' ' * 4 + 'sigma=5\n')
+            f.write('-' * 53 + '\n')
+
+        for j, item in enumerate(nodes_4_3):
+            with open('coefficients.txt', 'a') as f:
+                f.write(f' {item[0]:6}' + ' ' * 3)
+                for s in range(2, 6):
+                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_pa(item)
+                    fcn_name = w_fcn[i]
+                    result = integral(fcn_name)
+                    f.write(f'{result:.6f}' + ' '*3)
+                f.write('\n')
 
     del integral
 
