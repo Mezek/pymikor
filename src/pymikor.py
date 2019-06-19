@@ -249,6 +249,27 @@ class Mikor:
             #    print(f'{i}. iteration')
         return optimal_a, optimal_val
 
+    def first_optimal_a_candidates(self, eps):
+        """
+        Find first optimal values z = a
+        :return:
+        """
+        upran = self.p_prime
+        optimal_a = 0
+        optimal_val = 1e+18
+        cand = []
+
+        for i in range(1, upran + 1):
+            h_sum = self.h_poly(i)
+            print(i, h_sum)
+            if abs(h_sum - optimal_val) < eps:
+                print(f'{optimal_a}, {i}: {h_sum}')
+                cand.append(i)
+            if h_sum < optimal_val:
+                optimal_a = i
+                optimal_val = h_sum
+        return optimal_a, optimal_val, cand
+
     def h_tilde_sum(self, upperb, z):
         """
         Summation in h(z) function without coefficient

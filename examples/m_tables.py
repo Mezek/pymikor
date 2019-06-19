@@ -10,6 +10,7 @@ from pymikor import *
 
 
 def main():
+    ms = np.array([53])
     mk = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
                    6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
                    100003, 200003, 500009, 1000003, 2000003, 5000011])
@@ -21,24 +22,23 @@ def main():
     print('Spawning numbers...')
 
     with open('coefficients.txt', 'w') as f:
-        f.write('Tables of optimal coefficients\n')
+        f.write('Table of optimal coefficients\n')
 
-    arr = mn
-    for i in range(10, 11):
+    arr = ms
+    for i in range(3, 4):
         print(str(i), sep=' ', end=' ', flush=True)
         with open('coefficients.txt', 'a') as f:
             f.write(f'\n s = {i}\n')
-            f.write('  N=p' + ' ' * 7 + 'a_2 -->\n')
-            f.write(' ' + '-' * 34 + '\n')
+            f.write('  N=p' + ' ' * 7 + 'a' + ' ' * 7 + '  other candidates\n')
+            f.write(' ' + '-' * 47 + '\n')
             for j in range(len(arr)):
                 print(j)
-                integral.set_values(i, arr[j], 2, 1, sigma=3)
-                mo, mo_val = integral.first_optimal_a()
+                integral.set_values(i, arr[j], 2, 1, sigma=1)
+                mo, mo_val, cand = integral.first_optimal_a_candidates(1e-12)
                 f.write(f'{arr[j]:6}   ')
-                opt_a = integral.calc_optimal_coefficients_a(mo)
-                f.write(f'{mo:5}' + ' ' * 2)
-                for k in range(2, len(opt_a)):
-                    f.write(f'{opt_a[k]:5}' + ' ' * 2)
+                f.write(f'{mo:5}' + ' ' * 2 + ' | ')
+                for k in range(len(cand)):
+                    f.write(f'{cand[k]:5}' + ' ' * 2)
                 f.write('\n')
     print('\n')
 

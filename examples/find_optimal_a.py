@@ -22,7 +22,7 @@ def main():
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
-        integral.set_dpq(4, p, 1)
+        integral.set_dpq(20, p, 1)
         integral.show_parameters()
         opt_a, opt_val = integral.first_optimal_a()
         print(f'First optimal = {opt_a}')
