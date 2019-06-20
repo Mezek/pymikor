@@ -34,7 +34,7 @@ def main():
             f.write(' ' + '-' * 35 + '\n')
             while p_num <= max_n_nodes:
                 p_num = n_prime(p_num)
-                integral.set_values(i, p_num)
+                integral.set_values(1, i, p_num, 1)
                 mo = integral.more_optimal(1.e-10)
                 for j in range(len(mo)):
                     f.write(f'{p_num:6}   ')

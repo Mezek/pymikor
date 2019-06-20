@@ -33,7 +33,7 @@ def main():
             f.write('  N=p' + ' ' * 7 + 'a' + ' ' * 7 + f'  values\n')
             f.write(' ' + '-' * 47 + '\n')
             for j in range(len(arr)):
-                integral.set_values(i, arr[j], 2, 1, sigma=1)
+                integral.set_values(3, i, arr[j], 1, sigma=1)
                 mo, mo_val, cand = integral.first_optimal_a_candidates(eps)
                 f.write(f'{arr[j]:6}   ')
                 f.write(f'{mo:5}' + ' ' * 2 + f' |  {mo_val}\n')

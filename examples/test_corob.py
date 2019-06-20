@@ -97,7 +97,7 @@ def main():
                           [4001, 956], [6521, 3138], [10007, 1206]])
 
     integral = Mikor()
-    # integral.set_values(4, 10007, 2, 1, sigma=2)
+    # integral.set_values(3, 4, 10007, 1, sigma=2)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
     print('Spawning numbers...')
@@ -137,7 +137,7 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(1, 7):
-                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_values(1, 4, 5050, 1, sigma=s)
                     integral.set_pa(item)
                     fcn_name = t_fcn[i]
                     result = integral(fcn_name)
@@ -158,7 +158,7 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(3, 4):
-                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_values(1, 4, 5050, 1, sigma=s)
                     integral.set_pa(item)
                     fcn_name = u_fcn[i]
                     result = integral(fcn_name)
@@ -179,7 +179,7 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(2, 6):
-                    integral.set_values(4, 5050, 1, 1, sigma=s)
+                    integral.set_values(1, 4, 5050, 1, sigma=s)
                     integral.set_pa(item)
                     fcn_name = w_fcn[i]
                     result = integral(fcn_name)

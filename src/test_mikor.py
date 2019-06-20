@@ -33,7 +33,7 @@ def fcn3(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(3, 10000, 3, 1, sigma=3)
+    integral.set_values(3, 3, 10000, 1, sigma=3)
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 

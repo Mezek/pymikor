@@ -96,14 +96,15 @@ class Mikor:
         if self.n_nodes <= self.dim_s:
             raise ValueError('Integral dimension s must be < N nodes!')
 
-    def set_values(self, dims, nodes, strategy=1, sec_nodes=1, **kwargs):
+    def set_values(self, strategy, dims, nodes=1009, sec_nodes=1, **kwargs):
         """
+        :param strategy: Set variant of integration
+                          1 - automatic predefined p
+                          2 - automatic predefined p, q
+                          3 - N = p
+                          4 - N = p.q
         :param dims: Dimension of integral
         :param nodes: Number of nodes N1
-        :param strategy: Set variant of integration
-                          1 - predefined coefficients
-                          2 - N = p
-                          3 - N = p.q
         :param sec_nodes: Number of nodes N2
         :return:
         """
@@ -122,13 +123,15 @@ class Mikor:
 
         # TODO: choose p,q for strategy==1
         if self.strategy == 1:
+            pass
+        if self.strategy == 2:
             self.choose_pq()
-        if self.strategy == 2 and sec_nodes > 1:
+        if self.strategy == 3 and sec_nodes > 1:
             self.q_prime = 1
-        if self.strategy == 3 and sec_nodes == 1:
+        if self.strategy == 4 and sec_nodes == 1:
             self.p_prime = n_prime(int(pow(nodes, 2/3)))
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
-        if self.strategy == 3 and sec_nodes > 1:
+        if self.strategy == 4 and sec_nodes > 1:
             self.q_prime = n_prime(sec_nodes)
 
         self.n_nodes = self.p_prime*self.q_prime
@@ -159,9 +162,9 @@ class Mikor:
         self.empty_arrays(dims)
         self.p_prime = n_prime(p)
         if q == 1:
-            self.strategy = 2
-        else:
             self.strategy = 3
+        else:
+            self.strategy = 4
             self.q_prime = n_prime(q)
         self.n_nodes = p*q
 
@@ -410,15 +413,15 @@ class Mikor:
         """
         res_arr = self.a_arr
         # TODO: set coefficients for strategy==1
-        if self.strategy == 1:
+        if self.strategy == 2:
             self.calc_optimal_coefficients_a(self.a_opt)
             res_arr = self.a_arr
         else:
             self.a_opt, self.a_opt_value = self.first_optimal_a()
             self.calc_optimal_coefficients_a(self.a_opt)
-            if self.strategy == 2:
-                res_arr = self.a_arr
             if self.strategy == 3:
+                res_arr = self.a_arr
+            if self.strategy == 4:
                 self.b_opt, self.b_opt_value = self.first_optimal_b()
                 self.calc_optimal_coefficients_b(self.b_opt)
                 self.calc_optimal_coefficients_c()

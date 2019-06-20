@@ -49,7 +49,7 @@ def integrator(f, t):
 
 def main():
     integral = Mikor()
-    integral.set_values(4, 40000, 3, 1, sigma=3)
+    integral.set_values(4, 4, 40000, 1, sigma=3)
     integral.show_parameters()
 
     k_fcn = [fcn1, fcn2, fcn3, fcn4, fcn5]
