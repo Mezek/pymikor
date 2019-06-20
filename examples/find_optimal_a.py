@@ -22,10 +22,18 @@ def main():
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
-        integral.set_dpq(20, p, 1)
+        integral.set_dpq(3, p, 1)
         integral.show_parameters()
-        opt_a, opt_val = integral.first_optimal_a()
+        opt_a, opt_val = integral.first_optimal_a(1)
         print(f'First optimal = {opt_a}')
+
+        aoc = ([opt_a, 6697, 7623])
+        for i in range(len(aoc)):
+            h_valueA = integral.h_poly(aoc[i])
+            h_valueB = integral.h_poly_chet(aoc[i])
+            print(f'      {aoc[i]}')
+            print(f'H   = {h_valueA}')
+            print(f'H_c = {h_valueB}')
 
         c = input('\n Continue? [y/n]')
 

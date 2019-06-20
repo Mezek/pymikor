@@ -123,7 +123,7 @@ class Mikor:
 
         # TODO: choose p,q for strategy==1
         if self.strategy == 1:
-            pass
+            self.choose_p()
         if self.strategy == 2:
             self.choose_pq()
         if self.strategy == 3 and sec_nodes > 1:
@@ -149,6 +149,18 @@ class Mikor:
         print('number of nodes         :', self.n_nodes)
         print('sigma                   :', self.sigma)
         print('strategy                :', self.strategy)
+
+    def choose_p(self):
+        pp = np.array([
+            [[23, 3], [53, 25], [101, 40], [151, 20], [307, 75], [523, 78],
+             [829, 116], [1259, 535], [2129, 937], [3001, 772], [4001, 722],
+             [5003, 1476], [6007, 592], [8191, 739], [10007, 544], [13001, 2135],
+             [20011, 6880], [30011, 10180], [40009, 16592], [50021, 12962], [75011, 26279]]
+        ])
+        self.p_prime = pp[0][8][0]
+        self.a_opt = pp[0][8][1]
+        self.q_prime = 1
+        self.n_nodes = self.p_prime
 
     def choose_pq(self):
         p = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
@@ -234,22 +246,22 @@ class Mikor:
             sm_k = sm_k + k_term*k_term
         return pow(3, s)/p*(1. + 2*sm_k)
 
-    def first_optimal_a(self):
+    def first_optimal_a(self, prt=0):
         """
         Find first optimal value z = a
         :return: tuple of (a value, H(a) value)
         """
-        upran = int((self.p_prime - 1)/2)
+        up_ran = int((self.p_prime - 1)/2)
         optimal_a = 0
         optimal_val = 1e+18
 
-        for i in range(1, upran + 1):
+        for i in range(1, up_ran + 1):
             h_sum = self.h_poly_chet(i)
             if h_sum < optimal_val:
                 optimal_a = i
                 optimal_val = h_sum
-            # if i % 1000 == 0:
-            #    print(f'{i}. iteration')
+            if prt != 0 and i % 1000 == 0:
+                print(f'{i}. iteration')
         return optimal_a, optimal_val
 
     def first_optimal_a_candidates(self, eps):
@@ -257,13 +269,13 @@ class Mikor:
         Find first optimal values z = a
         :return:
         """
-        upran = self.p_prime
+        up_ran = self.p_prime
         optimal_a = 0
         optimal_val = 1e+18
         flag_o = False
         cand = []
 
-        for i in range(1, upran + 1):
+        for i in range(1, up_ran + 1):
             h_sum = self.h_poly(i)
             # print(i, h_sum)
             if abs(h_sum - optimal_val) < eps:
@@ -412,8 +424,11 @@ class Mikor:
         :return: array of [1,c,c^2,...,c^{s-1}]
         """
         res_arr = self.a_arr
-        # TODO: set coefficients for strategy==1
-        if self.strategy == 2:
+        # TODO: check all conditions again
+        if self.strategy == 1:
+            self.calc_optimal_coefficients_a(self.a_opt)
+            res_arr = self.a_arr
+        elif self.strategy == 2:
             self.calc_optimal_coefficients_a(self.a_opt)
             res_arr = self.a_arr
         else:
