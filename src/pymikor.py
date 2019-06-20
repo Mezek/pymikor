@@ -72,7 +72,7 @@ class Mikor:
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
-        self.r_eps = 0.0001
+        self.r_eps = 1e-5
         self.a_opt = 0
         self.a_opt_value = 0
         self.b_opt = 0
@@ -81,6 +81,14 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
         self.v_arr = np.empty(self.sigma)
+
+        self.pp = np.array([
+            [[23, 3], [53, 25], [101, 40], [151, 20], [307, 75], [523, 78],
+             [829, 116], [1259, 535], [2129, 937], [3001, 772], [4001, 722],
+             [5003, 1476], [6007, 592], [8191, 739], [10007, 544], [13001, 2135],
+             [20011, 6880], [30011, 10180], [40009, 16592], [50021, 12962], [75011, 26279],
+             [100003, 13758]]
+        ])
 
     def __del__(self):
         # print(f'Object {self.__class__.__name__} deleted')
@@ -118,12 +126,14 @@ class Mikor:
                 if self.sigma < 1:
                     raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
+            elif k == 'eps':
+                self.r_eps = kwargs[k]
             else:
                 raise AttributeError(f'no attribute named {k}')
 
         # TODO: choose p,q for strategy==1
         if self.strategy == 1:
-            self.choose_p()
+            self.choose_p(0)
         if self.strategy == 2:
             self.choose_pq()
         if self.strategy == 3 and sec_nodes > 1:
@@ -148,24 +158,19 @@ class Mikor:
         print('q - prime               :', self.q_prime)
         print('number of nodes         :', self.n_nodes)
         print('sigma                   :', self.sigma)
+        print('relative eps            :', self.r_eps)
         print('strategy                :', self.strategy)
 
-    def choose_p(self):
-        pp = np.array([
-            [[23, 3], [53, 25], [101, 40], [151, 20], [307, 75], [523, 78],
-             [829, 116], [1259, 535], [2129, 937], [3001, 772], [4001, 722],
-             [5003, 1476], [6007, 592], [8191, 739], [10007, 544], [13001, 2135],
-             [20011, 6880], [30011, 10180], [40009, 16592], [50021, 12962], [75011, 26279]]
-        ])
-        self.p_prime = pp[0][8][0]
-        self.a_opt = pp[0][8][1]
+    def choose_p(self, i):
+        self.p_prime = self.pp[0][i][0]
+        self.a_opt = self.pp[0][i][1]
         self.q_prime = 1
         self.n_nodes = self.p_prime
 
     def choose_pq(self):
-        p = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
-                      6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
-                      100003, 200003, 500009, 1000003, 2000003, 5000011])
+        qq = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
+                       6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
+                       100003, 200003, 500009, 1000003, 2000003, 5000011])
         self.p_prime = 13
         self.q_prime = 1
         self.n_nodes = self.p_prime*self.q_prime
@@ -426,6 +431,7 @@ class Mikor:
         res_arr = self.a_arr
         # TODO: check all conditions again
         if self.strategy == 1:
+            self.choose_p(17)
             self.calc_optimal_coefficients_a(self.a_opt)
             res_arr = self.a_arr
         elif self.strategy == 2:
