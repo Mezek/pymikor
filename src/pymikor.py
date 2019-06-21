@@ -1,3 +1,16 @@
+# Created by Erik Bartoš in 2019.
+# Copyright © 2019 Erik Bartoš <erik.bartos@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version (see <http://www.gnu.org/licenses/>).
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
 import math
 import numpy as np
 import scipy.special
@@ -191,6 +204,10 @@ class Mikor:
         self.p_prime = n_prime(pa[0])
         self.n_nodes = self.p_prime
         self.a_opt = pa[1]
+
+    def set_eps(self, eps):
+        self.r_eps = eps
+        self.eps_flag = True
 
     def h_sum(self, upperb, z):
         """
@@ -512,10 +529,16 @@ class Mikor:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
             elif k == 'eps':
-                self.r_eps = kwargs[k]
-                self.eps_flag = True
+                self.set_eps(kwargs[k])
             else:
                 raise AttributeError(f'no attribute named {k}')
+
+        if self.strategy == 1 and self.dim_s > 2:
+            order = self.dim_s - 3
+            for i in self.pp[order]:
+                print(i)
+        else:
+            pass
 
         integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
         return integ

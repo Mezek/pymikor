@@ -41,17 +41,6 @@ def main():
     integral.show_parameters()
     print(f'Result of integration   : {result}')
 
-    # x = np.array([0.1, 0.2, 0.3, 0.4])
-    # print(fcn3(x))
-
-    """
-    result1 = integral(fcn1, name='F1')
-    result2 = integral(fcn2, name='F2')
-
-    print(f'Result of integration   : {result1}')
-    print(f'Result of integration   : {result2}')
-    """
-
     del integral
 
 
