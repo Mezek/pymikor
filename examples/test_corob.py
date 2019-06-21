@@ -9,6 +9,8 @@ __author__ = "Erik Bartoš"
 __copyright__ = "Copyright © 2019 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
+import sys
+sys.path.append('../src')
 from pymikor import *
 from math import *
 

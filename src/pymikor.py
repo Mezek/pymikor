@@ -73,6 +73,7 @@ class Mikor:
         self.q_prime = 1
         self.sigma = 2
         self.r_eps = 1e-5
+        self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
         self.b_opt = 0
@@ -87,7 +88,7 @@ class Mikor:
              [829, 116], [1259, 535], [2129, 937], [3001, 772], [4001, 722],
              [5003, 1476], [6007, 592], [8191, 739], [10007, 544], [13001, 2135],
              [20011, 6880], [30011, 10180], [40009, 16592], [50021, 12962], [75011, 26279],
-             [100003, 13758]]
+             [100003, 13758], [200003, 79253]]
         ])
 
     def __del__(self):
@@ -128,6 +129,7 @@ class Mikor:
                 self.v_arr = np.empty(self.sigma)
             elif k == 'eps':
                 self.r_eps = kwargs[k]
+                self.eps_flag = True
             else:
                 raise AttributeError(f'no attribute named {k}')
 
@@ -151,15 +153,15 @@ class Mikor:
             warnings.warn('Slow computation, number of nodes too large.')
 
     def show_parameters(self):
-        print('Object class            :', self.__class__.__name__)
-        print('dimension of integration:', self.dim_s)
-        print('dimension of result     :', self.dim_r)
-        print('p - prime               :', self.p_prime)
-        print('q - prime               :', self.q_prime)
-        print('number of nodes         :', self.n_nodes)
-        print('sigma                   :', self.sigma)
-        print('relative eps            :', self.r_eps)
-        print('strategy                :', self.strategy)
+        print(f'\nObject class            : {self.__class__.__name__}')
+        print(f'dimension of integration: {self.dim_s}')
+        print(f'dimension of result     : {self.dim_r}')
+        print(f'p - prime               : {self.p_prime}')
+        print(f'q - prime               : {self.q_prime}')
+        print(f'number of nodes         : {self.n_nodes}')
+        print(f'sigma                   : {self.sigma}')
+        print(f'relative eps            : {self.r_eps}  flag: {self.eps_flag}')
+        print(f'strategy                : {self.strategy}')
 
     def choose_p(self, i):
         self.p_prime = self.pp[0][i][0]
@@ -476,8 +478,9 @@ class Mikor:
         for k in kwargs:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
-            elif k == 'name':
-                print(' '*2 + f'{kwargs[k]}')
+            elif k == 'eps':
+                self.r_eps = kwargs[k]
+                self.eps_flag = True
             else:
                 raise AttributeError(f'no attribute named {k}')
 
