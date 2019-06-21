@@ -431,27 +431,34 @@ class Mikor:
         :return: array of [1,c,c^2,...,c^{s-1}]
         """
         res_arr = self.a_arr
-        # TODO: check all conditions again
-        if self.strategy == 1:
-            self.choose_p(17)
-            self.calc_optimal_coefficients_a(self.a_opt)
-            res_arr = self.a_arr
-        elif self.strategy == 2:
-            self.calc_optimal_coefficients_a(self.a_opt)
-            res_arr = self.a_arr
+        if self.dim_s == 2:
+            res_arr = self.calc_fibonacci()
         else:
-            self.a_opt, self.a_opt_value = self.first_optimal_a()
-            self.calc_optimal_coefficients_a(self.a_opt)
-            if self.strategy == 3:
+            # TODO: check all conditions again
+            if self.strategy == 1:
+                self.choose_p(17)
+                self.calc_optimal_coefficients_a(self.a_opt)
                 res_arr = self.a_arr
-            if self.strategy == 4:
-                self.b_opt, self.b_opt_value = self.first_optimal_b()
-                self.calc_optimal_coefficients_b(self.b_opt)
-                self.calc_optimal_coefficients_c()
-                res_arr = self.c_arr
+            elif self.strategy == 2:
+                self.calc_optimal_coefficients_a(self.a_opt)
+                res_arr = self.a_arr
+            else:
+                self.a_opt, self.a_opt_value = self.first_optimal_a()
+                self.calc_optimal_coefficients_a(self.a_opt)
+                if self.strategy == 3:
+                    res_arr = self.a_arr
+                if self.strategy == 4:
+                    self.b_opt, self.b_opt_value = self.first_optimal_b()
+                    self.calc_optimal_coefficients_b(self.b_opt)
+                    self.calc_optimal_coefficients_c()
+                    res_arr = self.c_arr
         return res_arr
 
     def calc_aux_period_coefficients(self):
+        """
+        Calculate auxiliary period coefficients
+        :return: array of coefficients v_arr
+        """
         s_sign = 1
         k1 = self.sigma - 1
         for i in range(self.sigma):
@@ -459,6 +466,11 @@ class Mikor:
             s_sign = -s_sign
 
     def periodization_fcn(self, x):
+        """
+        Periodizing of function
+        :param x: parameter
+        :return: function psi and derivation of psi
+        """
         sig = self.sigma
         if sig == 1:
             return x, 1
@@ -474,21 +486,13 @@ class Mikor:
         der_psi = cp*pow(x*(1. - x), k1)
         return psi, der_psi
 
-    def __call__(self, integrand_fcn, **kwargs):
-        for k in kwargs:
-            if k == 'strategy':
-                print(f'strategy = {kwargs[k]}')
-            elif k == 'eps':
-                self.r_eps = kwargs[k]
-                self.eps_flag = True
-            else:
-                raise AttributeError(f'no attribute named {k}')
-
-        if self.dim_s == 2:
-            mi_a_arr = self.calc_fibonacci()
-        else:
-            mi_a_arr = self.optimal_coefficients()
-
+    def integral_value(self, mi_a_arr, integrand_fcn):
+        """
+        Calculation of integral with periodization function
+        :param mi_a_arr: argument vector
+        :param integrand_fcn: integrated function
+        :return: value of integral
+        """
         trans_x = np.empty(self.dim_s)
         mi_f = 0.
         for i in range(1, self.n_nodes + 1):
@@ -502,3 +506,16 @@ class Mikor:
                 mi_drv = mi_drv * der_psi
             mi_f += integrand_fcn(trans_x) * mi_drv
         return mi_f/self.n_nodes
+
+    def __call__(self, integrand_fcn, **kwargs):
+        for k in kwargs:
+            if k == 'strategy':
+                print(f'strategy = {kwargs[k]}')
+            elif k == 'eps':
+                self.r_eps = kwargs[k]
+                self.eps_flag = True
+            else:
+                raise AttributeError(f'no attribute named {k}')
+
+        integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+        return integ

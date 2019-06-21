@@ -29,7 +29,7 @@ def main():
         opt_a, opt_val = integral.first_optimal_a(1)
         print(f'First optimal = {opt_a}')
 
-        aoc = ([opt_a, 79253, 75025])
+        aoc = ([opt_a, 55279])
         for i in range(len(aoc)):
             h_valueA = integral.h_poly(aoc[i])
             h_valueB = integral.h_poly_chet(aoc[i])
