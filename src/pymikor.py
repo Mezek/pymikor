@@ -452,11 +452,7 @@ class Mikor:
             res_arr = self.calc_fibonacci()
         else:
             # TODO: check all conditions again
-            if self.strategy == 1:
-                self.choose_p(17)
-                self.calc_optimal_coefficients_a(self.a_opt)
-                res_arr = self.a_arr
-            elif self.strategy == 2:
+            if self.strategy == 2:
                 self.calc_optimal_coefficients_a(self.a_opt)
                 res_arr = self.a_arr
             else:
