@@ -85,7 +85,7 @@ class Mikor:
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
-        self.r_eps = 1e-5
+        self.req_eps = 1e-5
         self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
@@ -141,7 +141,7 @@ class Mikor:
                     raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
             elif k == 'eps':
-                self.r_eps = kwargs[k]
+                self.req_eps = kwargs[k]
                 self.eps_flag = True
             else:
                 raise AttributeError(f'no attribute named {k}')
@@ -173,7 +173,7 @@ class Mikor:
         print(f'q - prime               : {self.q_prime}')
         print(f'number of nodes         : {self.n_nodes}')
         print(f'sigma                   : {self.sigma}')
-        print(f'relative eps            : {self.r_eps}  flag: {self.eps_flag}')
+        print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
     def choose_p(self, i):
@@ -206,7 +206,7 @@ class Mikor:
         self.a_opt = pa[1]
 
     def set_eps(self, eps):
-        self.r_eps = eps
+        self.req_eps = eps
         self.eps_flag = True
 
     def h_sum(self, upperb, z):
@@ -533,12 +533,29 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        if self.strategy == 1 and self.dim_s > 2:
-            order = self.dim_s - 3
-            for i in self.pp[order]:
-                print(i)
+        # absolute error
+        integ = float('nan')
+        if self.strategy == 1:
+            if self.dim_s > 2:
+                order = self.dim_s - 3
+                act_val = 0.
+                eps_val = float('nan')
+                for i in self.pp[order]:
+                    self.set_pa(i)
+                    oc = self.calc_optimal_coefficients_a(i[1])
+                    iv = self.integral_value(oc, integrand_fcn)
+                    if math.fabs(act_val - iv) <= self.req_eps:
+                        eps_val = iv
+                        break
+                    act_val = iv
+                if not math.isnan(eps_val):
+                    integ = eps_val
+                else:
+                    print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
+                    print(f'Try to increase periodization value sigma={self.sigma}.')
+            else:
+                pass
         else:
-            pass
+            integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
-        integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
         return integ

@@ -37,9 +37,9 @@ def main():
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
-    result = integral(fcn, eps=1e-6)
-    integral.show_parameters()
-    print(f'Result of integration   : {result}')
+    result = integral(fcn, eps=1e-5)
+    # integral.show_parameters()
+    print(f'\nResult of integration   : {result}')
 
     del integral
 
