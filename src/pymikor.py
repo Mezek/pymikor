@@ -276,6 +276,8 @@ class Mikor:
     def first_optimal_a(self, prt=0):
         """
         Find first optimal value z = a
+
+        :param prt: 0 - no print, 1 - print iteration progress
         :return: tuple of (a value, H(a) value)
         """
         up_ran = int((self.p_prime - 1)/2)
@@ -456,6 +458,8 @@ class Mikor:
         else:
             # TODO: check all conditions again
             if self.strategy == 2:
+                print('\nUnknown optimal...')
+                print(self.a_opt)
                 self.calc_optimal_coefficients_a(self.a_opt)
                 res_arr = self.a_arr
             else:
@@ -534,15 +538,15 @@ class Mikor:
 
         # absolute error
         integ = float('nan')
-        if self.strategy == 1:
+        if self.strategy == 1 or self.strategy == 2:
             if self.dim_s > 2:
                 order = self.dim_s - 3
                 act_val = 0.
                 eps_val = float('nan')
                 for i in self.pp[order]:
                     self.set_pa(i)
-                    oc = self.calc_optimal_coefficients_a(i[1])
-                    iv = self.integral_value(oc, integrand_fcn)
+                    arg_vector = self.calc_optimal_coefficients_a(i[1])
+                    iv = self.integral_value(arg_vector, integrand_fcn)
                     if math.fabs(act_val - iv) <= self.req_eps:
                         eps_val = iv
                         break
@@ -551,9 +555,9 @@ class Mikor:
                     integ = eps_val
                 else:
                     print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
-                    print(f'Try to increase periodization value sigma={self.sigma}.')
+                    print(f'Try to increase current periodization value sigma={self.sigma}.')
             else:
-                pass
+                print('Ooops!')
         else:
             integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
