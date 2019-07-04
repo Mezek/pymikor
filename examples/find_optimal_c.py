@@ -20,8 +20,8 @@ def main():
     c = 'y'
     while c == 'y':
         # p = int(input('\n Set p number: '))
-        p = int(829)
-        q = int(29)
+        p = int(907) # 829)
+        q = int(31) # 29, 31, 37, 41, 47, 53
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
@@ -30,16 +30,17 @@ def main():
             continue
         integral.set_dpq(3, p, q)
         integral.show_parameters()
-        opt_a, opt_val = integral.first_optimal_a(1)
-        print(f'First optimal = {opt_a}')
+        opt_a, opt_val = integral.first_optimal_a()
+        opt_b, opt_val = integral.first_optimal_b()
+        print(f'First optimals = {opt_a} {opt_b}')
 
-        aoc = ([opt_a, 778])
-        for i in range(len(aoc)):
-            h_valueA = integral.h_poly(aoc[i])
-            h_valueB = integral.h_poly_chet(aoc[i])
-            print(f'      {aoc[i]}')
-            print(f'H   = {h_valueA}')
-            print(f'H_c = {h_valueB}')
+        #aoc = ([opt_a, 778])
+        #for i in range(len(aoc)):
+        #    h_valueA = integral.h_poly(aoc[i])
+        #    h_valueB = integral.h_poly_chet(aoc[i])
+        #    print(f'      {aoc[i]}')
+        #    print(f'H   = {h_valueA}')
+        #    print(f'H_c = {h_valueB}')
 
         # c = input('\n Continue? [y/n]')
         c = 'n'
