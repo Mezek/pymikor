@@ -20,8 +20,9 @@ def main():
     c = 'y'
     while c == 'y':
         # p = int(input('\n Set p number: '))
-        p = int(907)  # 829)
-        q = int(31)  # 29, 31, 37, 41, 47, 53
+        p = int(907)
+        opt_a = 355
+        q = int(37)
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
@@ -30,8 +31,8 @@ def main():
             continue
         integral.set_dpq(3, p, q)
         integral.show_parameters()
-        opt_a, opt_a_val = integral.first_optimal_a()
-        integral.set_dpq(3, p, q)
+        opt_a, opt_a_val = integral.first_optimal_a(0)
+        integral.calc_optimal_coefficients_a(opt_a)
         opt_b, opt_b_val = integral.first_optimal_b()
         print(f'First optimals = {opt_a} {opt_b}')
 
