@@ -377,6 +377,13 @@ class Mikor:
             #    print(f'{i}. iteration')
         return optimal_b, optimal_val
 
+    def find_optimal_b(self, first_a=None):
+        if first_a is None:
+            print('None')
+        else:
+            print(first_a)
+        return first_a
+
     def more_optimal(self, err_limit):
         """
         Find more optimal values z = a, to check with Saltykov's values

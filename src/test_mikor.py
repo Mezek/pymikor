@@ -37,9 +37,13 @@ def main():
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
-    result = integral(fcn, eps=1e-5)
-    # integral.show_parameters()
-    print(f'\nResult of integration   : {result}')
+    # result = integral(fcn, eps=1e-5)
+    ## integral.show_parameters()
+    # print(f'\nResult of integration   : {result}')
+
+    integral.find_optimal_b()
+    integral.find_optimal_b(7)
+    integral.find_optimal_b(float('nan'))
 
     del integral
 
