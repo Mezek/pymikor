@@ -379,7 +379,8 @@ class Mikor:
 
     def find_optimal_b(self, first_a=None):
         if first_a is None:
-            print('None')
+            opt_a, opt_a_val = self.first_optimal_a(0)
+            print(f'None: {opt_a}')
         else:
             print(first_a)
         return first_a
