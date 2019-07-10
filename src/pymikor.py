@@ -485,7 +485,7 @@ class Mikor:
                 if self.strategy == 3:
                     res_arr = self.a_arr
                 if self.strategy == 4:
-                    self.b_opt, self.b_opt_value = self.first_optimal_b()
+                    self.b_opt, self.b_opt_value = self.first_optimal_b(self.a_opt)
                     self.calc_optimal_coefficients_b(self.b_opt)
                     self.calc_optimal_coefficients_c()
                     res_arr = self.c_arr
