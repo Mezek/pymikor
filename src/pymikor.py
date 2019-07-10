@@ -296,6 +296,8 @@ class Mikor:
                 optimal_val = h_sum
             if prt != 0 and i % 1000 == 0:
                 print(f'{i}. iteration')
+        self.a_opt = optimal_a
+        self.a_opt_value = optimal_val
         return optimal_a, optimal_val
 
     def first_optimal_a_candidates(self, eps):
@@ -357,7 +359,7 @@ class Mikor:
         nn = self.p_prime*self.q_prime
         return pow(3, self.dim_s) / nn * self.h_tilde_sum(nn, z)
 
-    def first_optimal_b(self):
+    def find_optimal_b(self):
         """
         Find first optimal value z = b
         :return: tuple of (b value, H(b) value)
@@ -375,15 +377,17 @@ class Mikor:
                 optimal_val = h_sum
             # if i % 1000 == 0:
             #    print(f'{i}. iteration')
+        self.b_opt = optimal_b
+        self.b_opt_value = optimal_val
         return optimal_b, optimal_val
 
-    def find_optimal_b(self, first_a=None):
+    def first_optimal_b(self, first_a=None):
         if first_a is None:
-            opt_a, opt_a_val = self.first_optimal_a(0)
-            print(f'None: {opt_a}')
-        else:
-            print(first_a)
-        return first_a
+            first_a, opt_a_val = self.first_optimal_a(0)
+        if first_a < 1 or first_a > self.p_prime:
+            warnings.warn('Check first optimal a!')
+        self.calc_optimal_coefficients_a(first_a)
+        return self.find_optimal_b()
 
     def more_optimal(self, err_limit):
         """

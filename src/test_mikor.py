@@ -41,9 +41,9 @@ def main():
     ## integral.show_parameters()
     # print(f'\nResult of integration   : {result}')
 
-    integral.find_optimal_b()
-    integral.find_optimal_b(7)
-    integral.find_optimal_b(float('nan'))
+    integral.first_optimal_b()
+    integral.first_optimal_b(402)
+    # integral.first_optimal_b(909)
 
     del integral
 
