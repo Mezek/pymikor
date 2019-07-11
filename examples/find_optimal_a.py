@@ -20,7 +20,7 @@ def main():
     c = 'y'
     while c == 'y':
         # p = int(input('\n Set p number: '))
-        p = int(30011)
+        p = int(40009)
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
@@ -29,7 +29,7 @@ def main():
         opt_a, opt_val = integral.first_optimal_a(1)
         print(f'First optimal = {opt_a}')
 
-        aoc = ([opt_a, 2311])
+        aoc = ([opt_a, 2945])
         for i in range(len(aoc)):
             h_valueA = integral.h_poly(aoc[i])
             h_valueB = integral.h_poly_chet(aoc[i])
