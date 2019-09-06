@@ -22,16 +22,16 @@ def main():
         # p = int(input('\n Set p number: '))
         # 1259 2129 3001 4001 5003 6007 8191 10007 13001 20011 30011 40009 50021
         # 75011 100003   500009
-        p = int(500009)
+        p = int(1543)
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
-        integral.set_dpq(16, p, 1)
+        integral.set_dpq(5, p, 1)
         integral.show_parameters()
         opt_a, opt_val = integral.first_optimal_a(1)
         print(f'First optimal = {opt_a}')
 
-        aoc = ([opt_a, 61373])
+        aoc = ([opt_a, 663])
         for i in range(len(aoc)):
             h_valueA = integral.h_poly(aoc[i])
             h_valueB = integral.h_poly_chet(aoc[i])
