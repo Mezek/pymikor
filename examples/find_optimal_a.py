@@ -22,11 +22,11 @@ def main():
         # p = int(input('\n Set p number: '))
         # 1259 2129 3001 4001 5003 6007 8191 10007 13001 20011 30011 40009 50021
         # 75011 100003   500009
-        p = int(4001)
+        p = int(50021)
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
-        integral.set_dpq(10, p, 1)
+        integral.set_dpq(11, p, 1)
         integral.show_parameters()
         opt_a, opt_val = integral.first_optimal_a(1)
         print(f'First optimal = {opt_a}')
