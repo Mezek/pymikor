@@ -20,7 +20,7 @@ def main():
     c = 'y'
     while c == 'y':
         # p = int(input('\n Set p number: '))
-        qq = np.array([10007, 101, 684])
+        qq = np.array([13001, 113, 463])
         p = qq[0]
         q = qq[1]
         opt_a = qq[2]
