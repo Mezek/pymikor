@@ -44,7 +44,7 @@ def main():
                     f.write(f'{opt_val:12.6}' + ' ' * 2)
                     f.write(f'{mo[j]:5}' + ' ' * 2)
                     for k in range(2, len(opt_a)):
-                        f.write(f'{opt_a[k]:5}' + ' ' * 2)
+                        f.write(f'{opt_a[k]:5.0f}' + ' ' * 2)
                     f.write('\n')
                 p_num += 1
     print('\n')

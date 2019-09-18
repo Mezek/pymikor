@@ -49,7 +49,7 @@ def main():
                 f.write(f'{integral.b_opt:5}' + ' ' * 2)
                 f.write(f'{integral.b_opt_value - 1:12.6}' + ' ' * 2)
                 for k in range(1, len(c)):
-                    f.write(f'{c[k]:6}' + ' ' * 2)
+                    f.write(f'{c[k]:6.0f}' + ' ' * 2)
                 f.write('\n')
 
 
