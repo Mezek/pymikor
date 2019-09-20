@@ -20,7 +20,7 @@ def main():
     c = 'y'
     while c == 'y':
         # p = int(input('\n Set p number: '))
-        qq = np.array([13001, 113, 6426])
+        qq = np.array([13001, 113, 155])
         p = qq[0]
         q = qq[1]
         opt_a = qq[2]
@@ -30,7 +30,7 @@ def main():
         if not is_prime(q):
             print(f'q={q} in NOT prime number')
             break
-        integral.set_dpq(12, p, q)
+        integral.set_dpq(15, p, q)
         integral.show_parameters()
         opt_b, opt_b_val = integral.first_optimal_b(opt_a)
         print(f'Optimals = {p}, {q}, {integral.a_opt}, {opt_b}')
