@@ -233,8 +233,8 @@ class Mikor:
         # print(f'Object {self.__class__.__name__} deleted')
         print('\n')
 
-    def empty_arrays(self, dims):
-        self.dim_s = dims
+    def empty_arrays(self, dimension):
+        self.dim_s = dimension
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
@@ -243,19 +243,19 @@ class Mikor:
         if self.n_nodes <= self.dim_s:
             raise ValueError('Integral dimension s must be < N nodes!')
 
-    def set_values(self, strategy, dims, nodes=1009, sec_nodes=1, **kwargs):
+    def set_values(self, strategy, dimension, nodes=1009, sec_nodes=1, **kwargs):
         """
         :param strategy: Set variant of integration
                           1 - automatic predefined p
                           2 - automatic predefined p, q
                           3 - N = p
                           4 - N = p.q
-        :param dims: Dimension of integral
+        :param dimension: Dimension of integral
         :param nodes: Number of nodes N1
         :param sec_nodes: Number of nodes N2
         :return:
         """
-        self.empty_arrays(dims)
+        self.empty_arrays(dimension)
         self.p_prime = n_prime(nodes)
         self.strategy = strategy
 
@@ -315,8 +315,8 @@ class Mikor:
         self.q_prime = 1
         self.n_nodes = self.p_prime*self.q_prime
 
-    def set_dpq(self, dims, p, q):
-        self.empty_arrays(dims)
+    def set_dpq(self, dimension, p, q):
+        self.empty_arrays(dimension)
         self.p_prime = n_prime(p)
         if q == 1:
             self.strategy = 3
