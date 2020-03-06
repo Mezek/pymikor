@@ -22,8 +22,8 @@ def main():
         # p = int(input('\n Set p number: '))
         # 1259 2129 3001 4001 5003 6007 8191 10007 13001 20011 30011 40009 50021
         # 75011 100003   500009
-        p = int(1000003)
-        # p = int(200003)
+        # p = int(1000003)
+        p = int(200003)
         if not is_prime(p):
             print(f'{p} in NOT prime number')
             continue
@@ -33,8 +33,7 @@ def main():
         # print(f'First optimal = {opt_a}')
 
         # aoc = ([opt_a, 90347])
-        aoc = ([90347, 441796, 342972])
-        # aoc = ([19477, 95498, 79253])
+        aoc = ([19477, 95498, 79253])
         for i in range(len(aoc)):
             h_valueA = integral.h_poly(aoc[i])
             h_valueB = integral.h_poly_chet(aoc[i])

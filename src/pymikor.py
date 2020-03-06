@@ -133,7 +133,7 @@ class Mikor:
             [[829, 32], [1259, 392], [2129, 86], [3001, 955], [4001, 1728], [5003, 2362],
              [6007, 1253], [8191, 2602], [10007, 1905], [13001, 1352], [20011, 7191],
              [30011, 7011], [40009, 9946], [50021, 10899], [75011, 17605], [100003, 15120],
-             [200003, 39993], [500009, 42535], [1000003, 230727]],
+             [200003, 39993], [500009, 42535], [1000003, 230727], [2000003, 832685]],
             #  9
             [[2129, 636], [3001, 108], [4001, 1234], [5003, 526], [6007, 2633],
              [8191, 3052], [10007, 4748], [13001, 3391], [20011, 6181], [30011, 2348],
@@ -357,8 +357,8 @@ class Mikor:
             zs = (zs*z) % p
         for k in range(1, upperb + 1):
             k_term = 1.
-            for l in range(s):
-                ent = fraction(k*a[l])
+            for ls in range(s):
+                ent = fraction(k*a[ls])
                 k_term = k_term*(1. - ent - ent)
             sm_k = sm_k + k_term*k_term
         return sm_k
@@ -395,8 +395,8 @@ class Mikor:
         sm_k = 0
         for k in range(1, upperb + 1):
             k_term = 1.
-            for l in range(s):
-                ent = fraction(k*aopt[l] / p)
+            for ls in range(s):
+                ent = fraction(k*aopt[ls] / p)
                 k_term = k_term*(1. - ent - ent)
             sm_k = sm_k + k_term*k_term
         return pow(3, s)/p*(1. + 2*sm_k)
@@ -467,8 +467,8 @@ class Mikor:
             zs = (zs*z) % q
         for k in range(1, upperb + 1):
             k_term = 1.
-            for l in range(s):
-                ent = fraction(k*b[l])
+            for ls in range(s):
+                ent = fraction(k*b[ls])
                 k_term = k_term*(1. - ent - ent)
             sm_k = sm_k + k_term*k_term
         return sm_k
