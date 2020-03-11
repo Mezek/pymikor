@@ -17,20 +17,22 @@ def fcn(x):
 
 def main():
     integral = Mikor()
+    integral.set_values(1, 4, 10000, 1, sigma=2)
+    integral.show_parameters()
+    # print(f'\nResult of integration   : {result}')
+
     integral.set_values(2, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-
     result = integral(fcn, eps=1e-5)
     print(f'\nResult of integration   : {result}')
 
-    integral.set_values(1, 4, 10000, 1, sigma=2)
-    print(f'\nResult of integration   : {result}')
-
     integral.set_values(3, 4, 10000, 1, sigma=2)
-    print(f'\nResult of integration   : {result}')
+    integral.show_parameters()
+    # print(f'\nResult of integration   : {result}')
 
     integral.set_values(4, 4, 10000, 1, sigma=2)
-    print(f'\nResult of integration   : {result}')
+    integral.show_parameters()
+    # print(f'\nResult of integration   : {result}')
 
     del integral
 

@@ -279,9 +279,10 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
+        # Setting of p, q
         # TODO: choose p,q for strategy==1 & 2
         if self.strategy == 1:
-            self.choose_p(0)
+            self.choose_p()
         if self.strategy == 2:
             self.choose_pq()
         if self.strategy == 3 and sec_nodes > 1:
@@ -309,16 +310,14 @@ class Mikor:
         print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def choose_p(self, i):
-        self.p_prime = self.pp[0][i][0]
-        self.a_opt = self.pp[0][i][1]
+    def choose_p(self):
+        di = self.dim_s - 3
+        self.p_prime = self.pp[di][0][0]
+        self.a_opt = self.pp[di][0][1]
         self.q_prime = 1
         self.n_nodes = self.p_prime
 
     def choose_pq(self):
-        qq = np.array([23, 53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
-                       6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021, 75011,
-                       100003, 200003, 500009, 1000003, 2000003, 5000011])
         self.p_prime = 13
         self.q_prime = 1
         self.n_nodes = self.p_prime*self.q_prime
