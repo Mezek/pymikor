@@ -280,7 +280,6 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         # Setting of p, q
-        # TODO: choose p,q for strategy==1 & 2
         if self.strategy == 1:
             self.choose_p()
         if self.strategy == 2:
@@ -311,6 +310,7 @@ class Mikor:
         print(f'strategy                : {self.strategy}')
 
     def choose_p(self):
+        """ Choose p value from array """
         di = self.dim_s - 3
         self.p_prime = self.pp[di][0][0]
         self.a_opt = self.pp[di][0][1]
@@ -318,8 +318,12 @@ class Mikor:
         self.n_nodes = self.p_prime
 
     def choose_pq(self):
-        self.p_prime = 13
-        self.q_prime = 1
+        """ Choose p, q values from arrays """
+        di = self.dim_s - 3
+        self.p_prime = self.qq[di][0][0]
+        self.q_prime = self.qq[di][0][1]
+        self.a_opt = self.qq[di][0][2]
+        self.b_opt = self.qq[di][0][3]
         self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dimension, p, q):
@@ -678,6 +682,7 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
+        # TODO: redundant dim > 2, can be == 2
         # absolute error
         integ = float('nan')
         if self.strategy == 1 or self.strategy == 2:
