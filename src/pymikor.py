@@ -284,18 +284,18 @@ class Mikor:
             self.choose_p()
         if self.strategy == 2:
             self.choose_pq()
-        if self.strategy == 3 and sec_nodes > 1:
+        if self.strategy == 3:
             self.q_prime = 1
         if self.strategy == 4 and sec_nodes == 1:
             self.p_prime = n_prime(int(pow(nodes, 2/3)))
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
         if self.strategy == 4 and sec_nodes > 1:
             self.q_prime = n_prime(sec_nodes)
-
         self.n_nodes = self.p_prime*self.q_prime
 
+        assert (self.dim_s > 1), 'Integral dimension s must be >= 2!'
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
-        if strategy == 2 and nodes >= 10000:
+        if strategy == 3 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
 
     def show_parameters(self):
@@ -313,9 +313,9 @@ class Mikor:
         """ Choose p value from array """
         di = self.dim_s - 3
         self.p_prime = self.pp[di][0][0]
-        self.a_opt = self.pp[di][0][1]
         self.q_prime = 1
-        self.n_nodes = self.p_prime
+        self.a_opt = self.pp[di][0][1]
+        self.b_opt = 0
 
     def choose_pq(self):
         """ Choose p, q values from arrays """
@@ -324,7 +324,6 @@ class Mikor:
         self.q_prime = self.qq[di][0][1]
         self.a_opt = self.qq[di][0][2]
         self.b_opt = self.qq[di][0][3]
-        self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dimension, p, q):
         self.empty_arrays(dimension)
