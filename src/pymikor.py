@@ -295,6 +295,7 @@ class Mikor:
 
         assert (self.dim_s > 1), 'Integral dimension s must be >= 2!'
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
+        # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
 
