@@ -247,10 +247,6 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
 
-    def check_numbers(self):
-        if self.n_nodes <= self.dim_s:
-            raise ValueError('Integral dimension s must be < N nodes!')
-
     def set_values(self, strategy, dimension, nodes=1009, sec_nodes=1, **kwargs):
         """
         :param strategy: Set variant of integration
@@ -263,21 +259,9 @@ class Mikor:
         :param sec_nodes: Number of nodes N2
         :return:
         """
+        self.strategy = strategy
         self.empty_arrays(dimension)
         self.p_prime = n_prime(nodes)
-        self.strategy = strategy
-
-        for k in kwargs:
-            if k == 'sigma':
-                self.sigma = kwargs[k]
-                if self.sigma < 1:
-                    raise AttributeError(f'{k} must be greater then {self.sigma}')
-                self.v_arr = np.empty(self.sigma)
-            elif k == 'eps':
-                self.req_eps = kwargs[k]
-                self.eps_flag = True
-            else:
-                raise AttributeError(f'no attribute named {k}')
 
         # Setting of p, q
         if self.strategy == 1:
@@ -298,6 +282,18 @@ class Mikor:
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
+
+        for k in kwargs:
+            if k == 'sigma':
+                self.sigma = kwargs[k]
+                if self.sigma < 1:
+                    raise AttributeError(f'{k} must be greater then {self.sigma}')
+                self.v_arr = np.empty(self.sigma)
+            elif k == 'eps':
+                self.req_eps = kwargs[k]
+                self.eps_flag = True
+            else:
+                raise AttributeError(f'no attribute named {k}')
 
     def show_parameters(self):
         print(f'\nObject class            : {self.__class__.__name__}')
