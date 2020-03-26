@@ -277,7 +277,7 @@ class Mikor:
             self.q_prime = n_prime(sec_nodes)
         self.n_nodes = self.p_prime*self.q_prime
 
-        assert (self.dim_s > 1), 'Integral dimension s must be >= 2!'
+        assert (self.dim_s < 2), 'Integral dimension s must be >= 2!'
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
@@ -480,7 +480,7 @@ class Mikor:
         :param z: polynomial parameter
         :return: sum k = 1,2,...,N=p.q
         """
-        nn = self.p_prime*self.q_prime
+        nn = self.n_nodes
         return pow(3, self.dim_s) / nn * self.h_tilde_sum(nn, z, self.a_arr)
 
     def find_optimal_b(self):
@@ -560,6 +560,7 @@ class Mikor:
         self.a_arr[1] = opt_val
         for i in range(2, s):
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
+        print('a_arr: ', self.a_arr)
         return self.a_arr
 
     def calc_optimal_coefficients_b(self, opt_val):
