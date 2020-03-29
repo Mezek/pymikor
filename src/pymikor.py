@@ -277,7 +277,7 @@ class Mikor:
             self.q_prime = n_prime(sec_nodes)
         self.n_nodes = self.p_prime*self.q_prime
 
-        assert (self.dim_s < 2), 'Integral dimension s must be >= 2!'
+        assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
@@ -560,7 +560,6 @@ class Mikor:
         self.a_arr[1] = opt_val
         for i in range(2, s):
             self.a_arr[i] = (self.a_arr[i-1]*opt_val) % self.p_prime
-        print('a_arr: ', self.a_arr)
         return self.a_arr
 
     def calc_optimal_coefficients_b(self, opt_val):
@@ -679,7 +678,9 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        # TODO: redundant dim > 2, can be == 2
+        # TODO: calculation with optimal coeffs
+        # self.calc_optimal_coefficients_c()
+
         # absolute error
         integ = float('nan')
         if self.strategy == 1 or self.strategy == 2:
