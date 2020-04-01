@@ -263,11 +263,13 @@ class Mikor:
         self.empty_arrays(dimension)
         self.p_prime = n_prime(nodes)
 
-        # Setting of p, q
+        # Setting of p, q for strategy
+        assert (self.strategy <= 4), 'Too high strategy!'
+        assert (self.strategy > 0), 'Unknown strategy for the integration!'
         if self.strategy == 1:
-            self.choose_p()
+            self.choose_p(0)
         if self.strategy == 2:
-            self.choose_pq()
+            self.choose_pq(0)
         if self.strategy == 3:
             self.q_prime = 1
         if self.strategy == 4 and sec_nodes == 1:
@@ -306,21 +308,21 @@ class Mikor:
         print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def choose_p(self):
+    def choose_p(self, i):
         """ Choose p value from array """
-        di = self.dim_s - 3
-        self.p_prime = self.pp[di][0][0]
+        dim = self.dim_s - 3
+        self.p_prime = self.pp[dim][i][0]
         self.q_prime = 1
-        self.a_opt = self.pp[di][0][1]
+        self.a_opt = self.pp[dim][i][1]
         self.b_opt = 0
 
-    def choose_pq(self):
+    def choose_pq(self, i):
         """ Choose p, q values from arrays """
-        di = self.dim_s - 3
-        self.p_prime = self.qq[di][0][0]
-        self.q_prime = self.qq[di][0][1]
-        self.a_opt = self.qq[di][0][2]
-        self.b_opt = self.qq[di][0][3]
+        dim = self.dim_s - 3
+        self.p_prime = self.qq[dim][i][0]
+        self.q_prime = self.qq[dim][i][1]
+        self.a_opt = self.qq[dim][i][2]
+        self.b_opt = self.qq[dim][i][3]
 
     def set_dpq(self, dimension, p, q):
         self.empty_arrays(dimension)
@@ -598,12 +600,14 @@ class Mikor:
         if self.dim_s == 2:
             res_arr = self.calc_fibonacci()
         else:
-            # TODO: check all conditions again
-            if self.strategy == 2:
-                print('\nUnknown optimal...')
-                print(self.a_opt)
+            if self.strategy == 1:
                 self.calc_optimal_coefficients_a(self.a_opt)
                 res_arr = self.a_arr
+            elif self.strategy == 2:
+                self.calc_optimal_coefficients_a(self.a_opt)
+                self.calc_optimal_coefficients_b(self.b_opt)
+                self.calc_optimal_coefficients_c()
+                res_arr = self.c_arr
             else:
                 self.a_opt, self.a_opt_value = self.first_optimal_a()
                 self.calc_optimal_coefficients_a(self.a_opt)
@@ -682,6 +686,7 @@ class Mikor:
         # self.calc_optimal_coefficients_c()
 
         # absolute error
+        # TODO: next IF will be checking eps...
         integ = float('nan')
         if self.strategy == 1 or self.strategy == 2:
             if self.dim_s > 2:

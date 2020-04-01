@@ -17,7 +17,7 @@ def fcn(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(1, 3, 10000, 1, sigma=2)
+    integral.set_values(1, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     # print(f'\nResult of integration   : {result}')
 
