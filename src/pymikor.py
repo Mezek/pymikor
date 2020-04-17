@@ -263,13 +263,17 @@ class Mikor:
         self.empty_arrays(dimension)
         self.p_prime = n_prime(nodes)
 
+        assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
+
         # Setting of p, q for strategy
         assert (self.strategy <= 4), 'Too high strategy!'
         assert (self.strategy > 0), 'Unknown strategy for the integration!'
         if self.strategy == 1:
-            self.choose_p(0)
+            if self.dim_s > 2:
+                self.choose_p(0)
         if self.strategy == 2:
-            self.choose_pq(0)
+            if self.dim_s > 2:
+                self.choose_pq(0)
         if self.strategy == 3:
             self.q_prime = 1
         if self.strategy == 4 and sec_nodes == 1:
@@ -279,11 +283,11 @@ class Mikor:
             self.q_prime = n_prime(sec_nodes)
         self.n_nodes = self.p_prime*self.q_prime
 
-        assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
-        assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
+
+        assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
 
         for k in kwargs:
             if k == 'sigma':
@@ -593,7 +597,7 @@ class Mikor:
 
     def optimal_coefficients(self):
         """
-        Provides optimal coefficients based on strategy and defined eps
+        Provides optimal coefficients based on strategy and dimension
         :return: array of [1,c,c^2,...,c^{s-1}]
         """
         res_arr = self.a_arr
@@ -682,13 +686,12 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        # TODO: calculation with optimal coeffs
-        # self.calc_optimal_coefficients_c()
+        # TODO: calculation with optimal coefficients
+        integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
         # absolute error
         # TODO: next IF will be checking eps...
-        integ = float('nan')
-        if self.strategy == 1 or self.strategy == 2:
+        if self.strategy < 3:
             if self.dim_s > 2:
                 order = self.dim_s - 3
                 act_val = 0.
@@ -702,13 +705,13 @@ class Mikor:
                         break
                     act_val = iv
                 if not math.isnan(eps_val):
-                    integ = eps_val
+                    integral = eps_val
                 else:
                     print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
                     print(f'Try to increase current periodization value sigma={self.sigma}.')
             else:
-                print('Ooops!')
+                integral = float('nan')
         else:
-            integ = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+            integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
-        return integ
+        return integral
