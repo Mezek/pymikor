@@ -268,11 +268,12 @@ class Mikor:
         # Setting of p, q for strategy
         assert (self.strategy <= 4), 'Too high strategy!'
         assert (self.strategy > 0), 'Unknown strategy for the integration!'
-        if self.strategy == 1:
-            if self.dim_s > 2:
+        if self.dim_s == 2:
+            self.q_prime = 1
+        else:
+            if self.strategy == 1:
                 self.choose_p(0)
-        if self.strategy == 2:
-            if self.dim_s > 2:
+            if self.strategy == 2:
                 self.choose_pq(0)
         if self.strategy == 3:
             self.q_prime = 1
