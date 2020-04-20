@@ -264,17 +264,16 @@ class Mikor:
         self.p_prime = n_prime(nodes)
 
         assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
+        if self.dim_s == 2:
+            assert (self.strategy == 3), 'For dimension=2 only strategy=3 is available!'
 
         # Setting of p, q for strategy
         assert (self.strategy <= 4), 'Too high strategy!'
         assert (self.strategy > 0), 'Unknown strategy for the integration!'
-        if self.dim_s == 2:
-            self.q_prime = 1
-        else:
-            if self.strategy == 1:
-                self.choose_p(0)
-            if self.strategy == 2:
-                self.choose_pq(0)
+        if self.strategy == 1:
+            self.choose_p(0)
+        if self.strategy == 2:
+            self.choose_pq(0)
         if self.strategy == 3:
             self.q_prime = 1
         if self.strategy == 4 and sec_nodes == 1:
@@ -687,9 +686,12 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        # TODO: calculation with optimal coefficients
         integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
+        # TODO: eps with dimension 2
+
+        # TODO: classic eps for strategy 1, 2
+        """
         # absolute error
         # TODO: next IF will be checking eps...
         if self.strategy < 3:
@@ -714,5 +716,6 @@ class Mikor:
                 integral = float('nan')
         else:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+        """
 
         return integral
