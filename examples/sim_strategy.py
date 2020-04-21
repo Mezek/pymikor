@@ -19,7 +19,7 @@ def main():
     integral = Mikor()
     integral.set_values(1, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-    result = integral(fcn, eps=1e-6)
+    result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
     integral.set_values(2, 4, 10000, 1, sigma=2)

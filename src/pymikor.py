@@ -242,6 +242,11 @@ class Mikor:
         print('\n')
 
     def empty_arrays(self, dimension):
+        """
+        Set arrays dimension end empty them
+        :param dimension: arrays dimension
+        :return:
+        """
         self.dim_s = dimension
         self.a_arr = np.empty(self.dim_s)
         self.b_arr = np.empty(self.dim_s)
@@ -271,17 +276,19 @@ class Mikor:
         assert (self.strategy <= 4), 'Too high strategy!'
         assert (self.strategy > 0), 'Unknown strategy for the integration!'
         if self.strategy == 1:
-            self.choose_p(0)
+            self.choose_p(self.dim_s - 3, 0)
         if self.strategy == 2:
-            self.choose_pq(0)
+            self.choose_pq(self.dim_s - 3, 0)
         if self.strategy == 3:
             self.q_prime = 1
+            self.n_nodes = self.p_prime
         if self.strategy == 4 and sec_nodes == 1:
             self.p_prime = n_prime(int(pow(nodes, 2/3)))
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
+            self.n_nodes = self.p_prime * self.q_prime
         if self.strategy == 4 and sec_nodes > 1:
             self.q_prime = n_prime(sec_nodes)
-        self.n_nodes = self.p_prime*self.q_prime
+            self.n_nodes = self.p_prime * self.q_prime
 
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
@@ -311,23 +318,40 @@ class Mikor:
         print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def choose_p(self, i):
-        """ Choose p value from array """
-        dim = self.dim_s - 3
+    def choose_p(self, dim, i):
+        """
+        Choose p value from array
+        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
+        :param i: item index
+        :return:
+        """
         self.p_prime = self.pp[dim][i][0]
         self.q_prime = 1
         self.a_opt = self.pp[dim][i][1]
         self.b_opt = 0
+        self.n_nodes = self.p_prime
 
-    def choose_pq(self, i):
-        """ Choose p, q values from arrays """
-        dim = self.dim_s - 3
+    def choose_pq(self, dim, i):
+        """
+        Choose p, q values from arrays
+        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
+        :param i: item index
+        :return:
+        """
         self.p_prime = self.qq[dim][i][0]
         self.q_prime = self.qq[dim][i][1]
         self.a_opt = self.qq[dim][i][2]
         self.b_opt = self.qq[dim][i][3]
+        self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dimension, p, q):
+        """
+        Set values
+        :param dimension: dimension of integration dim_s
+        :param p: p_prime
+        :param q: q_prime
+        :return:
+        """
         self.empty_arrays(dimension)
         self.p_prime = n_prime(p)
         if q == 1:
@@ -338,11 +362,33 @@ class Mikor:
         self.n_nodes = p*q
 
     def set_pa(self, pa):
-        self.p_prime = n_prime(pa[0])
-        self.n_nodes = self.p_prime
+        """
+        Set values
+        :param pa: list in the form [p_prime, a_opt]
+        :return:
+        """
+        self.p_prime = pa[0]
         self.a_opt = pa[1]
+        self.n_nodes = self.p_prime
+
+    def set_pqab(self, qqlst):
+        """
+        Set values
+        :param qqlst: list in the form [p_prime, q_prime, a_opt, b_opt]
+        :return:
+        """
+        self.p_prime = qqlst[0]
+        self.q_prime = qqlst[1]
+        self.a_opt = qqlst[2]
+        self.b_opt = qqlst[3]
+        self.n_nodes = self.p_prime * self.q_prime
 
     def set_eps(self, eps):
+        """
+        Set required eps value
+        :param eps: value of uncertainty
+        :return:
+        """
         self.req_eps = eps
 
     def h_sum(self, upperb, z):
@@ -687,29 +733,34 @@ class Mikor:
         # TODO: eps with dimension 2
 
         integral = float('nan')
-        # TODO: classic eps for strategy 1, 2
-        if self.strategy == 1:
+        if self.strategy <= 2:
             order = self.dim_s - 3
             act_val = 0.
             next_val = float('nan')
-            for pre_calc in self.pp[order]:
-                print(pre_calc[0])
-                self.set_pa(pre_calc)
-                arg_vector = self.calc_optimal_coefficients_a(pre_calc[1])
-                int_val = self.integral_value(arg_vector, integrand_fcn)
-                if math.fabs(act_val - int_val) <= self.req_eps:
-                    next_val = int_val
-                    self.eps_flag = True
-                    break
-                act_val = int_val
+            if self.strategy == 1:
+                for i, pre_calc in enumerate(self.pp[order]):
+                    self.choose_p(order, i)
+                    int_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                    if math.fabs(act_val - int_val) <= self.req_eps:
+                        next_val = int_val
+                        self.eps_flag = True
+                        break
+                    act_val = int_val
+            if self.strategy == 2:
+                for j, pre_calc in enumerate(self.qq[order]):
+                    self.choose_pq(order, j)
+                    int_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                    if math.fabs(act_val - int_val) <= self.req_eps:
+                        next_val = int_val
+                        self.eps_flag = True
+                        break
+                    act_val = int_val
             if not math.isnan(next_val):
                 integral = next_val
                 if not self.eps_flag:
                     print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
             else:
                 print(f'Try to increase current periodization value sigma={self.sigma}.')
-
-        # absolute error
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
