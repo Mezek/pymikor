@@ -297,7 +297,6 @@ class Mikor:
                 self.v_arr = np.empty(self.sigma)
             elif k == 'eps':
                 self.req_eps = kwargs[k]
-                self.eps_flag = True
             else:
                 raise AttributeError(f'no attribute named {k}')
 
@@ -345,7 +344,6 @@ class Mikor:
 
     def set_eps(self, eps):
         self.req_eps = eps
-        self.eps_flag = True
 
     def h_sum(self, upperb, z):
         """
@@ -686,36 +684,34 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-
         # TODO: eps with dimension 2
 
+        integral = float('nan')
         # TODO: classic eps for strategy 1, 2
-        """
-        # absolute error
-        # TODO: next IF will be checking eps...
-        if self.strategy < 3:
-            if self.dim_s > 2:
-                order = self.dim_s - 3
-                act_val = 0.
-                eps_val = float('nan')
-                for i in self.pp[order]:
-                    self.set_pa(i)
-                    arg_vector = self.calc_optimal_coefficients_a(i[1])
-                    iv = self.integral_value(arg_vector, integrand_fcn)
-                    if math.fabs(act_val - iv) <= self.req_eps:
-                        eps_val = iv
-                        break
-                    act_val = iv
-                if not math.isnan(eps_val):
-                    integral = eps_val
-                else:
+        if self.strategy == 1:
+            order = self.dim_s - 3
+            act_val = 0.
+            next_val = float('nan')
+            for pre_calc in self.pp[order]:
+                print(pre_calc[0])
+                self.set_pa(pre_calc)
+                arg_vector = self.calc_optimal_coefficients_a(pre_calc[1])
+                int_val = self.integral_value(arg_vector, integrand_fcn)
+                if math.fabs(act_val - int_val) <= self.req_eps:
+                    next_val = int_val
+                    self.eps_flag = True
+                    break
+                act_val = int_val
+            if not math.isnan(next_val):
+                integral = next_val
+                if not self.eps_flag:
                     print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
-                    print(f'Try to increase current periodization value sigma={self.sigma}.')
             else:
-                integral = float('nan')
-        else:
+                print(f'Try to increase current periodization value sigma={self.sigma}.')
+
+        # absolute error
+
+        if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-        """
 
         return integral

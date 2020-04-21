@@ -19,20 +19,23 @@ def main():
     integral = Mikor()
     integral.set_values(1, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-    # print(f'\nResult of integration   : {result}')
+    result = integral(fcn, eps=1e-6)
+    print(f'\nIntegration result: {result}')
 
     integral.set_values(2, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
-    print(f'\nResult of integration   : {result}')
+    print(f'\nIntegration result: {result}')
 
     integral.set_values(3, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-    # print(f'\nResult of integration   : {result}')
+    #result = integral(fcn, eps=1e-5)
+    #print(f'\nIntegration result: {result}')
 
     integral.set_values(4, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-    # print(f'\nResult of integration   : {result}')
+    result = integral(fcn, eps=1e-5)
+    print(f'\nIntegration result: {result}')
 
     del integral
 
