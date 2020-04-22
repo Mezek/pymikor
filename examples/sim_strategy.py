@@ -15,6 +15,10 @@ def fcn(x):
     return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 2.*x[3]
 
 
+def fcn2(x):
+    return 3.*x[0]*x[0] + 4.*x[1]*x[0] + 2.*x[1]
+
+
 def main():
     integral = Mikor()
     integral.set_values(1, 4, 10000, 1, sigma=2)
@@ -35,6 +39,11 @@ def main():
     integral.set_values(4, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
+    print(f'\nIntegration result: {result}')
+
+    integral.set_values(3, 2, 10000, 1, sigma=2)
+    integral.show_parameters()
+    result = integral(fcn2, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
     del integral
