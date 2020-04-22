@@ -1,4 +1,3 @@
 TODO: Korobov's integration
 TODO: calc optimal coefficients as in Mikor for higher dimensions
-TODO: check steps in strategies
 TODO: prepare makefile
