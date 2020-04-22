@@ -41,7 +41,7 @@ def main():
     result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
-    integral.set_values(3, 2, 10000, 1, sigma=2)
+    integral.set_values(3, 2, 100000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn2, eps=1e-5)
     print(f'\nIntegration result: {result}')

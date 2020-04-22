@@ -777,4 +777,9 @@ class Mikor:
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
 
+        # test
+        if self.strategy == 3 and self.dim_s == 2:
+            # TODO: add n-terms to get EPS accuracy
+            print(self.optimal_coefficients())
+
         return integral
