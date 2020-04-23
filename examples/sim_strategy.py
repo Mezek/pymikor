@@ -21,11 +21,13 @@ def fcn2(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(1, 4, 10000, 1, sigma=2)
+
+    integral.set_values(1, 3, 10000, 1, sigma=2)
     integral.show_parameters()
-    result = integral(fcn, eps=1e-5)
+    result = integral(fcn2, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
+    """
     integral.set_values(2, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
@@ -33,18 +35,19 @@ def main():
 
     integral.set_values(3, 4, 10000, 1, sigma=2)
     integral.show_parameters()
-    #result = integral(fcn, eps=1e-5)
-    #print(f'\nIntegration result: {result}')
-
+    result = integral(fcn, eps=1e-5)
+    print(f'\nIntegration result: {result}')
+    
     integral.set_values(4, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
-
-    integral.set_values(3, 2, 10000, 1, sigma=2)
+ 
+    integral.set_values(3, 2, 1000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn2, eps=1e-5)
     print(f'\nIntegration result: {result}')
+    """
 
     del integral
 

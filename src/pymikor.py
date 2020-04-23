@@ -402,6 +402,7 @@ class Mikor:
         :return:
         """
         self.req_eps = eps
+        self.eps_flag = True
 
     def h_sum(self, upperb, z):
         """
@@ -723,8 +724,9 @@ class Mikor:
         mi_f = 0.
         for i in range(1, self.n_nodes + 1):
             mi_drv = 1.
+            # print(i, self.n_nodes)
             for j in range(self.dim_s):
-                a_element = mi_a_arr[j]*i/self.n_nodes
+                a_element = float(mi_a_arr[j])*float(i)/self.n_nodes
                 x = fraction(a_element)
                 psi, der_psi = self.periodization_fcn(x)
                 trans_x[j] = psi
@@ -742,39 +744,51 @@ class Mikor:
             else:
                 raise AttributeError(f'no attribute named {k}')
 
-        # TODO: eps with dimension 2
-
         integral = float('nan')
         if self.strategy <= 2:
             order = self.dim_s - 3
             act_val = 0.
             next_val = float('nan')
+            cond_flag = False
             if self.strategy == 1:
                 for i, pre_calc in enumerate(self.pp[order]):
                     self.choose_p(order, i)
-                    int_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - int_val) <= self.req_eps:
-                        next_val = int_val
-                        self.eps_flag = True
+                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                    if math.fabs(act_val - next_val) <= self.req_eps:
+                        cond_flag = True
                         break
-                    act_val = int_val
+                    act_val = next_val
             if self.strategy == 2:
                 for j, pre_calc in enumerate(self.qq[order]):
                     self.choose_pq(order, j)
-                    int_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - int_val) <= self.req_eps:
-                        next_val = int_val
-                        self.eps_flag = True
+                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                    if math.fabs(act_val - next_val) <= self.req_eps:
+                        cond_flag = True
                         break
-                    act_val = int_val
+                    act_val = next_val
             if not math.isnan(next_val):
                 integral = next_val
-                if not self.eps_flag:
-                    print(f'\nResult: {act_val} has not achieved the required accuracy {self.req_eps}!')
+                if not cond_flag:
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
             else:
                 print(f'Try to increase current periodization value sigma={self.sigma}.')
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+            # condition to improve accuracy for dim=2
+            act_val = integral
+            next_val = float('nan')
+            cond_flag = False
+            if self.eps_flag and self.dim_s == 2:
+                for i in range(1, 10):
+                    self.n_nodes *= 10
+                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                    if math.fabs(act_val - next_val) <= self.req_eps:
+                        cond_flag = True
+                        break
+                    act_val = next_val
+                integral = next_val
+                if not cond_flag:
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
 
         return integral
