@@ -571,6 +571,11 @@ class Mikor:
         return optimal_b, optimal_val
 
     def first_optimal_b(self, first_a=None):
+        """
+        Calculate first optimal value z = b based on first optimal a
+        :param first_a: first optimal a
+        :return: tuple of (b value, H(b) value)
+        """
         if first_a is None:
             first_a, opt_a_val = self.first_optimal_a(0)
         if first_a < 1 or first_a > self.p_prime:
