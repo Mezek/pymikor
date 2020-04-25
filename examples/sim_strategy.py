@@ -12,7 +12,7 @@ from pymikor import *
 
 
 def fcn(x):
-    return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 2.*x[3]
+    return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 2.*x[1]
 
 
 def fcn2(x):
@@ -24,15 +24,14 @@ def main():
 
     integral.set_values(1, 3, 10000, 1, sigma=2)
     integral.show_parameters()
-    result = integral(fcn2, eps=1e-5)
-    print(f'\nIntegration result: {result}')
-
-    """
-    integral.set_values(2, 4, 10000, 1, sigma=2)
-    integral.show_parameters()
     result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
+    integral.set_values(2, 3, 10000, 1, sigma=2)
+    integral.show_parameters()
+    result = integral(fcn, eps=1e-5)
+    print(f'\nIntegration result: {result}')
+    """
     integral.set_values(3, 4, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
