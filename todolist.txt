@@ -1,3 +1,4 @@
 TODO: Korobov's integration
-TODO: calc optimal coefficients as in Mikor for higher dimensions
+TODO: Comparative tables, e.g. Tab.6 in Zakrzewska, Gauss, Korobov, Vegas
 TODO: prepare makefile
+TODO: write paper with strategies, or appendix in documentation
