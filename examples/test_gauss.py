@@ -19,7 +19,7 @@ def fcn7(x):
 
 def fcn1(x):
     f = 1
-    for i in range(1):
+    for i in range(4):
         dblx = x[i]*x[i]
         if dblx > 1.0:
             dblx = 1.0
@@ -27,20 +27,24 @@ def fcn1(x):
     return 81*f
 
 
-def fcn_a(x):
-    f = 1
-    for i in range(3):
-        f *= x[i]
-    return f
+def fcn1a(x, y, z, w):
+    xx = x*sqrt(1. - x*x)
+    yy = y*sqrt(1. - y*y)
+    zz = z*sqrt(1. - z*z)
+    ww = w*sqrt(1. - w*w)
+    return 81*xx*yy*zz*ww
+
+
+def fcn_test(x, y, z):
+    return x*y*z
 
 
 def main():
-    #I = quad(fcn_a, 0, 1)
-    #print("Integral = ", I)
+    # result, error = nquad(fcn_test, [[0, 1], [0, 1], [0, 1]])
+    options = {'epsabs': 1.5e-03, 'epsrel': 1.5e-03, 'limit': 10}
+    result, error = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]], opts=[options,options,options,options])
 
-    fcn_t = lambda z, y, x: x*y*z
-    J = tplquad(fcn_t, 0, 1, lambda x: 0, lambda x: 1, lambda x, y: 0, lambda x, y: 1)
-    print(J)
+    print("Result = ", result, error)
 
 #    integral = Mikor()
 #    integral.set_values(3, 2, 1000, 1, sigma=2)
