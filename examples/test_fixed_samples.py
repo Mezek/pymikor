@@ -35,7 +35,9 @@ def main():
     x = np.linspace(0, 1, 1007)
     fyv = np.vectorize(fy)
     res1a = simps(fyv(x), x)
+    res1b = trapz(fyv(x), x)
     print(np.power(res1a, 4)*81)
+    print(np.power(res1b, 4)*81)
 
     integral = Mikor()
     integral.set_values(3, 4, 1007, 1, sigma=2)
