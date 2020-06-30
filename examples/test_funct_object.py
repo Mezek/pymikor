@@ -1,22 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""General integration using Gaussian quadrature
+"""Integrating functions
 
-Methods for integrating functions objects
+Methods for integrating by given function objects
 """
 __author__ = "Erik Bartoš"
 __copyright__ = "Copyright © 2020 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
-import sys
-import warnings
 from pymikor import *
 from math import *
 from scipy.integrate import *
-
-
-def fcn7(x):
-    return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 8.*x[3]*x[4]*x[5] + 7.*pow(x[6], 6)
 
 
 def fcn1(x):
@@ -37,21 +31,26 @@ def fcn1a(x, y, z, w):
     return 81*xx*yy*zz*ww
 
 
-def fcn_test(x, y, z):
+def fcn2(x, y, z):
     return x*y*z
 
 
+def fcn7(x):
+    return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 8.*x[3]*x[4]*x[5] + 7.*pow(x[6], 6)
+
+
 def main():
-    # result, error = nquad(fcn_test, [[0, 1], [0, 1], [0, 1]])
-    options = {'epsabs': 1.5e-03, 'epsrel': 1.5e-03, 'limit': 10}
-    print(sys.float_info.epsilon)
-#    result, error = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]], opts=[options,options,options,options])
-#    print("Result = ", result, error)
+    # res2, err2 = nquad(fcn2, [[0, 1], [0, 1], [0, 1]])
+    # print(res2)
+    options = {'epsabs': 1.5e-2, 'epsrel': 0, 'limit': 20}
+    res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]],
+                         opts=[options, options, options, options])
+    print(res1a, err1a)
 
     integral = Mikor()
-    integral.set_values(3, 7, 1000, 1, sigma=2)
-    result = integral(fcn7, eps=1e-4)
-    print(result)
+    integral.set_values(3, 4, 1000, 1, sigma=2)
+    res1 = integral(fcn1, eps=1e-4)
+    print(res1)
 
 
 if __name__ == "__main__":
