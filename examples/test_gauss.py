@@ -8,6 +8,8 @@ __author__ = "Erik Bartoš"
 __copyright__ = "Copyright © 2020 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
+import sys
+import warnings
 from pymikor import *
 from math import *
 from scipy.integrate import *
@@ -42,14 +44,14 @@ def fcn_test(x, y, z):
 def main():
     # result, error = nquad(fcn_test, [[0, 1], [0, 1], [0, 1]])
     options = {'epsabs': 1.5e-03, 'epsrel': 1.5e-03, 'limit': 10}
-    result, error = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]], opts=[options,options,options,options])
+    print(sys.float_info.epsilon)
+#    result, error = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]], opts=[options,options,options,options])
+#    print("Result = ", result, error)
 
-    print("Result = ", result, error)
-
-#    integral = Mikor()
-#    integral.set_values(3, 2, 1000, 1, sigma=2)
-#    result = integral(fcn1, eps=1e-4)
-#    print(result)
+    integral = Mikor()
+    integral.set_values(3, 7, 1000, 1, sigma=2)
+    result = integral(fcn7, eps=1e-4)
+    print(result)
 
 
 if __name__ == "__main__":
