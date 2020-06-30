@@ -27,22 +27,30 @@ def fcn7(x):
     return 3.*x[0]*x[0] + 4.*x[1]*x[2] + 8.*x[3]*x[4]*x[5] + 7.*pow(x[6], 6)
 
 
-def fy(x):
+def fcn1s(x):
     return x*sqrt(1. - x*x)
 
 
-def main():
-    x = np.linspace(0, 1, 1007)
-    fyv = np.vectorize(fy)
-    res1a = simps(fyv(x), x)
-    res1b = trapz(fyv(x), x)
-    print(np.power(res1a, 4)*81)
-    print(np.power(res1b, 4)*81)
+def prime_val(i):
+    x = np.linspace(0, 1, i)
+    fcn1sv = np.vectorize(fcn1s)
+    res1a = simps(fcn1sv(x), x)
+    res1b = trapz(fcn1sv(x), x)
+    print("Number: ", i)
+    print("Simps: ", np.power(res1a, 4)*81)
+    print("Trapz: ", np.power(res1b, 4)*81)
 
     integral = Mikor()
-    integral.set_values(3, 4, 1007, 1, sigma=2)
-    res1 = integral(fcn1, eps=1e-4)
-    print(res1)
+    integral.set_values(1, 4, i, 1, sigma=2)
+    res1 = integral(fcn1, eps=1e-5)
+    print("Mikor: ", res1)
+
+
+def main():
+    prime_val(n_prime(101))
+    prime_val(n_prime(523))
+    prime_val(n_prime(1259))
+    prime_val(n_prime(10007))
 
 
 if __name__ == "__main__":
