@@ -370,8 +370,8 @@ class Mikor:
                     raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
             elif k == 'eps':
-                if kwargs[k] <= 0:
-                    raise AttributeError(f'{k} must be greater then zero')
+                if kwargs[k] < 0:
+                    raise AttributeError(f'{k} cannot be negative')
                 if kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.req_eps = kwargs[k]
@@ -804,8 +804,8 @@ class Mikor:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
             elif k == 'eps':
-                if kwargs[k] <= 0:
-                    raise AttributeError(f'{k} must be greater then zero')
+                if kwargs[k] < 0:
+                    raise AttributeError(f'{k} cannot be negative')
                 if kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.set_eps(kwargs[k])
