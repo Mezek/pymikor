@@ -86,7 +86,7 @@ class Mikor:
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
-        self.eps_abs = 1e-5
+        self.eps_abs = 0.0
         self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
