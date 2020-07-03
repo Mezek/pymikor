@@ -86,7 +86,7 @@ class Mikor:
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
-        self.req_eps = 1e-5
+        self.eps_abs = 1e-5
         self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
@@ -334,6 +334,7 @@ class Mikor:
         self.strategy = strategy
         self.empty_arrays(dimension)
         self.p_prime = n_prime(nodes)
+        self.eps_flag = False
 
         assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
         if self.dim_s == 2:
@@ -372,9 +373,9 @@ class Mikor:
             elif k == 'eps':
                 if kwargs[k] < 0:
                     raise AttributeError(f'{k} cannot be negative')
-                if kwargs[k] <= sys.float_info.epsilon:
+                if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
-                self.req_eps = kwargs[k]
+                self.set_eps(kwargs[k])
             else:
                 raise AttributeError(f'no attribute named {k}')
 
@@ -386,7 +387,7 @@ class Mikor:
         print(f'q - prime               : {self.q_prime}')
         print(f'number of nodes         : {self.n_nodes}')
         print(f'sigma                   : {self.sigma}')
-        print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
+        print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
     def choose_p(self, dim, i):
@@ -460,7 +461,7 @@ class Mikor:
         :param eps: value of uncertainty
         :return:
         """
-        self.req_eps = eps
+        self.eps_abs = eps
         self.eps_flag = True
 
     def h_sum(self, upperb, z):
@@ -822,7 +823,7 @@ class Mikor:
                 for i, pre_calc in enumerate(self.pp[order]):
                     self.choose_p(order, i)
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
+                    if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True
                         break
                     act_val = next_val
@@ -830,14 +831,14 @@ class Mikor:
                 for j, pre_calc in enumerate(self.qq[order]):
                     self.choose_pq(order, j)
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
+                    if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True
                         break
                     act_val = next_val
             if not math.isnan(next_val):
                 integral = next_val
                 if not cond_flag:
-                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}!')
             else:
                 print(f'Try to increase current periodization value sigma={self.sigma}.')
 
@@ -851,12 +852,12 @@ class Mikor:
                 for i in range(1, 10):
                     self.n_nodes *= 10
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
+                    if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True
                         break
                     act_val = next_val
                 integral = next_val
                 if not cond_flag:
-                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}!')
 
         return integral
