@@ -82,7 +82,7 @@ class Mikor:
         self.strategy = 1
         self.dim_s = 1
         self.dim_r = 1
-        self.n_nodes = n_prime(1000)
+        self.n_nodes = n_prime(1009)
         self.p_prime = self.n_nodes
         self.q_prime = 1
         self.sigma = 2
@@ -343,6 +343,23 @@ class Mikor:
         # Setting of p, q for strategy
         assert (self.strategy <= 4), 'Too high strategy!'
         assert (self.strategy > 0), 'Unknown strategy for the integration!'
+        assert (self.p_prime > 0, 'Number of nodes is zero!')
+        assert (sec_nodes > 0, 'Number of second nodes is zero!')
+        for k in kwargs:
+            if k == 'sigma':
+                self.sigma = kwargs[k]
+                if self.sigma < 1:
+                    raise AttributeError(f'{k} must be greater then {self.sigma}')
+                self.v_arr = np.empty(self.sigma)
+            elif k == 'eps':
+                if kwargs[k] < 0:
+                    raise AttributeError(f'{k} cannot be negative')
+                if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
+                    raise AttributeError(f'{k} must be greater then machine epsilon')
+                self.set_eps(kwargs[k])
+            else:
+                raise AttributeError(f'no attribute named {k}')
+
         if self.strategy == 1:
             self.choose_p(self.dim_s - 3, 0)
         if self.strategy == 2:
@@ -361,23 +378,7 @@ class Mikor:
         # Warnings for strategy 3 or 4
         if strategy == 3 and nodes >= 10000:
             warnings.warn('Slow computation, number of nodes too large.')
-
         assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
-
-        for k in kwargs:
-            if k == 'sigma':
-                self.sigma = kwargs[k]
-                if self.sigma < 1:
-                    raise AttributeError(f'{k} must be greater then {self.sigma}')
-                self.v_arr = np.empty(self.sigma)
-            elif k == 'eps':
-                if kwargs[k] < 0:
-                    raise AttributeError(f'{k} cannot be negative')
-                if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
-                    raise AttributeError(f'{k} must be greater then machine epsilon')
-                self.set_eps(kwargs[k])
-            else:
-                raise AttributeError(f'no attribute named {k}')
 
     def show_parameters(self):
         print(f'\nObject class            : {self.__class__.__name__}')
