@@ -315,10 +315,9 @@ class Mikor:
         :param dimension: arrays dimension
         :return:
         """
-        self.dim_s = dimension
-        self.a_arr = np.empty(self.dim_s)
-        self.b_arr = np.empty(self.dim_s)
-        self.c_arr = np.empty(self.dim_s)
+        self.a_arr = np.empty(dimension)
+        self.b_arr = np.empty(dimension)
+        self.c_arr = np.empty(dimension)
 
     def set_values(self, strategy, dimension, nodes=1009, sec_nodes=1, **kwargs):
         """
@@ -333,6 +332,7 @@ class Mikor:
         :return:
         """
         self.strategy = strategy
+        self.dim_s = dimension
         self.empty_arrays(dimension)
         self.eps_flag = False
 
@@ -363,6 +363,7 @@ class Mikor:
 
         if self.strategy == 1:
             self.p_prime = n_prime(nodes)
+            self.find_closest()
             self.choose_p(self.dim_s - 3, 0)
         if self.strategy == 2:
             self.p_prime = n_prime(nodes)
@@ -396,6 +397,16 @@ class Mikor:
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
+    def find_closest(self):
+        """
+        Find closest item in array
+        :return: item index
+        """
+        i = 1
+        p = self.p_prime
+        print(p*i)
+        return p
+
     def choose_p(self, dim, i):
         """
         Choose p value from array
@@ -408,6 +419,8 @@ class Mikor:
         #    aux.append(abs(self.p_prime - j[0]))
         # print('Min: ', min(aux))
         # print(self.pp[dim][aux.index(min(aux))][0])
+        #
+        # dim = self.dim_s - 3
         self.p_prime = self.pp[dim][i][0]
         self.q_prime = 1
         self.a_opt = self.pp[dim][i][1]
