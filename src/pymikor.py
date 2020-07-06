@@ -363,11 +363,15 @@ class Mikor:
 
         if self.strategy == 1:
             self.p_prime = n_prime(nodes)
-            self.find_closest()
-            self.choose_p(self.dim_s - 3, 0)
+            ind = self.find_closest_p(self.dim_s)
+            print(ind)
+            if not self.eps_flag:
+                self.choose_p(ind)
+            else:
+                self.choose_p(0)
         if self.strategy == 2:
             self.p_prime = n_prime(nodes)
-            self.choose_pq(self.dim_s - 3, 0)
+            self.choose_pq(0)
         if self.strategy == 3:
             self.p_prime = n_prime(nodes)
             self.q_prime = 1
@@ -397,47 +401,43 @@ class Mikor:
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def find_closest(self):
+    def find_closest_p(self, dims):
         """
-        Find closest item in array
+        Find closest item in array pp
+        :param dims: dimension of integration,
         :return: item index
         """
-        i = 1
-        p = self.p_prime
-        print(p*i)
-        return p
+        dist = []
+        pdo = dims - 3
+        for j in self.pp[pdo]:
+            dist.append(abs(self.p_prime - j[0]))
+        mdi = min(dist)
+        return dist.index(mdi)
 
-    def choose_p(self, dim, i):
+    def choose_p(self, i):
         """
-        Choose p value from array
-        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
+        Choose p value from array pp
         :param i: item index
         :return:
         """
-        # aux = []
-        # for j in self.pp[dim]:
-        #    aux.append(abs(self.p_prime - j[0]))
-        # print('Min: ', min(aux))
-        # print(self.pp[dim][aux.index(min(aux))][0])
-        #
-        # dim = self.dim_s - 3
-        self.p_prime = self.pp[dim][i][0]
+        pdo = self.dim_s - 3
+        self.p_prime = self.pp[pdo][i][0]
         self.q_prime = 1
-        self.a_opt = self.pp[dim][i][1]
+        self.a_opt = self.pp[pdo][i][1]
         self.b_opt = 0
         self.n_nodes = self.p_prime
 
-    def choose_pq(self, dim, i):
+    def choose_pq(self, i):
         """
         Choose p, q values from arrays
-        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
         :param i: item index
         :return:
         """
-        self.p_prime = self.qq[dim][i][0]
-        self.q_prime = self.qq[dim][i][1]
-        self.a_opt = self.qq[dim][i][2]
-        self.b_opt = self.qq[dim][i][3]
+        pdo = self.dim_s - 3
+        self.p_prime = self.qq[pdo][i][0]
+        self.q_prime = self.qq[pdo][i][1]
+        self.a_opt = self.qq[pdo][i][2]
+        self.b_opt = self.qq[pdo][i][3]
         self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dimension, p, q):
@@ -839,21 +839,20 @@ class Mikor:
 
         integral = float('nan')
         if self.strategy <= 2:
-            order = self.dim_s - 3
             act_val = 0.
             next_val = float('nan')
             cond_flag = False
             if self.strategy == 1:
-                for i, pre_calc in enumerate(self.pp[order]):
-                    self.choose_p(order, i)
+                for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
+                    self.choose_p(i)
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
                     if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True
                         break
                     act_val = next_val
             if self.strategy == 2:
-                for j, pre_calc in enumerate(self.qq[order]):
-                    self.choose_pq(order, j)
+                for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
+                    self.choose_pq(j)
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
                     if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True

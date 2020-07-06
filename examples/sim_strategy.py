@@ -24,7 +24,7 @@ def main():
 
     """ strategy 1 """
 
-    integral.set_values(1, 3, 10000, 1, sigma=1)
+    integral.set_values(1, 3, 99, 1, sigma=1)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
