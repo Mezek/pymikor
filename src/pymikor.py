@@ -82,8 +82,9 @@ class Mikor:
         self.strategy = 1
         self.dim_s = 1
         self.dim_r = 1
-        self.n_nodes = n_prime(1009)
-        self.p_prime = self.n_nodes
+        self.n_nodes = 1
+        self.sec_nodes = 1
+        self.p_prime = 1
         self.q_prime = 1
         self.sigma = 2
         self.eps_abs = 0.0
@@ -333,18 +334,18 @@ class Mikor:
         """
         self.strategy = strategy
         self.empty_arrays(dimension)
-        self.p_prime = n_prime(nodes)
         self.eps_flag = False
 
-        assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
+        assert self.dim_s >= 2, 'Integral dimension s must be >= 2'
         if self.dim_s == 2:
-            assert (self.strategy == 3), 'For dimension=2 only strategy=3 is available!'
+            assert self.strategy == 3, 'For dimension=2 only strategy=3 is available'
 
         # Setting of p, q for strategy
-        assert (self.strategy <= 4), 'Too high strategy!'
-        assert (self.strategy > 0), 'Unknown strategy for the integration!'
-        assert (self.p_prime > 0, 'Number of nodes is zero!')
-        assert (sec_nodes > 0, 'Number of second nodes is zero!')
+        assert self.strategy <= 4, 'Too high strategy'
+        assert self.strategy > 0, 'Unknown strategy for the integration'
+        assert nodes > 0, 'Number of primary nodes is zero'
+        assert sec_nodes > 0, 'Number of second nodes is zero'
+        AssertionError()
         for k in kwargs:
             if k == 'sigma':
                 self.sigma = kwargs[k]
@@ -361,10 +362,13 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         if self.strategy == 1:
+            self.p_prime = n_prime(nodes)
             self.choose_p(self.dim_s - 3, 0)
         if self.strategy == 2:
+            self.p_prime = n_prime(nodes)
             self.choose_pq(self.dim_s - 3, 0)
         if self.strategy == 3:
+            self.p_prime = n_prime(nodes)
             self.q_prime = 1
             self.n_nodes = self.p_prime
         if self.strategy == 4 and sec_nodes == 1:
@@ -372,6 +376,7 @@ class Mikor:
             self.q_prime = n_prime(int(pow(nodes, 1/3)))
             self.n_nodes = self.p_prime * self.q_prime
         if self.strategy == 4 and sec_nodes > 1:
+            self.p_prime = n_prime(nodes)
             self.q_prime = n_prime(sec_nodes)
             self.n_nodes = self.p_prime * self.q_prime
 
@@ -398,6 +403,11 @@ class Mikor:
         :param i: item index
         :return:
         """
+        # aux = []
+        # for j in self.pp[dim]:
+        #    aux.append(abs(self.p_prime - j[0]))
+        # print('Min: ', min(aux))
+        # print(self.pp[dim][aux.index(min(aux))][0])
         self.p_prime = self.pp[dim][i][0]
         self.q_prime = 1
         self.a_opt = self.pp[dim][i][1]
