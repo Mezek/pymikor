@@ -82,11 +82,12 @@ class Mikor:
         self.strategy = 1
         self.dim_s = 1
         self.dim_r = 1
-        self.n_nodes = n_prime(1000)
-        self.p_prime = self.n_nodes
+        self.n_nodes = 1
+        self.sec_nodes = 1
+        self.p_prime = 1
         self.q_prime = 1
         self.sigma = 2
-        self.req_eps = 1e-5
+        self.eps_abs = 0.0
         self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
@@ -314,10 +315,9 @@ class Mikor:
         :param dimension: arrays dimension
         :return:
         """
-        self.dim_s = dimension
-        self.a_arr = np.empty(self.dim_s)
-        self.b_arr = np.empty(self.dim_s)
-        self.c_arr = np.empty(self.dim_s)
+        self.a_arr = np.empty(dimension)
+        self.b_arr = np.empty(dimension)
+        self.c_arr = np.empty(dimension)
 
     def set_values(self, strategy, dimension, nodes=1009, sec_nodes=1, **kwargs):
         """
@@ -332,36 +332,21 @@ class Mikor:
         :return:
         """
         self.strategy = strategy
+        self.dim_s = dimension
         self.empty_arrays(dimension)
-        self.p_prime = n_prime(nodes)
+        self.eps_abs = 0.
+        self.eps_flag = False
 
-        assert (self.dim_s >= 2), 'Integral dimension s must be >= 2!'
+        assert self.dim_s >= 2, 'Integral dimension s must be >= 2'
         if self.dim_s == 2:
-            assert (self.strategy == 3), 'For dimension=2 only strategy=3 is available!'
+            assert self.strategy == 3, 'For dimension=2 only strategy=3 is available'
 
         # Setting of p, q for strategy
-        assert (self.strategy <= 4), 'Too high strategy!'
-        assert (self.strategy > 0), 'Unknown strategy for the integration!'
-        if self.strategy == 1:
-            self.choose_p(self.dim_s - 3, 0)
-        if self.strategy == 2:
-            self.choose_pq(self.dim_s - 3, 0)
-        if self.strategy == 3:
-            self.q_prime = 1
-            self.n_nodes = self.p_prime
-        if self.strategy == 4 and sec_nodes == 1:
-            self.p_prime = n_prime(int(pow(nodes, 2/3)))
-            self.q_prime = n_prime(int(pow(nodes, 1/3)))
-            self.n_nodes = self.p_prime * self.q_prime
-        if self.strategy == 4 and sec_nodes > 1:
-            self.q_prime = n_prime(sec_nodes)
-            self.n_nodes = self.p_prime * self.q_prime
-
-        # Warnings for strategy 3 or 4
-        if strategy == 3 and nodes >= 10000:
-            warnings.warn('Slow computation, number of nodes too large.')
-
-        assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
+        assert self.strategy <= 4, 'Too high strategy'
+        assert self.strategy > 0, 'Unknown strategy for the integration'
+        assert nodes > 0, 'Number of primary nodes is zero'
+        assert sec_nodes > 0, 'Number of second nodes is zero'
+        AssertionError()
 
         for k in kwargs:
             if k == 'sigma':
@@ -370,13 +355,45 @@ class Mikor:
                     raise AttributeError(f'{k} must be greater then {self.sigma}')
                 self.v_arr = np.empty(self.sigma)
             elif k == 'eps':
-                if kwargs[k] <= 0:
-                    raise AttributeError(f'{k} must be greater then zero')
-                if kwargs[k] <= sys.float_info.epsilon:
+                if kwargs[k] < 0:
+                    raise AttributeError(f'{k} cannot be negative')
+                if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
-                self.req_eps = kwargs[k]
+                self.set_eps(kwargs[k])
             else:
                 raise AttributeError(f'no attribute named {k}')
+
+        if self.strategy == 1:
+            self.p_prime = n_prime(nodes)
+            if not self.eps_flag:
+                ind = self.find_closest_p()
+                self.choose_p(ind)
+            else:
+                self.choose_p(0)
+        if self.strategy == 2:
+            self.p_prime = n_prime(nodes)
+            if not self.eps_flag:
+                ind = self.find_closest_pq()
+                self.choose_pq(ind)
+            else:
+                self.choose_pq(0)
+        if self.strategy == 3:
+            self.p_prime = n_prime(nodes)
+            self.q_prime = 1
+            self.n_nodes = self.p_prime
+        if self.strategy == 4 and sec_nodes == 1:
+            self.p_prime = n_prime(int(pow(nodes, 2/3)))
+            self.q_prime = n_prime(int(pow(nodes, 1/3)))
+            self.n_nodes = self.p_prime * self.q_prime
+        if self.strategy == 4 and sec_nodes > 1:
+            self.p_prime = n_prime(nodes)
+            self.q_prime = n_prime(sec_nodes)
+            self.n_nodes = self.p_prime * self.q_prime
+
+        # Warnings for strategy 3 or 4
+        if strategy == 3 and nodes >= 10000:
+            warnings.warn('Slow computation, number of nodes too large.')
+        assert (self.dim_s < self.n_nodes), 'Integral dimension s must be < N nodes!'
 
     def show_parameters(self):
         print(f'\nObject class            : {self.__class__.__name__}')
@@ -386,33 +403,57 @@ class Mikor:
         print(f'q - prime               : {self.q_prime}')
         print(f'number of nodes         : {self.n_nodes}')
         print(f'sigma                   : {self.sigma}')
-        print(f'relative eps            : {self.req_eps}  flag: {self.eps_flag}')
+        print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def choose_p(self, dim, i):
+    def find_closest_p(self):
         """
-        Choose p value from array
-        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
+        Find closest item in array pp
+        :return: item index
+        """
+        dist = []
+        pdo = self.dim_s - 3
+        for j in self.pp[pdo]:
+            dist.append(abs(self.p_prime - j[0]))
+        mdi = min(dist)
+        return dist.index(mdi)
+
+    def find_closest_pq(self):
+        """
+        Find closest item in array qq
+        :return: item index
+        """
+        dist = []
+        pdo = self.dim_s - 3
+        for j in self.qq[pdo]:
+            dist.append(abs(self.p_prime - j[0]))
+        mdi = min(dist)
+        return dist.index(mdi)
+
+    def choose_p(self, i):
+        """
+        Choose p value from array pp
         :param i: item index
         :return:
         """
-        self.p_prime = self.pp[dim][i][0]
+        pdo = self.dim_s - 3
+        self.p_prime = self.pp[pdo][i][0]
         self.q_prime = 1
-        self.a_opt = self.pp[dim][i][1]
+        self.a_opt = self.pp[pdo][i][1]
         self.b_opt = 0
         self.n_nodes = self.p_prime
 
-    def choose_pq(self, dim, i):
+    def choose_pq(self, i):
         """
         Choose p, q values from arrays
-        :param dim: dimension of integration lower by 3 (self.dim_s - 3)
         :param i: item index
         :return:
         """
-        self.p_prime = self.qq[dim][i][0]
-        self.q_prime = self.qq[dim][i][1]
-        self.a_opt = self.qq[dim][i][2]
-        self.b_opt = self.qq[dim][i][3]
+        pdo = self.dim_s - 3
+        self.p_prime = self.qq[pdo][i][0]
+        self.q_prime = self.qq[pdo][i][1]
+        self.a_opt = self.qq[pdo][i][2]
+        self.b_opt = self.qq[pdo][i][3]
         self.n_nodes = self.p_prime*self.q_prime
 
     def set_dpq(self, dimension, p, q):
@@ -460,7 +501,7 @@ class Mikor:
         :param eps: value of uncertainty
         :return:
         """
-        self.req_eps = eps
+        self.eps_abs = eps
         self.eps_flag = True
 
     def h_sum(self, upperb, z):
@@ -788,13 +829,11 @@ class Mikor:
         mi_f = 0.
         for i in range(1, self.n_nodes + 1):
             mi_drv = 1.
-            # print(i, self.n_nodes)
             for j in range(self.dim_s):
                 a_element = float(mi_a_arr[j])*float(i)/self.n_nodes
                 x = fraction(a_element)
                 psi, der_psi = self.periodization_fcn(x)
                 trans_x[j] = psi
-                # print(x, psi, der_psi)
                 mi_drv = mi_drv * der_psi
             mi_f += integrand_fcn(trans_x) * mi_drv
         return mi_f/self.n_nodes
@@ -804,8 +843,8 @@ class Mikor:
             if k == 'strategy':
                 print(f'strategy = {kwargs[k]}')
             elif k == 'eps':
-                if kwargs[k] <= 0:
-                    raise AttributeError(f'{k} must be greater then zero')
+                if kwargs[k] < 0:
+                    raise AttributeError(f'{k} cannot be negative')
                 if kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.set_eps(kwargs[k])
@@ -813,31 +852,36 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         integral = float('nan')
+        print('Eps: ', self.eps_abs, self.eps_flag)
         if self.strategy <= 2:
-            order = self.dim_s - 3
             act_val = 0.
             next_val = float('nan')
             cond_flag = False
-            if self.strategy == 1:
-                for i, pre_calc in enumerate(self.pp[order]):
-                    self.choose_p(order, i)
-                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
-                        cond_flag = True
-                        break
-                    act_val = next_val
-            if self.strategy == 2:
-                for j, pre_calc in enumerate(self.qq[order]):
-                    self.choose_pq(order, j)
-                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
-                        cond_flag = True
-                        break
-                    act_val = next_val
+            if self.eps_flag == 0.:
+                next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                cond_flag = True
+            else:
+                if self.strategy == 1:
+                    for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
+                        self.choose_p(i)
+                        next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        if math.fabs(act_val - next_val) <= self.eps_abs:
+                            cond_flag = True
+                            break
+                        act_val = next_val
+                if self.strategy == 2:
+                    for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
+                        self.choose_pq(j)
+                        next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        print(j)
+                        if math.fabs(act_val - next_val) <= self.eps_abs:
+                            cond_flag = True
+                            break
+                        act_val = next_val
             if not math.isnan(next_val):
                 integral = next_val
                 if not cond_flag:
-                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}.')
             else:
                 print(f'Try to increase current periodization value sigma={self.sigma}.')
 
@@ -851,12 +895,12 @@ class Mikor:
                 for i in range(1, 10):
                     self.n_nodes *= 10
                     next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.req_eps:
+                    if math.fabs(act_val - next_val) <= self.eps_abs:
                         cond_flag = True
                         break
                     act_val = next_val
                 integral = next_val
                 if not cond_flag:
-                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.req_eps}!')
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}!')
 
         return integral
