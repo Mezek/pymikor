@@ -334,6 +334,7 @@ class Mikor:
         self.strategy = strategy
         self.dim_s = dimension
         self.empty_arrays(dimension)
+        self.eps_abs = 0.
         self.eps_flag = False
 
         assert self.dim_s >= 2, 'Integral dimension s must be >= 2'
@@ -346,6 +347,7 @@ class Mikor:
         assert nodes > 0, 'Number of primary nodes is zero'
         assert sec_nodes > 0, 'Number of second nodes is zero'
         AssertionError()
+
         for k in kwargs:
             if k == 'sigma':
                 self.sigma = kwargs[k]
@@ -363,15 +365,18 @@ class Mikor:
 
         if self.strategy == 1:
             self.p_prime = n_prime(nodes)
-            ind = self.find_closest_p(self.dim_s)
-            print(ind)
             if not self.eps_flag:
+                ind = self.find_closest_p()
                 self.choose_p(ind)
             else:
                 self.choose_p(0)
         if self.strategy == 2:
             self.p_prime = n_prime(nodes)
-            self.choose_pq(0)
+            if not self.eps_flag:
+                ind = self.find_closest_pq()
+                self.choose_pq(ind)
+            else:
+                self.choose_pq(0)
         if self.strategy == 3:
             self.p_prime = n_prime(nodes)
             self.q_prime = 1
@@ -401,15 +406,26 @@ class Mikor:
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'strategy                : {self.strategy}')
 
-    def find_closest_p(self, dims):
+    def find_closest_p(self):
         """
         Find closest item in array pp
-        :param dims: dimension of integration,
         :return: item index
         """
         dist = []
-        pdo = dims - 3
+        pdo = self.dim_s - 3
         for j in self.pp[pdo]:
+            dist.append(abs(self.p_prime - j[0]))
+        mdi = min(dist)
+        return dist.index(mdi)
+
+    def find_closest_pq(self):
+        """
+        Find closest item in array qq
+        :return: item index
+        """
+        dist = []
+        pdo = self.dim_s - 3
+        for j in self.qq[pdo]:
             dist.append(abs(self.p_prime - j[0]))
         mdi = min(dist)
         return dist.index(mdi)
@@ -813,13 +829,11 @@ class Mikor:
         mi_f = 0.
         for i in range(1, self.n_nodes + 1):
             mi_drv = 1.
-            # print(i, self.n_nodes)
             for j in range(self.dim_s):
                 a_element = float(mi_a_arr[j])*float(i)/self.n_nodes
                 x = fraction(a_element)
                 psi, der_psi = self.periodization_fcn(x)
                 trans_x[j] = psi
-                # print(x, psi, der_psi)
                 mi_drv = mi_drv * der_psi
             mi_f += integrand_fcn(trans_x) * mi_drv
         return mi_f/self.n_nodes
@@ -838,30 +852,36 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         integral = float('nan')
+        print('Eps: ', self.eps_abs, self.eps_flag)
         if self.strategy <= 2:
             act_val = 0.
             next_val = float('nan')
             cond_flag = False
-            if self.strategy == 1:
-                for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
-                    self.choose_p(i)
-                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.eps_abs:
-                        cond_flag = True
-                        break
-                    act_val = next_val
-            if self.strategy == 2:
-                for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
-                    self.choose_pq(j)
-                    next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                    if math.fabs(act_val - next_val) <= self.eps_abs:
-                        cond_flag = True
-                        break
-                    act_val = next_val
+            if self.eps_flag == 0.:
+                next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                cond_flag = True
+            else:
+                if self.strategy == 1:
+                    for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
+                        self.choose_p(i)
+                        next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        if math.fabs(act_val - next_val) <= self.eps_abs:
+                            cond_flag = True
+                            break
+                        act_val = next_val
+                if self.strategy == 2:
+                    for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
+                        self.choose_pq(j)
+                        next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        print(j)
+                        if math.fabs(act_val - next_val) <= self.eps_abs:
+                            cond_flag = True
+                            break
+                        act_val = next_val
             if not math.isnan(next_val):
                 integral = next_val
                 if not cond_flag:
-                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}!')
+                    print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}.')
             else:
                 print(f'Try to increase current periodization value sigma={self.sigma}.')
 

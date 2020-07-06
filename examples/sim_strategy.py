@@ -29,14 +29,14 @@ def main():
     result = integral(fcn, eps=1e-5)
     print(f'\nIntegration result: {result}')
 
-    integral.set_values(1, 3, 10000, 1, sigma=2)
+    integral.set_values(1, 3, 123, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn)
     print(f'\nIntegration result: {result}')
 
     integral.set_values(1, 3, 10000, 1, sigma=2, eps=0.)
     integral.show_parameters()
-    result = integral(fcn, eps=1e-5)
+    result = integral(fcn, eps=7e-5)
     print(f'\nIntegration result: {result}')
 
     """ strategy 2 """
@@ -44,6 +44,11 @@ def main():
     integral.set_values(2, 3, 10000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fcn, eps=1e-5)
+    print(f'\nIntegration result: {result}')
+
+    integral.set_values(2, 3, 1540, 1, sigma=2)
+    integral.show_parameters()
+    result = integral(fcn)
     print(f'\nIntegration result: {result}')
     """
     integral.set_values(3, 4, 10000, 1, sigma=2)
