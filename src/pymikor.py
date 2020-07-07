@@ -87,7 +87,7 @@ class Mikor:
         self.p_prime = 1
         self.q_prime = 1
         self.sigma = 2
-        self.eps_abs = 0.0
+        self.eps_abs = 0.
         self.eps_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
@@ -365,14 +365,14 @@ class Mikor:
 
         if self.strategy == 1:
             self.p_prime = n_prime(nodes)
-            if not self.eps_flag:
+            if self.eps_abs == 0.:
                 ind = self.find_closest_p()
                 self.choose_p(ind)
             else:
                 self.choose_p(0)
         if self.strategy == 2:
             self.p_prime = n_prime(nodes)
-            if not self.eps_flag:
+            if self.eps_abs == 0.:
                 ind = self.find_closest_pq()
                 self.choose_pq(ind)
             else:
@@ -852,15 +852,14 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         integral = float('nan')
-        print('Eps: ', self.eps_abs, self.eps_flag)
+        # print('Eps: ', self.eps_abs, self.eps_flag)
         if self.strategy <= 2:
             act_val = 0.
             next_val = float('nan')
-            cond_flag = False
             if self.eps_flag == 0.:
                 next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                cond_flag = True
             else:
+                cond_flag = False
                 if self.strategy == 1:
                     for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
                         self.choose_p(i)
@@ -873,17 +872,18 @@ class Mikor:
                     for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
                         self.choose_pq(j)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                        print(j)
+                        # print(j, next_val, abs(next_val - act_val))
                         if math.fabs(act_val - next_val) <= self.eps_abs:
                             cond_flag = True
                             break
                         act_val = next_val
-            if not math.isnan(next_val):
-                integral = next_val
                 if not cond_flag:
                     print(f'\nResult: {integral} didn\'t achieve the required accuracy {self.eps_abs}.')
+
+            if not math.isnan(next_val):
+                integral = next_val
             else:
-                print(f'Try to increase current periodization value sigma={self.sigma}.')
+                raise Exception(f'Try to increase current periodization value sigma={self.sigma}.')
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)

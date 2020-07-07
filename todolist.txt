@@ -2,4 +2,3 @@ TODO: Korobov's integration
 TODO: Comparative tables, e.g. Tab.6 in Zakrzewska, Gauss, Korobov, Vegas
 TODO: prepare makefile
 TODO: write paper with strategies, or appendix in documentation
-TODO: instead of 2*eps & eps_flag set 1*eps & eps_abs
