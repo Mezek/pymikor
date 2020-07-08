@@ -92,15 +92,15 @@ def fcn10(x):
 
 
 def main():
-    nodes_4_1 = np.array([[1069, 271], [2129, 766], [3001, 1466], [5003, 2053],
-                          [6007, 1351], [8191, 3842], [10007, 1206], [28111, 3570]])
+    nodes_4_1 = np.array([[1259, 550], [2129, 970], [3001, 174], [4001, 956],
+                          [5003, 2053], [6007, 2610], [8191, 3842], [10007, 1206],
+                          [13001, 778], [20011, 6016], [30011, 12084]]
+                         )
 
     nodes_4_3 = np.array([[251, 44], [631, 290], [1259, 483], [2503, 792],
                           [4001, 956], [6521, 3138], [10007, 1206]])
 
     integral = Mikor()
-    # integral.set_values(3, 4, 10007, 1, sigma=2)
-    # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
     print('Spawning numbers...')
 
@@ -125,7 +125,7 @@ def main():
         f.write('s = 4\n')
 
     for i in t_fcn:
-        # coefficientsZ.txt
+        # test_corob.txt
         with open('coefficients.txt', 'a') as f:
             f.write('\n' + '-' * 93 + '\n')
             f.write(f'Function {i}\n')
@@ -139,15 +139,16 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(1, 7):
-                    integral.set_values(1, 4, 5050, 1, sigma=s)
+                    integral.set_values(1, 4, 1000, 1, sigma=s)
                     integral.set_pa(item)
+                    # integral.show_parameters()
                     fcn_name = t_fcn[i]
                     result = integral(fcn_name)
                     f.write(f'{result:.9f}' + ' '*3)
                 f.write('\n')
 
     for i in u_fcn:
-        # coefficientsZ.txt
+        # test_corob.txt
         with open('coefficients.txt', 'a') as f:
             f.write('\n' + '-' * 21 + '\n')
             f.write(f'Function {i}\n')
@@ -160,7 +161,7 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(3, 4):
-                    integral.set_values(1, 4, 5050, 1, sigma=s)
+                    integral.set_values(1, 4, 1000, 1, sigma=s)
                     integral.set_pa(item)
                     fcn_name = u_fcn[i]
                     result = integral(fcn_name)
@@ -168,7 +169,7 @@ def main():
                 f.write('\n')
 
     for i in w_fcn:
-        # coefficientsZ.txt
+        # test_corob.txt
         with open('coefficients.txt', 'a') as f:
             f.write('\n' + '-' * 53 + '\n')
             f.write(f'Function {i}\n')
@@ -181,7 +182,7 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f' {item[0]:6}' + ' ' * 3)
                 for s in range(2, 6):
-                    integral.set_values(1, 4, 5050, 1, sigma=s)
+                    integral.set_values(1, 4, 1000, 1, sigma=s)
                     integral.set_pa(item)
                     fcn_name = w_fcn[i]
                     result = integral(fcn_name)

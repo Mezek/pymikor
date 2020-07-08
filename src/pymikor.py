@@ -852,7 +852,6 @@ class Mikor:
                 raise AttributeError(f'no attribute named {k}')
 
         integral = float('nan')
-        print('Eps: ', self.eps_abs, self.eps_flag)
         if self.strategy <= 2:
             act_val = 0.
             next_val = float('nan')
@@ -873,7 +872,6 @@ class Mikor:
                     for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
                         self.choose_pq(j)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
-                        print(j)
                         if math.fabs(act_val - next_val) <= self.eps_abs:
                             cond_flag = True
                             break
