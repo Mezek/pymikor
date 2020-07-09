@@ -15,12 +15,12 @@ from scipy.integrate import *
 
 def fcn1(x):
     f = 1
-    for i in range(5):
+    for i in range(4):
         dblx = x[i]*x[i]
         if dblx > 1.0:
             dblx = 1.0
         f *= x[i]*sqrt(1. - dblx)
-    return 243*f
+    return 81*f
 
 
 def fcn7(x):
@@ -38,17 +38,18 @@ def prime_val(i):
     res1b = trapz(fcn1sv(x), x)
 
     print("Number: ", i)
-    print("Simps: ", np.power(res1a, 5)*243)
-    print("Trapz: ", np.power(res1b, 5)*243)
+    print("Simps: ", np.power(res1a, 4)*81)
+    print("Trapz: ", np.power(res1b, 4)*81)
 
     integral = Mikor()
-    integral.set_values(1, 5, i, 1, sigma=3)
-    res1 = integral(fcn1, eps=1e-5)
+    integral.set_values(1, 4, i, 1, sigma=3)
+    res1 = integral(fcn1)
     print("Mikor: ", res1)
 
 
 def main():
-    fs = np.array([53, 101, 151, 307, 523, 829, 1259, 2129, 3001, 4001, 5003,
+    fs = np.array([# 53, 101, 151, 307, 523, 829,
+                    1259, 2129, 3001, 4001, 5003,
                    6007, 8191, 10007, 13001, 20011, 30011, 40009, 50021])
     for i in fs:
         prime_val(n_prime(i))
