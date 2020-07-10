@@ -42,14 +42,15 @@ def fcn7(x):
 def main():
     # res2, err2 = nquad(fcn2, [[0, 1], [0, 1], [0, 1]])
     # print(res2)
-    options = {'epsabs': 1.5e-2, 'epsrel': 0, 'limit': 20}
+    # options = {'epsabs': 1.5e-2, 'epsrel': 0, 'limit': 20}
+    options = {'limit': 20}
     res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]],
                          opts=[options, options, options, options])
     print(res1a, err1a)
 
     integral = Mikor()
-    integral.set_values(3, 4, 1000, 1, sigma=2)
-    res1 = integral(fcn1, eps=1e-4)
+    integral.set_values(1, 4, 1259, 1, sigma=2)
+    res1 = integral(fcn1)
     print(res1)
 
 
