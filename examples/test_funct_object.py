@@ -44,8 +44,8 @@ def main():
     # print(res2)
     # options = {'epsabs': 1.5e-2, 'epsrel': 0, 'limit': 20}
     options = {'limit': 20}
-    res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]],
-                         opts=[options, options, options, options])
+    res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]])#,
+#                         opts=[options, options, options, options])
     print(res1a, err1a)
 
     integral = Mikor()

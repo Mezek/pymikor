@@ -23,12 +23,24 @@ def f(x):
     return math.exp(-100. * dx2) * norm
 
 
+def fcn1(x):
+    f = 1
+    for i in range(4):
+        dblx = x[i]*x[i]
+        if dblx > 1.0:
+            dblx = 1.0
+        f *= x[i]*math.sqrt(1. - dblx)
+    return 81*f
+
+
 integ = vegas.Integrator(4 * [[0, 1]])
 
-integ(f, nitn=10, neval=2e5)
-result = integ(f, nitn=10, neval=2e5)
+# integ(fcn1, nitn=10, neval=2e5)
+result = integ(fcn1, nitn=10, neval=10000)
+print(result.summary())
 print('result = %s   Q = %.2f' % (result, result.Q))
 
+"""
 @vegas.batchintegrand
 def f_batch(x):
     # evaluate integrand at multiple points simultaneously
@@ -46,3 +58,4 @@ integ(f_batch, nitn=10, neval=2e5)
 result = integ(f_batch, nitn=10, neval=2e5)
 # print(result.summary())
 print('result = %s   Q = %.2f' % (result, result.Q))
+"""
