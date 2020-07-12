@@ -11,6 +11,7 @@ __email__ = "erik.bartos@gmail.com"
 
 import vegas
 import math
+import time
 import numpy as np
 
 
@@ -33,12 +34,15 @@ def fcn1(x):
     return 81*f
 
 
-integ = vegas.Integrator(4 * [[0, 1]])
 
+integ = vegas.Integrator(4 * [[0, 1]])
 # integ(fcn1, nitn=10, neval=2e5)
-result = integ(fcn1, nitn=10, neval=10000)
+start_time = time.time()
+result = integ(fcn1, nitn=10, neval=1e6)
+t_time = time.time() - start_time
 print(result.summary())
 print('result = %s   Q = %.2f' % (result, result.Q))
+print(f'{t_time} seconds')
 
 """
 @vegas.batchintegrand

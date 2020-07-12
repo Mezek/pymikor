@@ -11,6 +11,7 @@ __email__ = "erik.bartos@gmail.com"
 from pymikor import *
 from math import *
 from scipy.integrate import *
+import time
 
 
 def fcn1(x):
@@ -44,14 +45,17 @@ def main():
     # print(res2)
     # options = {'epsabs': 1.5e-2, 'epsrel': 0, 'limit': 20}
     options = {'limit': 20}
-    res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]])#,
+#    res1a, err1a = nquad(fcn1a, [[0, 1], [0, 1], [0, 1], [0, 1]])#,
 #                         opts=[options, options, options, options])
-    print(res1a, err1a)
+#    print(res1a, err1a)
 
     integral = Mikor()
     integral.set_values(1, 4, 1259, 1, sigma=2)
+    start_time = time.time()
     res1 = integral(fcn1)
+    t_time = time.time() - start_time
     print(res1)
+    print(f'{t_time} seconds')
 
 
 if __name__ == "__main__":
