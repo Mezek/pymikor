@@ -855,7 +855,7 @@ class Mikor:
         if self.strategy <= 2:
             act_val = 0.
             next_val = float('nan')
-            if self.eps_flag == 0.:
+            if self.eps_abs == 0.:
                 next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
             else:
                 cond_flag = False
