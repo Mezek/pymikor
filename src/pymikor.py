@@ -881,7 +881,7 @@ class Mikor:
             if not math.isnan(next_val):
                 integral = next_val
             else:
-                raise Exception(f'Try to increase current periodization value sigma={self.sigma}.')
+                raise Exception(f'NaN value! Try to increase current periodization value sigma={self.sigma}.')
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)

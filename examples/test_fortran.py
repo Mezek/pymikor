@@ -63,7 +63,7 @@ def main():
     # integral.set_dpq(7, 907, 31)
     integral.show_parameters()
 
-    result = integral(fcn, eps=1e-4)
+    result = integral(fcn)
     rz = result*4*52.768*3
     print(f'\nResult: {rz}')
 
