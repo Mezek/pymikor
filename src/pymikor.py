@@ -97,6 +97,7 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
         self.v_arr = np.empty(self.sigma)
+        # self.a_xlim = np.empty()
 
         self.pp = np.array([
             #  3
@@ -360,6 +361,11 @@ class Mikor:
                 if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.set_eps(kwargs[k])
+            elif k == 'limits':
+                if len(kwargs[k]) != self.dim_s:
+                    raise AttributeError(f'Dimension of limits differs from integral dimension')
+                else:
+                    print(kwargs[k])
             else:
                 raise AttributeError(f'no attribute named {k}')
 
