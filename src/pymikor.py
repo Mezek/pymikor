@@ -97,7 +97,7 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
         self.v_arr = np.empty(self.sigma)
-        # self.a_xlim = np.empty()
+        self.x_lim = np.empty(self.dim_s)
 
         self.pp = np.array([
             #  3
@@ -364,8 +364,7 @@ class Mikor:
             elif k == 'limits':
                 if len(kwargs[k]) != self.dim_s:
                     raise AttributeError(f'Dimension of limits differs from integral dimension')
-                else:
-                    print(kwargs[k])
+                self.x_lim = kwargs[k]
             else:
                 raise AttributeError(f'no attribute named {k}')
 
@@ -403,6 +402,7 @@ class Mikor:
 
     def show_parameters(self):
         print(f'\nObject class            : {self.__class__.__name__}')
+        print(f'strategy                : {self.strategy}')
         print(f'dimension of integration: {self.dim_s}')
         print(f'dimension of result     : {self.dim_r}')
         print(f'p - prime               : {self.p_prime}')
@@ -410,7 +410,7 @@ class Mikor:
         print(f'number of nodes         : {self.n_nodes}')
         print(f'sigma                   : {self.sigma}')
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
-        print(f'strategy                : {self.strategy}')
+        print(f'limits                  : {self.x_lim}')
 
     def find_closest_p(self):
         """
