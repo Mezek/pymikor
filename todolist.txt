@@ -2,4 +2,4 @@ TODO: Korobov's integration
 TODO: Comparative tables, e.g. Tab.6 in Zakrzewska, Gauss, Korobov, Vegas, Cuba
 TODO: prepare makefile
 TODO: write paper with strategies, or appendix in documentation
-TODO: cite CyCuba: https://github.com/scikit-cycuba/scikit-cycuba, Cuba: https://arxiv.org/abs/hep-ph/0404043
+TODO: cite CyCuba: https://github.com/scikit-cycuba/scikit-cycuba, Cuba: https://arxiv.org/abs/hep-ph/0404043 in documentation

@@ -97,6 +97,7 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
         self.v_arr = np.empty(self.sigma)
+        self.x_lim = np.empty(self.dim_s)
 
         self.pp = np.array([
             #  3
@@ -360,6 +361,10 @@ class Mikor:
                 if kwargs[k] != 0 and kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.set_eps(kwargs[k])
+            elif k == 'limits':
+                if len(kwargs[k]) != self.dim_s:
+                    raise AttributeError(f'Dimension of limits differs from integral dimension')
+                self.x_lim = kwargs[k]
             else:
                 raise AttributeError(f'no attribute named {k}')
 
@@ -397,6 +402,7 @@ class Mikor:
 
     def show_parameters(self):
         print(f'\nObject class            : {self.__class__.__name__}')
+        print(f'strategy                : {self.strategy}')
         print(f'dimension of integration: {self.dim_s}')
         print(f'dimension of result     : {self.dim_r}')
         print(f'p - prime               : {self.p_prime}')
@@ -404,7 +410,7 @@ class Mikor:
         print(f'number of nodes         : {self.n_nodes}')
         print(f'sigma                   : {self.sigma}')
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
-        print(f'strategy                : {self.strategy}')
+        print(f'limits                  : {self.x_lim}')
 
     def find_closest_p(self):
         """
@@ -881,7 +887,7 @@ class Mikor:
             if not math.isnan(next_val):
                 integral = next_val
             else:
-                raise Exception(f'Try to increase current periodization value sigma={self.sigma}.')
+                raise Exception(f'NaN value! Try to increase current periodization value sigma={self.sigma}.')
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
