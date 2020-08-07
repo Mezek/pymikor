@@ -337,6 +337,7 @@ class Mikor:
         self.empty_arrays(dimension)
         self.eps_abs = 0.
         self.eps_flag = False
+        self.x_lim = [[0, 1] for i in range(self.dim_s)]
 
         assert self.dim_s >= 2, 'Integral dimension s must be >= 2'
         if self.dim_s == 2:
