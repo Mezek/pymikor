@@ -845,6 +845,12 @@ class Mikor:
             mi_f += integrand_fcn(trans_x) * mi_drv
         return mi_f/self.n_nodes
 
+    def get_volume(self):
+        vol = 1.
+        for lt in self.x_lim:
+            vol = vol*(lt[1] - lt[0])
+        return vol
+
     def __call__(self, integrand_fcn, **kwargs):
         for k in kwargs:
             if k == 'strategy':
