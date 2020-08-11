@@ -804,6 +804,12 @@ class Mikor:
             self.v_arr[i] = scipy.special.binom(k1, i)*s_sign/(i+1 + k1)
             s_sign = -s_sign
 
+    def area_volume(self):
+        vol = 1.
+        for lt in self.x_lim:
+            vol = vol*(lt[1] - lt[0])
+        return vol
+
     def periodization_fcn(self, x):
         """
         Periodizing of function
@@ -844,12 +850,6 @@ class Mikor:
                 mi_drv = mi_drv * der_psi
             mi_f += integrand_fcn(trans_x) * mi_drv
         return mi_f/self.n_nodes
-
-    def get_volume(self):
-        vol = 1.
-        for lt in self.x_lim:
-            vol = vol*(lt[1] - lt[0])
-        return vol
 
     def __call__(self, integrand_fcn, **kwargs):
         for k in kwargs:

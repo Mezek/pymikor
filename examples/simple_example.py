@@ -21,7 +21,7 @@ def main():
     # integral.set_values(1, 7, 1000, 1, sigma=2)
     # integral.set_dpq(7, 907, 31)
     integral.show_parameters()
-    print(integral.get_volume())
+    print(integral.area_volume())
 
     result = integral(fcn, eps=1e-4)
     print(f'\nResult of integration   : {result}')
