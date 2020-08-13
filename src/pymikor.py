@@ -337,7 +337,7 @@ class Mikor:
         self.empty_arrays(dimension)
         self.eps_abs = 0.
         self.eps_flag = False
-        self.x_lim = [[0, 1] for i in range(self.dim_s)]
+        self.x_lim = [[0, 1] for _ in range(self.dim_s)]
 
         assert self.dim_s >= 2, 'Integral dimension s must be >= 2'
         if self.dim_s == 2:
@@ -804,12 +804,6 @@ class Mikor:
             self.v_arr[i] = scipy.special.binom(k1, i)*s_sign/(i+1 + k1)
             s_sign = -s_sign
 
-    def area_volume(self):
-        vol = 1.
-        for lt in self.x_lim:
-            vol = vol*(lt[1] - lt[0])
-        return vol
-
     def periodization_fcn(self, x):
         """
         Periodizing of function
@@ -831,6 +825,18 @@ class Mikor:
         der_psi = cp*pow(x*(1. - x), k1)
         return psi, der_psi
 
+    def area_volume(self):
+        """
+        Multidimensional area volume
+        :return: volume
+        """
+        vol = 1.
+        oda = np.empty(self.dim_s)
+        for i in range(self.dim_s):
+            oda[i] = self.x_lim[i][1] - self.x_lim[i][0]
+            vol = vol*oda[i]
+        return vol, oda
+
     def integral_value(self, mi_a_arr, integrand_fcn):
         """
         Calculation of integral with periodization function
@@ -839,6 +845,7 @@ class Mikor:
         :return: value of integral
         """
         trans_x = np.empty(self.dim_s)
+        volume, x_interval = self.area_volume()
         mi_f = 0.
         for i in range(1, self.n_nodes + 1):
             mi_drv = 1.
@@ -846,10 +853,10 @@ class Mikor:
                 a_element = float(mi_a_arr[j])*float(i)/self.n_nodes
                 x = fraction(a_element)
                 psi, der_psi = self.periodization_fcn(x)
-                trans_x[j] = psi
+                trans_x[j] = x_interval[j]*psi + self.x_lim[j][0]
                 mi_drv = mi_drv * der_psi
             mi_f += integrand_fcn(trans_x) * mi_drv
-        return mi_f/self.n_nodes
+        return mi_f*volume/self.n_nodes
 
     def __call__(self, integrand_fcn, **kwargs):
         for k in kwargs:
