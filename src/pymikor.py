@@ -97,7 +97,7 @@ class Mikor:
         self.b_arr = np.empty(self.dim_s)
         self.c_arr = np.empty(self.dim_s)
         self.v_arr = np.empty(self.sigma)
-        self.x_lim = np.empty(self.dim_s)
+        self.x_lim = np.array([[0, 1]])
 
         self.pp = np.array([
             #  3
