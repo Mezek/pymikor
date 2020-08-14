@@ -59,13 +59,15 @@ def fcn(x):
 
 def main():
     integral = Mikor()
-    integral.set_values(1, 8, 1000, 1, sigma=2)
+    #.0001
+    x_lim = [[0.0001, 0.9999] for _ in range(8)]
+    integral.set_values(1, 8, 5000011, 1, sigma=3, limits=x_lim)
     # integral.set_dpq(7, 907, 31)
     integral.show_parameters()
 
     result = integral(fcn)
-    rz = result*4*52.768*3
-    print(f'\nResult: {rz}')
+    rz = result*4*pow(52.768, 3)
+    print(f'\nResult: {rz}, {result}')
 
     del integral
 
