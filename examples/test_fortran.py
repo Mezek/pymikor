@@ -119,8 +119,8 @@ def main():
 
     result = integral(fcn1)*4*pow(52.768, 3)
     # result = integral(fcn2)
-    rz = result
-    print(f'\nResult: {rz}, {result}')
+
+    print(f'\nResult: {result}')
 
     del integral
 
