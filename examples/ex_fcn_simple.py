@@ -27,11 +27,11 @@ def fcn_la(a1, a2, m1, m2, lp, mp, gp):
     return 3./4.*gp/pow(np.pi, 2)*e_t*m_t
 
 
-def fcn_p(x):
+def fcn_p(x, *args):
     m1 = 0.235
     m2 = 0.235
     lp = 0.87
-    lcut = 0.181
+    # lcut = 0.181
     mp = 0.14
     gp = 5.133
 
@@ -46,7 +46,6 @@ def fcn_p(x):
 
 def main():
 
-    ex_fcn1 = np.exp(-0.5) + np.exp(0.5) - 2.
     integral = Mikor()
 
     # # fcn1
@@ -54,6 +53,7 @@ def main():
     # integral.set_values(3, 2, 1009, 1, sigma=2, limits=x_lim)
     # integral.show_parameters()
     # result = integral(fcn1)
+    # ex_fcn1 = np.exp(-0.5) + np.exp(0.5) - 2.
     # print(f'\nResult: {result}')
     # print(f'Exact:  {ex_fcn1}')
     # print(f'Diff:  ', (result - ex_fcn1))
@@ -65,6 +65,10 @@ def main():
     integral.show_parameters()
     result = integral(fcn_p)
     print(f'\nResult: {result}')
+
+    v = np.array([1, 2, 3])
+    normalized_v = v / np.sqrt(np.sum(v ** 2))
+    print(normalized_v)
 
     del integral
 
