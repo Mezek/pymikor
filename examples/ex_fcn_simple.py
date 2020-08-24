@@ -9,6 +9,7 @@ __copyright__ = "Copyright © 2020 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
 from pymikor import *
+from integrand_suit import *
 
 
 def fcn1(x):
@@ -69,6 +70,11 @@ def main():
     v = np.array([1, 2, 3])
     normalized_v = v / np.sqrt(np.sum(v ** 2))
     print(normalized_v)
+
+    # fcn suit
+    fcn_ts = Integrand('FCN', 3)
+    z = np.empty(3)
+    print(fcn_ts.oscillatory_fcn(v, normalized_v))
 
     del integral
 
