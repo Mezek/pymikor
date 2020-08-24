@@ -74,7 +74,9 @@ def main():
     # fcn suit
     fcn_ts = Integrand('FCN', 3)
     z = np.empty(3)
-    print(fcn_ts.oscillatory_fcn(v, normalized_v))
+    # print(fcn_ts.oscillatory_fcn(v, normalized_v))
+    fcn_ts.a = [1, 1, 1, 1]
+    print(fcn_ts.a)
 
     del integral
 

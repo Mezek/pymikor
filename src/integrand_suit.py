@@ -33,3 +33,23 @@ class Integrand:
         print('Arguments: ', *par)
         print('Random:    ', self.__a)
         return res
+
+    @property
+    def a(self):
+        return self.__a
+
+    @a.setter
+    def a(self, a):
+        if len(a) != self.__dim_n:
+            raise AttributeError('Check dimension of a-parameters!')
+        self.__a = a
+
+    @property
+    def u(self):
+        return self.__u
+
+    @u.setter
+    def u(self, u):
+        if len(u) != self.__dim_n:
+            raise AttributeError('Check dimension of u-parameters!')
+        self.__u = u
