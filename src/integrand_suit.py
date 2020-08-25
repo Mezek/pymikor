@@ -12,6 +12,7 @@
 # GNU General Public License for more details.
 
 import numpy as np
+import math
 
 
 class Integrand:
@@ -21,18 +22,6 @@ class Integrand:
         self.__dim_n = dimension
         self.__a = np.random.rand(dimension)
         self.__u = np.random.rand(dimension)
-
-    def oscillatory_fcn(self, x, *par):
-        if len(x) != self.__dim_n:
-            raise AttributeError('Dimension of arguments is not correct!')
-        if len(*par) != len(x):
-            raise AttributeError('Number of parameters is not correct!')
-        res = 0.
-        for i in range(len(x)):
-            res += x[i]**2
-        print('Arguments: ', *par)
-        print('Random:    ', self.__a)
-        return res
 
     @property
     def a(self):
@@ -53,3 +42,36 @@ class Integrand:
         if len(u) != self.__dim_n:
             raise AttributeError('Check dimension of u-parameters!')
         self.__u = u
+
+    def check_x(self, dmx):
+        """
+        Check dimension of x-variable
+        :param dmx: length of x-variable
+        :return: implicit None
+        """
+        if dmx != self.__dim_n:
+            raise AttributeError('Check dimension of x-variable!')
+
+    def oscillatory_fcn(self, x):
+        """
+        Oscillatory function
+        :param x: x-variable
+        :return: f_1(x)
+        """
+        self.check_x(len(x))
+        sma = 0.
+        for i in range(self.__dim_n):
+            sma += self.__a[i]*x[i]
+        return np.cos(2.*np.pi*self.__u[0] + sma)
+
+    def product_peak_fcn(self, x):
+        """
+        Product peak function
+        :param x: x-variable
+        :return: f_2(x)
+        """
+        self.check_x(len(x))
+        res = 1.
+        for i in range(self.__dim_n):
+            res *= 1./(1./math.pow(self.__a[i], 2) + math.pow(x[i] - self.__u[i], 2))
+        return res
