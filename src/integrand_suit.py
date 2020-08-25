@@ -62,7 +62,7 @@ class Integrand:
         sma = 0.
         for i in range(self.__dim_n):
             sma += self.__a[i]*x[i]
-        return np.cos(2.*np.pi*self.__u[0] + sma)
+        return math.cos(2.*math.pi*self.__u[0] + sma)
 
     def product_peak_fcn(self, x):
         """
@@ -75,3 +75,55 @@ class Integrand:
         for i in range(self.__dim_n):
             res *= 1./(1./math.pow(self.__a[i], 2) + math.pow(x[i] - self.__u[i], 2))
         return res
+
+    def corner_peak_fcn(self, x):
+        """
+        Corner peak function
+        :param x: x-variable
+        :return: f_3(x)
+        """
+        self.check_x(len(x))
+        sma = 0.
+        for i in range(self.__dim_n):
+            sma += self.__a[i]*x[i]
+        return math.pow(1. + sma, - (self.__dim_n + 1))
+
+    def gaussian_fcn(self, x):
+        """
+        Gaussian function
+        :param x: x-variable
+        :return: f_4(x)
+        """
+        self.check_x(len(x))
+        sma = 0.
+        for i in range(self.__dim_n):
+            sma += math.pow(self.__a[i]*(x[i] - self.__u[i]), 2)
+        return math.exp(- sma)
+
+    def c0_fcn(self, x):
+        """
+        C^0 function
+        :param x: x-variable
+        :return: f_5(x)
+        """
+        self.check_x(len(x))
+        sma = 0.
+        for i in range(self.__dim_n):
+            sma += self.__a[i]*math.fabs(x[i] - self.__u[i])
+        return math.exp(- sma)
+
+    def discontinuous_fcn(self, x):
+        """
+        Discontinuous function
+        :param x: x-variable
+        :return: f_6x)
+        """
+        self.check_x(len(x))
+        print(x, self.__u)
+        if x[0] > self.__u[0] or x[1] > self.__u[1]:
+            return 0.
+        else:
+            sma = 0.
+            for i in range(self.__dim_n):
+                sma += self.__a[i]*x[i]
+            return math.exp(sma)

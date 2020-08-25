@@ -78,6 +78,7 @@ def main():
     print('Random:    ', fcn_ts.a)
     print(fcn_ts.oscillatory_fcn(normalized_v))
     print(fcn_ts.product_peak_fcn(v))
+    print(fcn_ts.discontinuous_fcn(normalized_v))
 
     del integral
 
