@@ -9,6 +9,7 @@ __copyright__ = "Copyright © 2020 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
 from pymikor import *
+from integrand_suit import *
 
 
 def fcn1(x):
@@ -21,17 +22,17 @@ def fcn_la(a1, a2, m1, m2, lp, mp, gp):
     a = 1./lp/lp + a1 + a2
     mp2 = mp*mp
     ear = -a1*m1*m1 - a2*m2*m2 + (a1*om1*om1 + a2*om2*om2)*mp2\
-          - pow((a1*om1 - a2*om2), 2)*mp2/a
+          - math.pow((a1*om1 - a2*om2), 2)*mp2/a
     e_t = np.exp(ear)
-    m_t = (m1 - m2)/pow(a, 3)*(a1*om1 - a2*om2) + (m1*om2 + m2*om1)/pow(a, 2)
-    return 3./4.*gp/pow(np.pi, 2)*e_t*m_t
+    m_t = (m1 - m2)/math.pow(a, 3)*(a1*om1 - a2*om2) + (m1*om2 + m2*om1)/math.pow(a, 2)
+    return 3./4.*gp/math.pow(np.pi, 2)*e_t*m_t
 
 
-def fcn_p(x):
+def fcn_p(x, *args):
     m1 = 0.235
     m2 = 0.235
     lp = 0.87
-    lcut = 0.181
+    # lcut = 0.181
     mp = 0.14
     gp = 5.133
 
@@ -39,14 +40,13 @@ def fcn_p(x):
     a = x[1]
     tm1 = 1. - t
     am1 = 1. - a
-    ddx = t/pow(tm1, 3)
+    ddx = t/math.pow(tm1, 3)
     ddy = fcn_la(t*a/tm1, t*am1/tm1, m1, m2, lp, mp, gp)
     return ddx*ddy
 
 
 def main():
 
-    ex_fcn1 = np.exp(-0.5) + np.exp(0.5) - 2.
     integral = Mikor()
 
     # # fcn1
@@ -54,6 +54,7 @@ def main():
     # integral.set_values(3, 2, 1009, 1, sigma=2, limits=x_lim)
     # integral.show_parameters()
     # result = integral(fcn1)
+    # ex_fcn1 = np.exp(-0.5) + np.exp(0.5) - 2.
     # print(f'\nResult: {result}')
     # print(f'Exact:  {ex_fcn1}')
     # print(f'Diff:  ', (result - ex_fcn1))
@@ -65,6 +66,19 @@ def main():
     integral.show_parameters()
     result = integral(fcn_p)
     print(f'\nResult: {result}')
+
+    v = np.array([1, 2, 3])
+    normalized_v = v / np.sqrt(np.sum(np.power(v, 2)))
+
+    # fcn suit
+    fcn_ts = Integrand('FCN', 3)
+    z = np.empty(3)
+    # print(fcn_ts.oscillatory_fcn(v, normalized_v))
+    # fcn_ts.a = [1, 1, 1]
+    print('Random:    ', fcn_ts.a)
+    print(fcn_ts.oscillatory_fcn(normalized_v))
+    print(fcn_ts.product_peak_fcn(v))
+    print(fcn_ts.discontinuous_fcn(normalized_v))
 
     del integral
 
