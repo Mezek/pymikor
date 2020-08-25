@@ -86,7 +86,7 @@ class Integrand:
         sma = 0.
         for i in range(self.__dim_n):
             sma += self.__a[i]*x[i]
-        return math.pow(1. + sma, - (self.__dim_n + 1))
+        return 1./math.pow(1. + sma, (self.__dim_n + 1))
 
     def gaussian_fcn(self, x):
         """
@@ -119,7 +119,6 @@ class Integrand:
         :return: f_6x)
         """
         self.check_x(len(x))
-        print(x, self.__u)
         if x[0] > self.__u[0] or x[1] > self.__u[1]:
             return 0.
         else:

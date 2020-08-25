@@ -75,10 +75,12 @@ def main():
     z = np.empty(3)
     # print(fcn_ts.oscillatory_fcn(v, normalized_v))
     # fcn_ts.a = [1, 1, 1]
-    print('Random:    ', fcn_ts.a)
+    # print('Random:    ', fcn_ts.a)
+    print('Norm.: ', normalized_v, np.linalg.norm(v)**2)
     print(fcn_ts.oscillatory_fcn(normalized_v))
-    print(fcn_ts.product_peak_fcn(v))
-    print(fcn_ts.discontinuous_fcn(normalized_v))
+    print(fcn_ts.oscillatory_fcn(v/np.linalg.norm(v)))
+
+    # print(fcn_ts.discontinuous_fcn(normalized_v))
 
     del integral
 
