@@ -15,9 +15,9 @@ import numpy as np
 import math
 
 
-def norm_vec(v):
+def normalize_2(v):
     """
-    Normalise vector
+    Normalize vector with Euclidean norm
     :param v: input vector
     :return: normalised vector
     """
@@ -49,7 +49,7 @@ class Integrand:
         self.__dim_n = dimension
         self.__a_pr = np.random.rand(dimension)
         self.__u = np.random.rand(dimension)
-        self.__a = norm_vec(self.__a_pr)
+        self.__a = self.normalize_a(1, 1)
 
     @property
     def a_pr(self):
@@ -71,9 +71,29 @@ class Integrand:
             raise AttributeError('Check dimension of u parameters!')
         self.__u = u
 
+    @property
+    def a(self):
+        return self.__a
+
+    def c_factor(self, e, h):
+        """
+        Normalize condition by Genz
+        :param e: number
+        :param h: number
+        :return: const
+        """
+        return h/math.pow(self.__dim_n, e)
+
     def normalize_a(self, e, h):
-        self.__a = 0.
-        return 0.
+        """
+        Normalize vector by Genz's condition
+        :param e: number
+        :param h: number
+        :return: normalized vector
+        """
+        c = self.c_factor(e, h)/norm1(self.__a_pr)
+        self.__a = self.__a_pr * c
+        return self.__a
 
     def check_x(self, dmx):
         """

@@ -68,17 +68,21 @@ def main():
     print(f'\nResult: {result}')
 
     v = np.array([1, 2, 3])
-    n_v = norm_vec(v)
+    n_v = normalize_2(v)
 
     # fcn suit
     fcn_ts = Integrand('FCN', 3)
+    fcn_ts.normalize_a(2, 200)
+    print(fcn_ts.c_factor(2, 200))
     z = np.empty(3)
     # print(fcn_ts.oscillatory_fcn(v, normalized_v))
     # fcn_ts.a = [1, 1, 1]
     # print('Random:    ', fcn_ts.a)
-    print('Norm.: ', norm2(v), norm2(v)**2, norm2(n_v))
+    print('Norm.:   ', norm2(v), norm2(v)**2, norm2(n_v), normalize_2(v))
+    print('G. norm: ', fcn_ts.normalize_a(2, 200))
+    print('G. norm: ', norm1(fcn_ts.normalize_a(2, 200)) * math.pow(3, 2))
     print(fcn_ts.oscillatory_fcn(n_v))
-    print(fcn_ts.oscillatory_fcn(norm_vec(v)))
+    print(fcn_ts.oscillatory_fcn(normalize_2(v)))
 
     # print(fcn_ts.discontinuous_fcn(normalized_v))
 
