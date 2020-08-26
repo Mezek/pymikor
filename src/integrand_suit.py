@@ -15,23 +15,51 @@ import numpy as np
 import math
 
 
+def normalize_2(v):
+    """
+    Normalize vector with Euclidean norm
+    :param v: input vector
+    :return: normalised vector
+    """
+    return v/np.linalg.norm(v)
+
+
+def norm1(v):
+    """
+    Calculate Taxicab norm of vector
+    :param v: input vector
+    :return: norm of vector
+    """
+    return math.fsum(np.fabs(v))
+
+
+def norm2(v):
+    """
+    Calculate Euclidean norm of vector
+    :param v: input vector
+    :return: norm of vector
+    """
+    return math.sqrt(math.fsum(v*v))
+
+
 class Integrand:
 
     def __init__(self, name, dimension):
         self.name = name
         self.__dim_n = dimension
-        self.__a = np.random.rand(dimension)
+        self.__a_pr = np.random.rand(dimension)
         self.__u = np.random.rand(dimension)
+        self.__a = self.normalize_a(1, 1)
 
     @property
-    def a(self):
-        return self.__a
+    def a_pr(self):
+        return self.__a_pr
 
-    @a.setter
-    def a(self, a):
-        if len(a) != self.__dim_n:
-            raise AttributeError('Check dimension of a-parameters!')
-        self.__a = a
+    @a_pr.setter
+    def a_pr(self, apr):
+        if len(apr) != self.__dim_n:
+            raise AttributeError('Check dimension of a-prime parameters!')
+        self.__a_pr = apr
 
     @property
     def u(self):
@@ -40,8 +68,32 @@ class Integrand:
     @u.setter
     def u(self, u):
         if len(u) != self.__dim_n:
-            raise AttributeError('Check dimension of u-parameters!')
+            raise AttributeError('Check dimension of u parameters!')
         self.__u = u
+
+    @property
+    def a(self):
+        return self.__a
+
+    def c_factor(self, e, h):
+        """
+        Normalize condition by Genz
+        :param e: number
+        :param h: number
+        :return: const
+        """
+        return h/math.pow(self.__dim_n, e)
+
+    def normalize_a(self, e, h):
+        """
+        Normalize vector by Genz's condition
+        :param e: number
+        :param h: number
+        :return: normalized vector
+        """
+        c = self.c_factor(e, h)/norm1(self.__a_pr)
+        self.__a = self.__a_pr * c
+        return self.__a
 
     def check_x(self, dmx):
         """
@@ -86,7 +138,7 @@ class Integrand:
         sma = 0.
         for i in range(self.__dim_n):
             sma += self.__a[i]*x[i]
-        return math.pow(1. + sma, - (self.__dim_n + 1))
+        return 1./math.pow(1. + sma, (self.__dim_n + 1))
 
     def gaussian_fcn(self, x):
         """
@@ -119,7 +171,6 @@ class Integrand:
         :return: f_6x)
         """
         self.check_x(len(x))
-        print(x, self.__u)
         if x[0] > self.__u[0] or x[1] > self.__u[1]:
             return 0.
         else:
