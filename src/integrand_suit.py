@@ -15,23 +15,51 @@ import numpy as np
 import math
 
 
+def norm_vec(v):
+    """
+    Normalise vector
+    :param v: input vector
+    :return: normalised vector
+    """
+    return v/np.linalg.norm(v)
+
+
+def norm1(v):
+    """
+    Calculate Taxicab norm of vector
+    :param v: input vector
+    :return: norm of vector
+    """
+    return math.fsum(np.fabs(v))
+
+
+def norm2(v):
+    """
+    Calculate Euclidean norm of vector
+    :param v: input vector
+    :return: norm of vector
+    """
+    return math.sqrt(math.fsum(v*v))
+
+
 class Integrand:
 
     def __init__(self, name, dimension):
         self.name = name
         self.__dim_n = dimension
-        self.__a = np.random.rand(dimension)
+        self.__a_pr = np.random.rand(dimension)
         self.__u = np.random.rand(dimension)
+        self.__a = norm_vec(self.__a_pr)
 
     @property
-    def a(self):
-        return self.__a
+    def a_pr(self):
+        return self.__a_pr
 
-    @a.setter
-    def a(self, a):
-        if len(a) != self.__dim_n:
-            raise AttributeError('Check dimension of a-parameters!')
-        self.__a = a
+    @a_pr.setter
+    def a_pr(self, apr):
+        if len(apr) != self.__dim_n:
+            raise AttributeError('Check dimension of a-prime parameters!')
+        self.__a_pr = apr
 
     @property
     def u(self):
@@ -40,8 +68,12 @@ class Integrand:
     @u.setter
     def u(self, u):
         if len(u) != self.__dim_n:
-            raise AttributeError('Check dimension of u-parameters!')
+            raise AttributeError('Check dimension of u parameters!')
         self.__u = u
+
+    def normalize_a(self, e, h):
+        self.__a = 0.
+        return 0.
 
     def check_x(self, dmx):
         """
