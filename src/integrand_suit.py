@@ -75,15 +75,6 @@ class Integrand:
     def a(self):
         return self.__a
 
-    def c_factor(self, e, h):
-        """
-        Normalize condition by Genz
-        :param e: number
-        :param h: number
-        :return: const
-        """
-        return h/math.pow(self.__dim_n, e)
-
     def normalize_a(self, e, h):
         """
         Normalize vector by Genz's condition
@@ -91,7 +82,8 @@ class Integrand:
         :param h: number
         :return: normalized vector
         """
-        c = self.c_factor(e, h)/norm1(self.__a_pr)
+        c_factor = h/math.pow(self.__dim_n, e)
+        c = c_factor/norm1(self.__a_pr)
         self.__a = self.__a_pr * c
         return self.__a
 
