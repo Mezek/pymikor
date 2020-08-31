@@ -11,29 +11,21 @@ from pymikor import *
 from integrand_suit import *
 
 
-def fcn_osc(a, u):
-    b = 2.*math.pi*u[0]
-    s = math.fsum(a)
-    prod = 1.
-    for ael in a:
-        prod = 2.*math.sin(ael/2.)/ael
-    return math.cos((2.*b + s)/2.)*prod
-
-
 def main():
     with open('coefficients.txt', 'w') as f:
         f.write('\n')
 
-    fof = Integrand('FCN', 5)
-    a = fof.a
-    u = fof.u
+    dmn = 6
+    fof = Integrand('FCN', dmn)
     integral = Mikor()
-    integral.set_values(2, 5, 1000, 1, sigma=2)
+    integral.set_values(2, dmn, 1000, 1, sigma=2)
     integral.show_parameters()
     result = integral(fof.oscillatory_fcn)
     # integral.show_parameters()
-    print(a, u)
-    print(f'\nResult of integration   : {result}, {fcn_osc(a, u)}')
+    print(f'\nResult of integration   : {result}, {fof.exact_oscillatory()}')
+
+    result = integral(fof.product_peak_fcn)
+    print(f'\nResult of integration   : {result}, {fof.exact_product_peak()}')
 
     del integral
 
