@@ -75,15 +75,6 @@ class Integrand:
     def a(self):
         return self.__a
 
-    def c_factor(self, e, h):
-        """
-        Normalize condition by Genz
-        :param e: number
-        :param h: number
-        :return: const
-        """
-        return h/math.pow(self.__dim_n, e)
-
     def normalize_a(self, e, h):
         """
         Normalize vector by Genz's condition
@@ -91,7 +82,8 @@ class Integrand:
         :param h: number
         :return: normalized vector
         """
-        c = self.c_factor(e, h)/norm1(self.__a_pr)
+        c_factor = h/math.pow(self.__dim_n, e)
+        c = c_factor/norm1(self.__a_pr)
         self.__a = self.__a_pr * c
         return self.__a
 
@@ -178,3 +170,26 @@ class Integrand:
             for i in range(self.__dim_n):
                 sma += self.__a[i]*x[i]
             return math.exp(sma)
+
+    def exact_oscillatory(self):
+        """
+        Integration of f_1(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        b = 2. * math.pi * self.__u[0]
+        prod = 1.
+        for ael in self.__a:
+            prod *= 2. * math.sin(ael / 2.) / ael
+        return math.cos((2. * b + math.fsum(self.__a)) / 2.) * prod
+
+    def exact_product_peak(self):
+        """
+        Integration of f_2(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        prod = 1.
+        for i in range(0, len(self.__a)):
+            ael = self.__a[i]
+            prod *= ael * (math.atan(ael*(1. - self.__u[i])) - math.atan(ael*(-self.__u[i])))
+        return prod
+

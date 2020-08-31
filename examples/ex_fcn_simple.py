@@ -73,7 +73,6 @@ def main():
     # fcn suit
     fcn_ts = Integrand('FCN', 3)
     fcn_ts.normalize_a(2, 200)
-    print(fcn_ts.c_factor(2, 200))
     z = np.empty(3)
     # print(fcn_ts.oscillatory_fcn(v, normalized_v))
     # fcn_ts.a = [1, 1, 1]
