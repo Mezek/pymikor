@@ -13,6 +13,7 @@
 
 import numpy as np
 import math
+import scipy.special as spec
 
 
 def normalize_2(v):
@@ -86,6 +87,14 @@ class Integrand:
         c = c_factor/norm1(self.__a_pr)
         self.__a = self.__a_pr * c
         return self.__a
+
+    def show_parameters(self):
+        print(f'\nObject class    : {self.__class__.__name__}')
+        print(f'Object name     : {self.name}')
+        print(f'dimension       : {self.__dim_n}')
+        print(f'a-prime vector  : {self.__a_pr}')
+        print(f'a vector        : {self.__a}')
+        print(f'u vector        : {self.__u}')
 
     def check_x(self, dmx):
         """
@@ -193,3 +202,12 @@ class Integrand:
             prod *= ael * (math.atan(ael*(1. - self.__u[i])) - math.atan(ael*(-self.__u[i])))
         return prod
 
+    def exact_gaussian(self):
+        prod = 1.
+        for i in range(0, len(self.__a)):
+            prod *= math.sqrt(math.pi)/2./self.__a[i]*(spec.erf(self.__a[i]*(1. - self.__u[i]))
+                                                       - spec.erf(-self.__a[i]*self.__u[i]))
+        return prod
+
+#  u-x <= 0: -exp(u-x)
+#  true: exp(-u+x)
