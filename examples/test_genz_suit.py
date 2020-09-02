@@ -27,9 +27,13 @@ def main():
     # print(f'\nResult of integration   : {result}, {fof.exact_product_peak()}')
 
     fof.show_parameters()
-    result = integral(fof.gaussian_fcn)
-    ex_tr = fof.exact_gaussian()
-    print(f'\nResults: {result} {ex_tr} {result-ex_tr}')
+    # result = integral(fof.gaussian_fcn)
+    # ex_tr = fof.exact_gaussian()
+    # print(f'\nResults: {result} {ex_tr} {result-ex_tr}')
+
+    result = integral(fof.c0_fcn)
+    ex_tr = fof.exact_c0()
+    print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
 
     del integral
 

@@ -169,7 +169,7 @@ class Integrand:
         """
         Discontinuous function
         :param x: x-variable
-        :return: f_6x)
+        :return: f_6(x)
         """
         self.check_x(len(x))
         if x[0] > self.__u[0] or x[1] > self.__u[1]:
@@ -203,11 +203,24 @@ class Integrand:
         return prod
 
     def exact_gaussian(self):
+        """
+        Integration of f_4(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
         prod = 1.
         for i in range(0, len(self.__a)):
             prod *= math.sqrt(math.pi)/2./self.__a[i]*(spec.erf(self.__a[i]*(1. - self.__u[i]))
                                                        - spec.erf(-self.__a[i]*self.__u[i]))
         return prod
 
-#  u-x <= 0: -exp(u-x)
-#  true: exp(-u+x)
+    def exact_c0(self):
+        """
+        Integration of f_5(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        prod = 1.
+        for i in range(0, len(self.__a)):
+            ael = self.__a[i]
+            uel = self.__u[i]
+            prod *= (math.exp(ael*(1. - uel)) + math.exp(ael*uel) - 2.)/ael
+        return prod
