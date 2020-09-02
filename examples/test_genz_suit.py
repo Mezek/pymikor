@@ -31,8 +31,12 @@ def main():
     # ex_tr = fof.exact_gaussian()
     # print(f'\nResults: {result} {ex_tr} {result-ex_tr}')
 
-    result = integral(fof.c0_fcn)
-    ex_tr = fof.exact_c0()
+    # result = integral(fof.c0_fcn)
+    # ex_tr = fof.exact_c0()
+    # print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
+
+    result = integral(fof.corner_peak_fcn)
+    ex_tr = fof.exact_corner_peak()
     print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
 
     del integral

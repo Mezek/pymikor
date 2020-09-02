@@ -224,3 +224,14 @@ class Integrand:
             uel = self.__u[i]
             prod *= (math.exp(ael*(1. - uel)) + math.exp(ael*uel) - 2.)/ael
         return prod
+
+    def exact_corner_peak(self):
+        """
+        bad factor
+        :return:
+        """
+        sam = math.fsum(self.__a)
+        r = (math.factorial(self.__dim_n) + sam)/(1. + sam)
+        for i in range(0, len(self.__a)):
+            r = r/(1. + self.__a[i])
+        return r/math.factorial(self.__dim_n)
