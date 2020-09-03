@@ -14,6 +14,7 @@
 import numpy as np
 import math
 import scipy.special as spec
+import itertools
 
 
 def normalize_2(v):
@@ -202,6 +203,30 @@ class Integrand:
             prod *= ael * (math.atan(ael*(1. - self.__u[i])) - math.atan(ael*(-self.__u[i])))
         return prod
 
+    def exact_corner_peak(self):
+        """
+        Integration of f_3(x) in limits [0, 1]^n / brute force
+        :return: value of n-integral
+        """
+        res = 0.
+        la = len(self.__a)
+        mc = 0
+        for i in range(la, 0, -1):
+            vec = list(range(la, 0, -1))
+            comb_i = list(itertools.combinations(vec, i))
+            for j in comb_i:
+                sma = 0.
+                for k in j:
+                    sma = sma + self.__a[k - 1]
+                res = res + 1./(1. + sma)*math.pow(-1, mc)
+            mc += 1
+        res = res + math.pow(-1., mc)
+        if (la % 2) != 0:
+            res = - res
+        for i in range(0, la):
+            res = res/self.__a[i]
+        return res/math.factorial(self.__dim_n)
+
     def exact_gaussian(self):
         """
         Integration of f_4(x) in limits [0, 1]^n
@@ -225,13 +250,14 @@ class Integrand:
             prod *= (math.exp(ael*(1. - uel)) + math.exp(ael*uel) - 2.)/ael
         return prod
 
-    def exact_corner_peak(self):
+    def exact_discontinuous(self):
         """
-        bad factor
-        :return:
+        Integration of f_6(x) in limits [0, 1]^n
+        :return: value of n-integral
         """
-        sam = math.fsum(self.__a)
-        r = (math.factorial(self.__dim_n) + sam)/(1. + sam)
-        for i in range(0, len(self.__a)):
-            r = r/(1. + self.__a[i])
-        return r/math.factorial(self.__dim_n)
+        res = (math.exp(self.__a[0]*self.__u[0]) - 1.)/self.__a[0]
+        res *= (math.exp(self.__a[1]*self.__u[1]) - 1.)/self.__a[1]
+        if self.__dim_n > 2:
+            for i in range(2, len(self.__a)):
+                res *= (math.exp(self.__a[i]) - 1.)/self.__a[i]
+        return res

@@ -35,8 +35,12 @@ def main():
     # ex_tr = fof.exact_c0()
     # print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
 
-    result = integral(fof.corner_peak_fcn)
-    ex_tr = fof.exact_corner_peak()
+    # result = integral(fof.corner_peak_fcn)
+    # ex_tr = fof.exact_corner_peak()
+    # print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
+
+    result = integral(fof.discontinuous_fcn)
+    ex_tr = fof.exact_discontinuous()
     print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
 
     del integral
