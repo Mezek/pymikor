@@ -13,6 +13,8 @@
 
 import numpy as np
 import math
+import scipy.special as spec
+import itertools
 
 
 def normalize_2(v):
@@ -87,6 +89,14 @@ class Integrand:
         self.__a = self.__a_pr * c
         return self.__a
 
+    def show_parameters(self):
+        print(f'\nObject class    : {self.__class__.__name__}')
+        print(f'Object name     : {self.name}')
+        print(f'dimension       : {self.__dim_n}')
+        print(f'a-prime vector  : {self.__a_pr}')
+        print(f'a vector        : {self.__a}')
+        print(f'u vector        : {self.__u}')
+
     def check_x(self, dmx):
         """
         Check dimension of x-variable
@@ -160,7 +170,7 @@ class Integrand:
         """
         Discontinuous function
         :param x: x-variable
-        :return: f_6x)
+        :return: f_6(x)
         """
         self.check_x(len(x))
         if x[0] > self.__u[0] or x[1] > self.__u[1]:
@@ -193,3 +203,61 @@ class Integrand:
             prod *= ael * (math.atan(ael*(1. - self.__u[i])) - math.atan(ael*(-self.__u[i])))
         return prod
 
+    def exact_corner_peak(self):
+        """
+        Integration of f_3(x) in limits [0, 1]^n / brute force
+        :return: value of n-integral
+        """
+        res = 0.
+        la = len(self.__a)
+        mc = 0
+        for i in range(la, 0, -1):
+            vec = list(range(la, 0, -1))
+            comb_i = list(itertools.combinations(vec, i))
+            for j in comb_i:
+                sma = 0.
+                for k in j:
+                    sma = sma + self.__a[k - 1]
+                res = res + 1./(1. + sma)*math.pow(-1, mc)
+            mc += 1
+        res = res + math.pow(-1., mc)
+        if (la % 2) != 0:
+            res = - res
+        for i in range(0, la):
+            res = res/self.__a[i]
+        return res/math.factorial(self.__dim_n)
+
+    def exact_gaussian(self):
+        """
+        Integration of f_4(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        prod = 1.
+        for i in range(0, len(self.__a)):
+            prod *= math.sqrt(math.pi)/2./self.__a[i]*(spec.erf(self.__a[i]*(1. - self.__u[i]))
+                                                       - spec.erf(-self.__a[i]*self.__u[i]))
+        return prod
+
+    def exact_c0(self):
+        """
+        Integration of f_5(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        prod = 1.
+        for i in range(0, len(self.__a)):
+            ael = self.__a[i]
+            uel = self.__u[i]
+            prod *= (math.exp(ael*(1. - uel)) + math.exp(ael*uel) - 2.)/ael
+        return prod
+
+    def exact_discontinuous(self):
+        """
+        Integration of f_6(x) in limits [0, 1]^n
+        :return: value of n-integral
+        """
+        res = (math.exp(self.__a[0]*self.__u[0]) - 1.)/self.__a[0]
+        res *= (math.exp(self.__a[1]*self.__u[1]) - 1.)/self.__a[1]
+        if self.__dim_n > 2:
+            for i in range(2, len(self.__a)):
+                res *= (math.exp(self.__a[i]) - 1.)/self.__a[i]
+        return res
