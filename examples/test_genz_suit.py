@@ -15,33 +15,41 @@ def main():
     with open('coefficients.txt', 'w') as f:
         f.write('\n')
 
-    dmn = 7
-    fof = Integrand('FCN', dmn)
+    dmn = 3
     integral = Mikor()
-    integral.set_values(2, dmn, 1000, 1, sigma=2)
+    integral.set_values(1, dmn, 10000, 1, sigma=4)
     integral.show_parameters()
-    # result = integral(fof.oscillatory_fcn)
-    # print(f'\nResult of integration   : {result}, {fof.exact_oscillatory()}')
+
+    fof = Integrand('FCN', dmn)
+    fof.normalize_a(1.5, 110)
+    fof.show_parameters()
+
+    result = integral(fof.oscillatory_fcn)
+    exact_res = fof.exact_oscillatory()
+    print(f'\nResults oscillatory:')
+    print(f'{result:.10e}')
+    print(f'{exact_res:.10e}')
+    print(f'{(result - exact_res):.3e}')
 
     # result = integral(fof.product_peak_fcn)
-    # print(f'\nResult of integration   : {result}, {fof.exact_product_peak()}')
+    # exact_res = fof.exact_product_peak()
+    # print(f'\nResults: {result} {exact_res} {result - exact_res}')
 
-    fof.show_parameters()
     # result = integral(fof.gaussian_fcn)
-    # ex_tr = fof.exact_gaussian()
-    # print(f'\nResults: {result} {ex_tr} {result-ex_tr}')
+    # exact_res = fof.exact_gaussian()
+    # print(f'\nResults: {result} {exact_res} {result - exact_res}')
 
     # result = integral(fof.c0_fcn)
-    # ex_tr = fof.exact_c0()
-    # print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
+    # exact_res = fof.exact_c0()
+    # print(f'\nResults: {result} {exact_res} {result - exact_res}')
 
     # result = integral(fof.corner_peak_fcn)
-    # ex_tr = fof.exact_corner_peak()
-    # print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
+    # exact_res = fof.exact_corner_peak()
+    # print(f'\nResults: {result} {exact_res} {result - exact_res}')
 
-    result = integral(fof.discontinuous_fcn)
-    ex_tr = fof.exact_discontinuous()
-    print(f'\nResults: {result} {ex_tr} {result - ex_tr}')
+    # result = integral(fof.discontinuous_fcn)
+    # exact_res = fof.exact_discontinuous()
+    # print(f'\nResults: {result} {exact_res} {result - exact_res}')
 
     del integral
 
