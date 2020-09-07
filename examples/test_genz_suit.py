@@ -13,15 +13,20 @@ from integrand_suit import *
 
 def main():
     with open('coefficients.txt', 'w') as f:
-        f.write('\n')
+        f.write('Genz suit')
 
-    dmn = 3
+    nd = (3, 5, 8, 10, 13, 15)
+    for i in nd:
+        with open('coefficients.txt', 'a') as f:
+            f.write('\nDimension: ' + str(i))
+
+    dmn = 15
     integral = Mikor()
-    integral.set_values(1, dmn, 10000, 1, sigma=4)
+    integral.set_values(1, dmn, 1000, 1, sigma=2)
     integral.show_parameters()
 
     fof = Integrand('FCN', dmn)
-    fof.normalize_a(1.5, 110)
+    fof.normalize_a(2, 600)
     fof.show_parameters()
 
     result = integral(fof.oscillatory_fcn)
