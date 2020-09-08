@@ -41,7 +41,6 @@ def main():
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
 
-                """
                 f.write('   2:')
                 result = integral(fof.product_peak_fcn)
                 exact_res = fof.exact_product_peak()
@@ -51,29 +50,8 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
-
-                """
+                
                 f.write('   3:')
-                result = integral(fof.gaussian_fcn)
-                exact_res = fof.exact_gaussian()
-                diff_res = result - exact_res
-                f.write(f'{diff_res:.3e}')
-                print(f'\n3: Gaussian:')
-                print(f'{result:.10e}')
-                print(f'{exact_res:.10e}')
-                print(f'{diff_res:.3e}')
-
-                f.write('   4:')
-                result = integral(fof.c0_fcn)
-                exact_res = fof.exact_c0()
-                diff_res = result - exact_res
-                f.write(f'{diff_res:.3e}')
-                print(f'\n4: C0:')
-                print(f'{result:.10e}')
-                print(f'{exact_res:.10e}')
-                print(f'{diff_res:.3e}')
-
-                f.write('   5:')
                 result = integral(fof.corner_peak_fcn)
                 exact_res = fof.exact_corner_peak()
                 diff_res = result - exact_res
@@ -83,6 +61,26 @@ def main():
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
 
+                f.write('   4:')
+                result = integral(fof.gaussian_fcn)
+                exact_res = fof.exact_gaussian()
+                diff_res = result - exact_res
+                f.write(f'{diff_res:.3e}')
+                print(f'\n3: Gaussian:')
+                print(f'{result:.10e}')
+                print(f'{exact_res:.10e}')
+                print(f'{diff_res:.3e}')
+                """
+                f.write('   5:')
+                result = integral(fof.c0_fcn)
+                exact_res = fof.exact_c0()
+                diff_res = result - exact_res
+                f.write(f'{diff_res:.3e}')
+                print(f'\n4: C0:')
+                print(f'{result:.10e}')
+                print(f'{exact_res:.10e}')
+                print(f'{diff_res:.3e}')
+                """
                 f.write('   6:')
                 result = integral(fof.discontinuous_fcn)
                 exact_res = fof.exact_discontinuous()
