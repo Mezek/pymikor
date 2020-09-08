@@ -29,6 +29,8 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f'\nN={nod:12.0f}')
                 # fof.show_parameters()
+
+                """
                 f.write('   1:')
                 result = integral(fof.oscillatory_fcn)
                 exact_res = fof.exact_oscillatory()
@@ -39,6 +41,7 @@ def main():
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
 
+                """
                 f.write('   2:')
                 result = integral(fof.product_peak_fcn)
                 exact_res = fof.exact_product_peak()
@@ -49,6 +52,7 @@ def main():
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
 
+                """
                 f.write('   3:')
                 result = integral(fof.gaussian_fcn)
                 exact_res = fof.exact_gaussian()
@@ -88,6 +92,7 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
+                """
 
     del integral
 
