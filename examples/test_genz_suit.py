@@ -29,7 +29,6 @@ def main():
             with open('coefficients.txt', 'a') as f:
                 f.write(f'\nN={nod:12.0f}')
                 # fof.show_parameters()
-
                 """
                 f.write('   1:')
                 result = integral(fof.oscillatory_fcn)
@@ -40,7 +39,7 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
-
+                """
                 f.write('   2:')
                 result = integral(fof.product_peak_fcn)
                 exact_res = fof.exact_product_peak()
@@ -50,7 +49,7 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
-                
+                """
                 f.write('   3:')
                 result = integral(fof.corner_peak_fcn)
                 exact_res = fof.exact_corner_peak()
@@ -70,7 +69,7 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
-                """
+
                 f.write('   5:')
                 result = integral(fof.c0_fcn)
                 exact_res = fof.exact_c0()
@@ -80,7 +79,7 @@ def main():
                 print(f'{result:.10e}')
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
-                """
+
                 f.write('   6:')
                 result = integral(fof.discontinuous_fcn)
                 exact_res = fof.exact_discontinuous()
@@ -91,7 +90,6 @@ def main():
                 print(f'{exact_res:.10e}')
                 print(f'{diff_res:.3e}')
                 """
-
     del integral
 
 

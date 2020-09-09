@@ -247,7 +247,6 @@ class Integrand:
         for i in range(0, len(self.__a)):
             ael = self.__a[i]
             uel = self.__u[i]
-            # prod *= (math.exp(ael*(1. - uel)) + math.exp(ael*uel) - 2.)/ael
             prod *= (2. - math.exp(-ael * (1. - uel)) - math.exp(- ael * uel)) / ael
         return prod
 
