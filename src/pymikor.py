@@ -603,7 +603,7 @@ class Mikor:
         optimal_a = 0
         optimal_val = 1e+18
         flag_o = False
-        cand = []
+        candid = []
 
         for i in range(1, up_ran + 1):
             h_sum = self.h_poly(i)
@@ -611,13 +611,13 @@ class Mikor:
             if abs(h_sum - optimal_val) < eps:
                 # print(f'{optimal_a}, {i}: {h_sum}')
                 if flag_o is False:
-                    cand.append([optimal_a, optimal_val])
+                    candid.append([optimal_a, optimal_val])
                     flag_o = True
-                cand.append([i, h_sum])
+                candid.append([i, h_sum])
             if h_sum < optimal_val:
                 optimal_a = i
                 optimal_val = h_sum
-        return optimal_a, optimal_val, cand
+        return optimal_a, optimal_val, candid
 
     def h_tilde_sum(self, upperb, z, a_arg):
         """
