@@ -76,7 +76,7 @@ def mod_inv(a, b):
         return x % b
 
 
-class Mikor:
+class PyMikor:
 
     def __init__(self):
         self.strategy = 1

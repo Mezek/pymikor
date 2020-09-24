@@ -48,7 +48,7 @@ def integrator(f, t):
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(4, 4, 40000, 1, sigma=3)
     integral.show_parameters()
 

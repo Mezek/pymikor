@@ -105,7 +105,7 @@ def fcn2(x):
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
 
     # fcn1
     x_lim = [[0.0001, 0.9999] for _ in range(8)]

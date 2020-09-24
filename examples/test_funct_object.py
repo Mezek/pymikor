@@ -49,7 +49,7 @@ def main():
 #                         opts=[options, options, options, options])
 #    print(res1a, err1a)
 
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, 4, 1259, 1, sigma=2)
     start_time = time.time()
     res1 = integral(fcn1)

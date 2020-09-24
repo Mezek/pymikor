@@ -64,7 +64,7 @@ def prime_val(i):
     print("Simps: ", np.power(res1a, 6))
     print("Trapz: ", np.power(res1b, 6))
 
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, 6, i, 1, sigma=3, eps=0.)
     # integral.show_parameters()
     res1 = integral(fcn2)
