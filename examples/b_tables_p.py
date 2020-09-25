@@ -18,7 +18,7 @@ def main():
     p_step = 1000
     max_n_nodes = 18000
 
-    integral = Mikor()
+    integral = PyMikor()
     # integral.show_parameters()
     print('Spawning numbers...')
 

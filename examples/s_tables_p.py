@@ -18,7 +18,7 @@ def main():
           [5, 1069, 1543, 2129, 3001, 4001, 5003, 6007, 8191, 10007],
           [6, 2129, 3001, 4001, 5003, 6007, 6023, 8191, 10007, 12029, 24041])
 
-    integral = Mikor()
+    integral = PyMikor()
     # integral.show_parameters()
     print('Spawning numbers...')
 

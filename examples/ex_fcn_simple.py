@@ -47,7 +47,7 @@ def fcn_p(x, *args):
 
 def main():
 
-    integral = Mikor()
+    integral = PyMikor()
 
     # # fcn1
     # x_lim = [[0., 0.5] for _ in range(2)]

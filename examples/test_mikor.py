@@ -32,9 +32,9 @@ def fcn3(x):
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, 4, 10000, 1, sigma=1)
-    integral.set_dpq(3, 907, 31)
+    # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
 
     result = integral(fcn, eps=1e-5)

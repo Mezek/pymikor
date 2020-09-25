@@ -100,7 +100,7 @@ def main():
     nodes_4_3 = np.array([[251, 44], [631, 290], [1259, 483], [2503, 792],
                           [4001, 956], [6521, 3138], [10007, 1206]])
 
-    integral = Mikor()
+    integral = PyMikor()
     integral.show_parameters()
     print('Spawning numbers...')
 

@@ -16,7 +16,7 @@ def one_fcn():
 
     nd = 13
     nod = 10003
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, nd, nod, 1, sigma=2)
     fof = Integrand('FCN', nd)
     # fof.normalize_a(2, 600)
@@ -35,7 +35,7 @@ def main():
     with open('coefficients.txt', 'w') as f:
         f.write('Genz suit')
 
-    integral = Mikor()
+    integral = PyMikor()
     nd = (3, 5, 8, 10, 13, 15)
     prnb = (1259, 10007, 100003, 1000003)
     for idn in nd:

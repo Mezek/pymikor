@@ -20,7 +20,7 @@ def fcn2(x):
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
 
     """ strategy 1 """
 

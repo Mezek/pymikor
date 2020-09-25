@@ -16,7 +16,7 @@ def fcn(x):
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, 7, 10000, 1, sigma=2, limits=[[0, 10], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
     # integral.set_values(1, 7, 1000, 1, sigma=2)
     # integral.set_dpq(7, 907, 31)

@@ -12,7 +12,7 @@ from pymikor import *
 
 
 def candidates(arr, eps, start, stop):
-    integral = Mikor()
+    integral = PyMikor()
     # integral.show_parameters()
     for i in range(start, stop + 1):
         print(str(i), sep=' ', end=' ', flush=True)

@@ -14,7 +14,7 @@ from pymikor import *
 
 
 def main():
-    integral = Mikor()
+    integral = PyMikor()
     integral.set_values(1, 1, 1, 1, sigma=2)
 
     c = 'y'
