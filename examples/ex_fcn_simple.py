@@ -9,7 +9,7 @@ __copyright__ = "Copyright © 2020 Erik Bartoš"
 __email__ = "erik.bartos@gmail.com"
 
 from pymikor import *
-from integrand_suit import *
+from integrand import *
 
 
 def fcn1(x):

@@ -33,7 +33,7 @@ def fcn3(x):
 
 def main():
     integral = PyMikor()
-    integral.set_values(1, 4, 10000, 1, sigma=2,
+    integral.set_values(2, 4, 1009, 1, sigma=2,
                         limits=[[0, 1], [0, 1], [0, 1], [0, 1]])
     # integral.set_dpq(3, 907, 31)
     integral.show_parameters()
