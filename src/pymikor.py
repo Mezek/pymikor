@@ -883,6 +883,7 @@ class PyMikor:
                     for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
                         self.choose_p(i)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        pass
                         if math.fabs(act_val - next_val) <= self.eps_abs:
                             cond_flag = True
                             break
@@ -891,6 +892,7 @@ class PyMikor:
                     for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
                         self.choose_pq(j)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
+                        pass
                         if math.fabs(act_val - next_val) <= self.eps_abs:
                             cond_flag = True
                             break
