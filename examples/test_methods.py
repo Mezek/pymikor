@@ -12,21 +12,22 @@ import vegas
 
 
 def main():
-    ndim = 9
-    nods = 100009
+    ndim = 8
+    nods = 10009
     v_integ = vegas.Integrator(ndim * [[0, 1]])
     p_integ = PyMikor()
     p_integ.set_values(1, ndim, nods, 1, sigma=2)
     fof = Integrand('FCN', ndim)
-    fof.normalize_a(5, 100)
+    fof.normalize_a(1, 1)
+    fof.show_parameters()
 
-    v_result = v_integ(fof.oscillatory_fcn).mean
+    v_result = v_integ(fof.corner_peak_fcn).mean
     # v_result = v_integ(fof.oscillatory_fcn, nitn=10, neval=1e3).mean
-    p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
-    p_integ.show_parameters()
+    p_result = p_integ(fof.corner_peak_fcn)  # , eps=1e-4
+    # p_integ.show_parameters()
     # # c_result = cuba Divone
     # exact_res = fof.exact_corner_peak()
-    exact_res = fof.exact_oscillatory()
+    exact_res = fof.exact_corner_peak()
     print(f'\nResult of integration   : {exact_res:.8e}')
 
     v_rel_res = math.fabs((v_result - exact_res) / exact_res)

@@ -223,9 +223,13 @@ class Integrand:
         res = res + math.pow(-1., mc)
         if (la % 2) != 0:
             res = - res
+        # for i in range(0, la):
+        #    res = res/self.__a[i]
+        a_prod = 1.
         for i in range(0, la):
-            res = res/self.__a[i]
-        return res/math.factorial(self.__dim_n)
+            a_prod = a_prod*self.__a[i]
+        r_fact = math.factorial(self.__dim_n)
+        return res/a_prod/r_fact
 
     def exact_gaussian(self):
         """
