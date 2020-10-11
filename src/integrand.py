@@ -228,6 +228,7 @@ class Integrand:
         a_prod = 1.
         for i in range(0, la):
             a_prod = a_prod*self.__a[i]
+        print(a_prod)
         r_fact = math.factorial(self.__dim_n)
         return res/a_prod/r_fact
 

@@ -12,7 +12,7 @@ import vegas
 
 
 def main():
-    ndim = 8
+    ndim = 5
     nods = 10009
     v_integ = vegas.Integrator(ndim * [[0, 1]])
     p_integ = PyMikor()
