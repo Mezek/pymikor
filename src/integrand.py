@@ -52,7 +52,7 @@ class Integrand:
         self.__dim_n = dimension
         self.__a_pr = self.create_random(dimension)
         self.__u = self.create_random(dimension)
-        self.__a = self.__a_pr  # self.normalize_a(1, 1)
+        self.__a = self.__a_pr
 
     @property
     def a_pr(self):
@@ -93,9 +93,10 @@ class Integrand:
         :param h: number
         :return: normalized vector
         """
+        old_vector = self.__a
         c_factor = h/math.pow(self.__dim_n, e)
-        c = c_factor/norm1(self.__a_pr)
-        self.__a = self.__a_pr * c
+        c = c_factor/norm1(old_vector)
+        self.__a = old_vector * c
         return self.__a
 
     def show_parameters(self):
@@ -218,7 +219,7 @@ class Integrand:
         :return: value of n-integral
         """
         mp.dps = 50
-        res = mpf(0.)
+        res = 0.
         la = len(self.__a)
         mc = 0
         for i in range(la, 0, -1):
@@ -229,18 +230,17 @@ class Integrand:
                 for k in ocb:
                     sma = sma + self.__a[k - 1]
                 sig = math.pow(-1, mc)
-                res = res + mpf(1./(1. + sma)*sig)
-                # print(ocb, mpf(1./(1. + sma)*sig))
+                res = res + 1./(1. + sma)*sig
+                # print(ocb, sma, 1./(1. + sma)*sig)
             mc += 1
         res = res + math.pow(-1, mc)
-        print(res)
         if (self.__dim_n % 2) != 0:
             res = - res
         cf = 1.
         for i in range(0, la):
             res = res/self.__a[i]
             cf = cf*self.__a[i]
-            print(res, self.__a[i], cf)
+            # print(res, cf)
         r_fact = math.factorial(self.__dim_n)
         return res/r_fact
 
