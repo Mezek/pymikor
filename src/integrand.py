@@ -15,6 +15,7 @@ import numpy as np
 import math
 import scipy.special as spec
 import itertools
+from mpmath import *
 
 
 def normalize_2(v):
@@ -49,9 +50,9 @@ class Integrand:
     def __init__(self, name, dimension):
         self.name = name
         self.__dim_n = dimension
-        self.__a_pr = np.random.rand(dimension)
-        self.__u = np.random.rand(dimension)
-        self.__a = self.normalize_a(1, 1)
+        self.__a_pr = self.create_random(dimension)
+        self.__u = self.create_random(dimension)
+        self.__a = self.__a_pr  # self.normalize_a(1, 1)
 
     @property
     def a_pr(self):
@@ -76,6 +77,14 @@ class Integrand:
     @property
     def a(self):
         return self.__a
+
+    def create_random(self, dim):
+        new_vector = np.zeros(dim)
+        epsilon = 1e-10
+        for i, x in enumerate(new_vector):
+            while fabs(new_vector[i]) < epsilon:
+                new_vector[i] = np.random.rand()
+        return new_vector
 
     def normalize_a(self, e, h):
         """
@@ -208,29 +217,32 @@ class Integrand:
         Integration of f_3(x) in limits [0, 1]^n / brute force
         :return: value of n-integral
         """
-        res = 0.
+        mp.dps = 50
+        res = mpf(0.)
         la = len(self.__a)
         mc = 0
         for i in range(la, 0, -1):
             vec = list(range(la, 0, -1))
             comb_i = list(itertools.combinations(vec, i))
-            for j in comb_i:
+            for ocb in comb_i:
                 sma = 0.
-                for k in j:
+                for k in ocb:
                     sma = sma + self.__a[k - 1]
-                res = res + 1./(1. + sma)*math.pow(-1, mc)
+                sig = math.pow(-1, mc)
+                res = res + mpf(1./(1. + sma)*sig)
+                # print(ocb, mpf(1./(1. + sma)*sig))
             mc += 1
-        res = res + math.pow(-1., mc)
-        if (la % 2) != 0:
+        res = res + math.pow(-1, mc)
+        print(res)
+        if (self.__dim_n % 2) != 0:
             res = - res
-        # for i in range(0, la):
-        #    res = res/self.__a[i]
-        a_prod = 1.
+        cf = 1.
         for i in range(0, la):
-            a_prod = a_prod*self.__a[i]
-        print(a_prod)
+            res = res/self.__a[i]
+            cf = cf*self.__a[i]
+            print(res, self.__a[i], cf)
         r_fact = math.factorial(self.__dim_n)
-        return res/a_prod/r_fact
+        return res/r_fact
 
     def exact_gaussian(self):
         """

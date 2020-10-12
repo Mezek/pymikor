@@ -12,13 +12,13 @@ import vegas
 
 
 def main():
-    ndim = 5
+    ndim = 14
     nods = 10009
     v_integ = vegas.Integrator(ndim * [[0, 1]])
     p_integ = PyMikor()
     p_integ.set_values(1, ndim, nods, 1, sigma=2)
     fof = Integrand('FCN', ndim)
-    fof.normalize_a(1, 1)
+    # fof.normalize_a(1, 1)
     fof.show_parameters()
 
     v_result = v_integ(fof.corner_peak_fcn).mean
@@ -28,7 +28,7 @@ def main():
     # # c_result = cuba Divone
     # exact_res = fof.exact_corner_peak()
     exact_res = fof.exact_corner_peak()
-    print(f'\nResult of integration   : {exact_res:.8e}')
+    print(f'\nResult of integration   : {exact_res}')
 
     v_rel_res = math.fabs((v_result - exact_res) / exact_res)
     print(f'                Vegas   : {v_result:.8e}')
@@ -42,5 +42,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # one_fcn()
     main()
