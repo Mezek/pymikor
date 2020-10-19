@@ -31,8 +31,42 @@ def fcn3(x):
     return fc
 
 
+def fcn_g1(x):
+    fc = math.exp(x[0]*x[1]*x[2])
+    return fc
+
+
+def fcn_g2(x):
+    fc = 1.
+    a = np.array([1, 0.5, 0.2, 0.2, 0.2])
+    for i in range(5):
+        dd = 0.
+        for j in range(5):
+            if j != i:
+                dd += x[j]
+        ss = 0.5*a[i]*x[i]*x[i]*(2. + math.sin(dd))
+        fc *= math.exp(ss)
+    return fc
+
+
+def fcn_g3(x):
+    fc = 1
+    for i in range(8):
+        fc *= math.exp(0.1*x[i])
+    return fc
+
+
+def fcn_g4(x):
+    xx = 1.
+    for i in range(20):
+        xx *= x[i]
+    return math.exp(xx)
+
+
 def main():
     integral = PyMikor()
+    """
+    # Listing example 1
     integral.set_values(2, 4, 1009, 1, sigma=2,
                         limits=[[0, 1], [0, 1], [0, 1], [0, 1]])
     # integral.set_dpq(3, 907, 31)
@@ -41,7 +75,33 @@ def main():
     result = integral(fcn, eps=1e-5)
     # integral.show_parameters()
     print(f'\nResult of integration   : {result}')
-
+    """
+    """
+    integral.set_values(1, 3, 100009, 1, sigma=2,
+                        limits=[[0, 1], [0, 1], [0, 1]])
+    result = integral(fcn_g1, eps=1e-5)
+    print(f'\nResult of integration   : {result}')
+    """
+    integral.set_values(1, 5, 100009, 1, sigma=2,
+                        limits=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1]])
+    result = integral(fcn_g2, eps=1e-5)
+    print(f'\nResult of integration   : {result}')
+    """
+    integral.set_values(1, 8, 100009, 1, sigma=2,
+                        limits=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1],
+                                [0, 1], [0, 1]])
+    result = integral(fcn_g3, eps=1e-5)
+    print(f'\nResult of integration   : {result}')
+    print(math.pow((math.exp(0.1) - 1.)/0.1, 8))
+    """
+    """
+    integral.set_values(1, 20, 100009, 1, sigma=2,
+                        limits=[[0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1],
+                                [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1],
+                                [0, 1], [0, 1], [0, 1], [0, 1]])
+    result = integral(fcn_g4)
+    print(f'\nResult of integration   : {result}')
+    """
     del integral
 
 
