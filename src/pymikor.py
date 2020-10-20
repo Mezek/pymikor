@@ -413,6 +413,19 @@ class PyMikor:
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'limits                  : {self.x_lim}')
 
+    def tabulated_optimals(self, dimension, afs=1):
+        pdo = self.dim_s - 3
+        if afs == 1:
+            parr = np.array(self.pp[pdo])
+        elif afs == 2:
+            parr = np.array(self.qq[pdo])
+        else:
+            print('Error: No optimals for given parameters!')
+            return
+        print(f'Optimal coefficients, dimension = {dimension}, shape = {parr.shape}')
+        print(parr)
+        return parr
+
     def find_closest_p(self):
         """
         Find closest item in array pp
