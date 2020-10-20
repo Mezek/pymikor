@@ -89,6 +89,7 @@ class PyMikor:
         self.sigma = 2
         self.eps_abs = 0.
         self.eps_flag = False
+        self.stat_flag = False
         self.a_opt = 0
         self.a_opt_value = 0
         self.b_opt = 0
@@ -412,6 +413,17 @@ class PyMikor:
         print(f'sigma                   : {self.sigma}')
         print(f'absolute eps            : {self.eps_abs}  flag: {self.eps_flag}')
         print(f'limits                  : {self.x_lim}')
+
+    def tabulated_optimals(self, dimension):
+        if dimension < 3 or dimension > 20:
+            print('Error: No optimals for given parameters!')
+            return
+        pdo = dimension - 3
+        parr = np.array(self.pp[pdo])
+        qarr = np.array(self.qq[pdo])
+        print(f'Primes and optimal coefficients, dimension = {dimension}')
+        print(f'[p a] =\n {parr} \n [p a q b] =\n {qarr}')
+        return parr
 
     def find_closest_p(self):
         """
@@ -868,10 +880,13 @@ class PyMikor:
                 if kwargs[k] <= sys.float_info.epsilon:
                     raise AttributeError(f'{k} must be greater then machine epsilon')
                 self.set_eps(kwargs[k])
+            elif k == 'stat':
+                self.stat_flag = True
             else:
                 raise AttributeError(f'no attribute named {k}')
 
         integral = float('nan')
+        stat_str = ''
         if self.strategy <= 2:
             act_val = 0.
             next_val = float('nan')
@@ -882,6 +897,7 @@ class PyMikor:
                 if self.strategy == 1:
                     for i, pre_calc in enumerate(self.pp[self.dim_s - 3]):
                         self.choose_p(i)
+                        stat_str = 'p = ' + str(self.p_prime) + ', a = ' + str(self.a_opt)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
                         pass
                         if math.fabs(act_val - next_val) <= self.eps_abs:
@@ -891,6 +907,8 @@ class PyMikor:
                 if self.strategy == 2:
                     for j, pre_calc in enumerate(self.qq[self.dim_s - 3]):
                         self.choose_pq(j)
+                        stat_str = 'p = ' + str(self.p_prime) + ', a = ' + str(self.a_opt) +\
+                                   ', q = ' + str(self.q_prime) + ', b = ' + str(self.b_opt)
                         next_val = self.integral_value(self.optimal_coefficients(), integrand_fcn)
                         pass
                         if math.fabs(act_val - next_val) <= self.eps_abs:
@@ -904,6 +922,8 @@ class PyMikor:
                 integral = next_val
             else:
                 raise Exception(f'NaN value! Try to increase current periodization value sigma={self.sigma}.')
+        if self.stat_flag:
+            print(f'Used in evaluation: {stat_str}')
 
         if self.strategy > 2:
             integral = self.integral_value(self.optimal_coefficients(), integrand_fcn)
