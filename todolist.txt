@@ -1,4 +1,2 @@
 TODO: Comparative tables, e.g. Tab.6 in Zakrzewska, Gauss, Korobov, Vegas, Cuba
 TODO: prepare makefile
-TODO: Add "statistics" option to see the last p, q values with opt. parameters
-TODO: Print optimal coefficient for entered p, with np.array output

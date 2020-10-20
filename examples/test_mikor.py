@@ -78,10 +78,10 @@ def main():
     print(f'\nResult of integration   : {result}')
     """
     # r \approx 1.14649907
-    integral.set_values(1, 3, 100009, 1, sigma=2,
+    integral.set_values(2, 3, 100009, 1, sigma=2,
                         limits=[[0, 1], [0, 1], [0, 1]])
-    integral.tabulated_optimals(3, 1)
-    p_result = integral(fcn_g1, eps=1e-5)
+    integral.tabulated_optimals(3)
+    p_result = integral(fcn_g1, eps=1e-5, stat=1)
     print(f'PyMikor   : {p_result:.8e}')
     v_integ = vegas.Integrator(3 * [[0, 1]])
     v_result = v_integ(fcn_g1, nitn=10, neval=1e3).mean
