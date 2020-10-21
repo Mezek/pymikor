@@ -28,15 +28,15 @@ def main():
     # # c_result = cuba Divone
     # exact_res = fof.exact_corner_peak()
     exact_res = fof.exact_corner_peak()
-    print(f'\nResult of integration   : {exact_res}')
+    print(f'\nExact result   : {exact_res:.12e}')
 
     v_rel_res = math.fabs((v_result - exact_res) / exact_res)
-    print(f'                Vegas   : {v_result:.8e}')
+    print(f'       Vegas   : {v_result:.8e}')
     p_rel_res = math.fabs((p_result - exact_res) / exact_res)
-    print(f'              PyMikor   : {p_result:.8e}')
+    print(f'     PyMikor   : {p_result:.8e}')
     # # c_rel_res = (c_result - exact_res) / exact_res
 
-    print(f'Relative result         : {v_rel_res:.3e} / {p_rel_res:.3e}')
+    print(f'Relative res   : {v_rel_res:.3e} / {p_rel_res:.3e}')
 
     del p_integ
 
