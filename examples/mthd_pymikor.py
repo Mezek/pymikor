@@ -19,35 +19,31 @@ def main():
         writer = csv.writer(file, delimiter=',')
         writer.writerow(["1", "a", "A"])
         writer.writerow(["2", "b", "B"])
-    """    
-    ndim = 7
+
+    ndim = 4
     nods = 10009
+    occur = 5
     v_integ = vegas.Integrator(ndim * [[0, 1]])
     p_integ = PyMikor()
     p_integ.set_values(1, ndim, nods, 1, sigma=2)
     fof = Integrand('FCN', ndim)
-    # fof.normalize_a(1, 500)
-    fof.show_parameters()
+    # fof.normalize_a(2, 100)
 
-    v_result = v_integ(fof.corner_peak_fcn).mean
+    # v_result = v_integ(fof.oscillatory_fcn).mean
     # v_result = v_integ(fof.oscillatory_fcn, nitn=10, neval=1e3).mean
-    p_result = p_integ(fof.corner_peak_fcn)  # , eps=1e-4
-    # p_integ.show_parameters()
-    # # c_result = cuba Divone
-    # exact_res = fof.exact_corner_peak()
-    exact_res = fof.exact_corner_peak()
-    print(f'\nExact result   : {exact_res:.12e}')
 
-    v_rel_res = math.fabs((v_result - exact_res) / exact_res)
-    print(f'       Vegas   : {v_result:.8e}')
-    p_rel_res = math.fabs((p_result - exact_res) / exact_res)
-    print(f'     PyMikor   : {p_result:.8e}')
-    # # c_rel_res = (c_result - exact_res) / exact_res
-
-    print(f'Relative res   : {v_rel_res:.3e} / {p_rel_res:.3e}')
+    rvec = []
+    for i in range(occur):
+        fof.reset_a()
+        p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
+        # p_integ.show_parameters()
+        exact_res = fof.exact_oscillatory()
+        p_rel_res = math.fabs((p_result - exact_res) / exact_res)
+        # print(f'Relative res   : {p_rel_res:.3e}')
+        rvec.append(float("{:.3e}".format(p_rel_res)))
+    print(rvec)
 
     del p_integ
-    """
 
 
 if __name__ == "__main__":
