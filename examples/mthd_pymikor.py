@@ -15,11 +15,6 @@ import vegas
 
 
 def main():
-    with open('data_pymikor.csv', 'w', newline='') as file:
-        writer = csv.writer(file, delimiter=',')
-        writer.writerow(["1", "a", "A"])
-        writer.writerow(["2", "b", "B"])
-
     ndim = 4
     nods = 10009
     occur = 5
@@ -41,7 +36,13 @@ def main():
         p_rel_res = math.fabs((p_result - exact_res) / exact_res)
         # print(f'Relative res   : {p_rel_res:.3e}')
         rvec.append(float("{:.3e}".format(p_rel_res)))
-    print(rvec)
+    # print(rvec)
+
+    with open('data_pymikor.csv', 'w', newline='') as file:
+        wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
+        wr.writerow(["Record1", "Record2"])
+        for f_num in rvec:
+            wr.writerow([f_num, f_num])
 
     del p_integ
 
