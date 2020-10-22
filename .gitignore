@@ -108,3 +108,4 @@ venv.bak/
 
 # files
 examples/coefficients.txt
+examples/data_pymikor.csv
