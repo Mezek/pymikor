@@ -14,37 +14,49 @@ import csv
 import vegas
 
 
-def main():
-    ndim = 4
-    nods = 10009
-    occur = 5
-    v_integ = vegas.Integrator(ndim * [[0, 1]])
+def format_num(f):
+    return float("{:.3e}".format(f))
+
+
+def proceed_err(ndim, nods, nt):
     p_integ = PyMikor()
-    p_integ.set_values(1, ndim, nods, 1, sigma=2)
     fof = Integrand('FCN', ndim)
     # fof.normalize_a(2, 100)
-
-    # v_result = v_integ(fof.oscillatory_fcn).mean
+    exact_res = fof.exact_oscillatory()
+    v_integ = vegas.Integrator(ndim * [[0, 1]])
+    v_result = v_integ(fof.oscillatory_fcn).mean
     # v_result = v_integ(fof.oscillatory_fcn, nitn=10, neval=1e3).mean
+    v_rel_res = math.fabs((v_result - exact_res) / exact_res)
+    v_rel_res = format_num(v_rel_res)
 
-    rvec = []
-    for i in range(occur):
-        fof.reset_a()
+    r_vec = []
+    for tab_prime in nods:
+        p_integ.set_values(1, ndim, tab_prime, 1, sigma=2)
         p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
         # p_integ.show_parameters()
-        exact_res = fof.exact_oscillatory()
         p_rel_res = math.fabs((p_result - exact_res) / exact_res)
-        # print(f'Relative res   : {p_rel_res:.3e}')
-        rvec.append(float("{:.3e}".format(p_rel_res)))
-    # print(rvec)
+        r_vec.append(format_num(p_rel_res))
+
+    with open('data_pymikor.csv', 'a', newline='') as file:
+        wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
+        wr.writerow([nt, ndim, v_rel_res] + r_vec)
+
+    del p_integ, v_integ
+
+
+def main():
+    ndim = 4
+    nods = np.array([1259, 10007, 100003, 1000003])
 
     with open('data_pymikor.csv', 'w', newline='') as file:
         wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
-        wr.writerow(["Record1", "Record2"])
-        for f_num in rvec:
-            wr.writerow([f_num, f_num])
+        header = ['A', 'NDim', 'Vegas']
+        for el in nods:
+            header.append(el)
+        wr.writerow(header)
 
-    del p_integ
+    for i in range(10):
+        proceed_err(ndim, nods, i+1)
 
 
 if __name__ == "__main__":

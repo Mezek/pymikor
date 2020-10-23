@@ -310,7 +310,7 @@ class PyMikor:
 
     def __del__(self):
         # print(f'Object {self.__class__.__name__} deleted')
-        print('\n')
+        pass
 
     def empty_arrays(self, dimension):
         """
