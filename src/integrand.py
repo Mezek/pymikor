@@ -50,8 +50,9 @@ class Integrand:
     def __init__(self, name, dimension):
         self.name = name
         self.__dim_n = dimension
-        self.__a_pr = self.create_random(dimension)
+        self.__eps = 1e-10
         self.__u = self.create_random(dimension)
+        self.__a_pr = self.create_random(dimension)
         self.__a = self.__a_pr
 
     @property
@@ -59,10 +60,10 @@ class Integrand:
         return self.__a_pr
 
     @a_pr.setter
-    def a_pr(self, apr):
-        if len(apr) != self.__dim_n:
+    def a_pr(self, apr_new):
+        if len(apr_new) != self.__dim_n:
             raise AttributeError('Check dimension of a-prime parameters!')
-        self.__a_pr = apr
+        self.__a_pr = apr_new
 
     @property
     def u(self):
@@ -78,23 +79,31 @@ class Integrand:
     def a(self):
         return self.__a
 
+    @a.setter
+    def a(self, anew):
+        if len(anew) != self.__dim_n:
+            raise AttributeError('Check dimension of a parameters!')
+        self.__a = anew
+
     def create_random(self, dim):
         new_vector = np.zeros(dim)
-        epsilon = 1e-10
         for i, x in enumerate(new_vector):
-            while fabs(new_vector[i]) < epsilon:
+            while fabs(new_vector[i]) < self.__eps:
                 new_vector[i] = np.random.rand()
         return new_vector
 
-    def normalize_a(self, e, h):
+    def reset_a(self):
+        self.__a = self.create_random(self.__dim_n)
+
+    def normalize_a(self, ee, h):
         """
         Normalize vector by Genz's condition
-        :param e: number
+        :param ee: number
         :param h: number
         :return: normalized vector
         """
         old_vector = self.__a
-        c_factor = h/math.pow(self.__dim_n, e)
+        c_factor = h/math.pow(self.__dim_n, ee)
         c = c_factor/norm1(old_vector)
         self.__a = old_vector * c
         return self.__a
