@@ -13,6 +13,7 @@ __email__ = "erik.bartos@gmail.com"
 from pymikor import *
 from integrand import *
 import csv
+import vegas
 import pycuba
 
 
@@ -25,23 +26,28 @@ def proceed_err(nidim, nods, nt):
     p_integ = PyMikor()
     fof = Integrand('FCN', nidim)
     # fof.normalize_a(1.5, 110)
-    exact_res = fof.exact_product_peak()
+    exact_res = fof.exact_oscillatory()
+    v_integ = vegas.Integrator(nidim * [[0, 1]])
+    v_result = []
+    v_result.append(v_integ(fof.oscillatory_fcn, nitn=10, neval=1e3).mean)
+    v_result.append(v_integ(fof.oscillatory_fcn, nitn=10, neval=1e5).mean)
+
     global ave, ucc
     ave = fof.a
     ucc = fof.u
 
     def IntegCuba(ndim, xx, ncomp, ff, userdata):
         # x, y, z = [xx[i] for i in range(ndim.contents.value)]
-        sma = 0.
         nnn = ndim.contents.value
-        # for i in range(nnn):
-        #    sma += ave[i]*xx[i]
-        #ff[0] = math.cos(2.*math.pi*ucc[0] + sma)
-
-        res = 1.
+        sma = 0.
         for i in range(nnn):
-            res *= 1./(1./math.pow(ave[i], 2) + math.pow(xx[i] - ucc[i], 2))
-        ff[0] = res
+            sma += ave[i]*xx[i]
+        ff[0] = math.cos(2.*math.pi*ucc[0] + sma)
+
+        # res = 1.
+        # for i in range(nnn):
+        #    res *= 1./(1./math.pow(ave[i], 2) + math.pow(xx[i] - ucc[i], 2))
+        #ff[0] = res
         return 0
 
     NDIM = nidim
@@ -80,7 +86,6 @@ def proceed_err(nidim, nods, nt):
     # print_header('Vegas')
     vrs = pycuba.Vegas(IntegCuba, NDIM, verbose=0)
     # print_results('Vegas', vrs)
-    v_result = []
     v_result.append(vrs['results'][0]['integral'])
 
     # print_header('Divonne')
@@ -95,14 +100,13 @@ def proceed_err(nidim, nods, nt):
         v = math.fabs((v - exact_res) / exact_res)
         r_vec.append(format_num(v))
 
-    # for tab_prime in nods:
-    #    p_integ.set_values(1, nidim, tab_prime, 1, sigma=2)
-    #    p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
-    #    # p_integ.show_parameters()
-    #    p_rel_res = math.fabs((p_result - exact_res) / exact_res)
-    #    r_vec.append(format_num(p_rel_res))
+    for tab_prime in nods:
+        p_integ.set_values(1, nidim, tab_prime, 1, sigma=2)
+        p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
+        p_rel_res = math.fabs((p_result - exact_res) / exact_res)
+        r_vec.append(format_num(p_rel_res))
 
-    with open('data_f_prodp_cuba.csv', 'a', newline='') as file:
+    with open('data_oscillatory_cuba.csv', 'a', newline='') as file:
         wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow(r_vec)
 
@@ -110,12 +114,12 @@ def proceed_err(nidim, nods, nt):
 
 
 def main():
-    nidim = [3, 5, 8, 10, 13, 15]
+    nidim = [15]
     nods = np.array([1259, 10007, 100003, 1000003])
 
-    with open('data_f_prodp_cuba.csv', 'w', newline='') as file:
+    with open('data_oscillatory_cuba.csv', 'w', newline='') as file:
         wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
-        header = ['A', 'NDim', 'VegasC', 'PyCuba']
+        header = ['A', 'NDim', 'VegasA', 'VegasB', 'VegasC', 'PyCuba']
         for el in nods:
             header.append(el)
         wr.writerow(header)
@@ -123,7 +127,6 @@ def main():
     for i in range(len(nidim)):
         for j in range(100):
             proceed_err(nidim[i], nods, j+1)
-            # print(i, j+1, ndim[i], nods)
 
 
 if __name__ == "__main__":
