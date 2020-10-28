@@ -25,7 +25,7 @@ def proceed_err(nidim, nods, nt):
     r_vec = [nt, nidim]
     p_integ = PyMikor()
     fof = Integrand('FCN', nidim)
-    # fof.normalize_a(1.5, 110)
+    fof.normalize_a(1.5, 110)
     exact_res = fof.exact_oscillatory()
     v_integ = vegas.Integrator(nidim * [[0, 1]])
     v_result = []
@@ -106,7 +106,7 @@ def proceed_err(nidim, nods, nt):
         p_rel_res = math.fabs((p_result - exact_res) / exact_res)
         r_vec.append(format_num(p_rel_res))
 
-    with open('data_oscillatory_cuba.csv', 'a', newline='') as file:
+    with open('data_oscillatory_a_norm1.csv', 'a', newline='') as file:
         wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
         wr.writerow(r_vec)
 
@@ -114,10 +114,10 @@ def proceed_err(nidim, nods, nt):
 
 
 def main():
-    nidim = [15]
+    nidim = [3, 5, 8, 10, 13]
     nods = np.array([1259, 10007, 100003, 1000003])
 
-    with open('data_oscillatory_cuba.csv', 'w', newline='') as file:
+    with open('data_oscillatory_a_norm1.csv', 'w', newline='') as file:
         wr = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
         header = ['A', 'NDim', 'VegasA', 'VegasB', 'VegasC', 'PyCuba']
         for el in nods:
