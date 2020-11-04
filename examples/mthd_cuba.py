@@ -25,7 +25,7 @@ def proceed_err(nidim, nods, nt):
     r_vec = [nt, nidim]
     p_integ = PyMikor()
     fof = Integrand('FCN', nidim)
-    fof.normalize_a(1.5, 110)
+    fof.normalize_a(2, 600)
     exact_res = fof.exact_oscillatory()
     v_integ = vegas.Integrator(nidim * [[0, 1]])
     v_result = []
