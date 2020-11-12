@@ -12,13 +12,13 @@ import vegas
 
 
 def main():
-    ndim = 7
+    ndim = 13
     nods = 10009
     v_integ = vegas.Integrator(ndim * [[0, 1]])
     p_integ = PyMikor()
     p_integ.set_values(1, ndim, nods, 1, sigma=2)
     fof = Integrand('FCN', ndim)
-    # fof.normalize_a(1, 500)
+    fof.normalize_a(2., 500)
     fof.show_parameters()
 
     v_result = v_integ(fof.corner_peak_fcn).mean
@@ -36,7 +36,7 @@ def main():
     print(f'     PyMikor   : {p_result:.8e}')
     # # c_rel_res = (c_result - exact_res) / exact_res
 
-    print(f'Relative res   : {v_rel_res:.3e} / {p_rel_res:.3e}')
+    print(f'Relative res   : {v_rel_res:.3e} : {p_rel_res:.3e}')
 
     del p_integ
 
