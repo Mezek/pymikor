@@ -1,2 +1,1 @@
-TODO: Comparative tables, e.g. Tab.6 in Zakrzewska, Gauss, Korobov, Vegas, Cuba
 TODO: prepare makefile
