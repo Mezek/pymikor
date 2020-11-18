@@ -34,7 +34,8 @@ def proceed_err(ndim, nods, nt):
 
     for tab_prime in nods:
         p_integ.set_values(1, ndim, tab_prime, 1, sigma=2)
-        p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
+        # p_result = p_integ(fof.oscillatory_fcn)  # , eps=1e-4
+        p_result = 1.
         # p_integ.show_parameters()
         p_rel_res = math.fabs((p_result - exact_res) / exact_res)
         r_vec.append(format_num(p_rel_res))
@@ -56,11 +57,10 @@ def main():
         for el in nods:
             header.append(el)
         wr.writerow(header)
-
     for i in range(len(ndim)):
-        for j in range(1000):
-            # proceed_err(ndim[i], nods, j+1)
-            print(i, j+1, ndim[i], nods)
+        for j in range(100):
+            proceed_err(ndim[i], nods, j+1)
+            # print(i, j+1, ndim[i], nods)
 
 
 if __name__ == "__main__":
